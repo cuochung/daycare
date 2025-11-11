@@ -213,10 +213,16 @@ const handleEdit = async () => {
 
   const timeNow = dayjs().format('YYYY-MM-DD HH:mm:ss')
   record.edit_man = `${store.state.pData?.username ?? ''} (${timeNow})` + record.edit_man ? `, ${record.edit_man}` : ''
-  record.update_time = timeNow
 
-  const response = await api.post('signlife', record)
+  let postData = {
+    snkey: record.snkey,
+    datalist: JSON.stringify(record),
+    updateTime: timeNow
+  }
+
+  const response = await api.post('signlife', postData)
   loading.value = false
+  console.log('response',response)
 
   if (response?.state == 1) {
     proxy.$swal({ icon: 'success', title: '修改成功' })
