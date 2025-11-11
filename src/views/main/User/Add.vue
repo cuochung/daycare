@@ -22,7 +22,7 @@
           <v-btn color="primary" variant="flat" @click="addOK" v-if="processType == 'add'">
             確認新增
           </v-btn>
-          <v-btn color="success" variant="flat" @click="editOK" v-if="processType == 'edit' && !pharmacistKey">
+          <v-btn color="success" variant="flat" @click="editOK" v-if="processType == 'edit'">
             確認修改
           </v-btn>
         </div>
@@ -75,7 +75,7 @@
                           ref="p_code"></v-text-field> -->
                       </v-col>
                       <v-col cols="12" sm="4">
-                        <v-text-field label="姓名" v-model="list.name" :rules="emptyRules"
+                        <v-text-field label="姓名" v-model="list.name" :rules="emptyRules" autofocus
                           variant="outlined"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="4">
@@ -109,7 +109,7 @@
                           v-model="list.birthday" variant="outlined"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="3" class="d-flex align-center">
-                        <v-text-field label="身分證字號" v-model="list.id_num" counter="10" variant="outlined"
+                        <v-text-field :label="`身分證字號${idEdit ? '(鎖定)' : '(可修改)'}`" v-model="list.id_num" counter="10" variant="outlined"
                           :readonly="idEdit && processType == 'edit'"></v-text-field>
                         <v-btn color="secondary" variant="tonal" size="small" @click.stop="idEdit = false"
                           v-if="processType == 'edit'">
@@ -139,26 +139,66 @@
                       <v-icon color="primary" size="32" class="mb-2">mdi-account-box-outline</v-icon>
                       <span class="text-subtitle-2 text-primary mb-4">個人照片</span>
 
-                      <v-responsive max-width="220" class="w-100">
-                        <v-img :src="`${baseUrl}upload/thumb/${list.pic_url}`"
-                          :lazy-src="`${baseUrl}upload/thumb/lazypic.jpg`" aspect-ratio="1" rounded="lg" elevation="3"
-                          cover>
-                          <template #placeholder>
-                            <v-row class="fill-height ma-0" align="center" justify="center">
+                      <div class="w-100">
+                        <v-sheet v-if="uploadImage.preview" color="white" rounded="lg"
+                          class="d-flex align-center justify-center pa-2">
+                          <v-img :src="uploadImage.preview" aspect-ratio="1" rounded="lg" cover>
+                            <v-overlay absolute :model-value="uploading" class="d-flex align-center justify-center">
                               <v-progress-circular color="primary" indeterminate size="32"></v-progress-circular>
-                            </v-row>
-                          </template>
-                        </v-img>
-                        <v-overlay absolute :model-value="uploading" class="d-flex align-center justify-center">
-                          <v-progress-circular color="primary" indeterminate size="32"></v-progress-circular>
-                        </v-overlay>
-                      </v-responsive>
+                            </v-overlay>
+                          </v-img>
+                        </v-sheet>
 
-                      <v-card-actions class="mt-4">
-                        <v-btn color="primary" variant="flat" prepend-icon="mdi-cloud-upload"
-                          @click.stop="goUploadThumb" :loading="uploading">
-                          重新上傳
-                        </v-btn>
+                        <v-sheet v-else-if="hasExistingPhoto" color="white" rounded="lg"
+                          class="d-flex align-center justify-center pa-2">
+                          <v-img :src="`${baseUrl}/upload/${databaseName}/${list.picInfo.picName}`"
+                            :lazy-src="`${baseUrl}/upload/${databaseName}/${defaultPicName}`" aspect-ratio="1"
+                            rounded="lg" cover>
+                            <template #placeholder>
+                              <v-row class="fill-height ma-0" align="center" justify="center">
+                                <v-progress-circular color="primary" indeterminate size="32"></v-progress-circular>
+                              </v-row>
+                            </template>
+                            <v-overlay absolute :model-value="uploading" class="d-flex align-center justify-center">
+                              <v-progress-circular color="primary" indeterminate size="32"></v-progress-circular>
+                            </v-overlay>
+                          </v-img>
+                        </v-sheet>
+
+                        <v-sheet v-else color="white" rounded="lg"
+                          class="d-flex flex-column align-center justify-center pa-6" style="min-height: 220px;">
+                          <v-icon color="primary" size="36" class="mb-2">mdi-image-off-outline</v-icon>
+                          <span class="text-body-2 text-medium-emphasis">未上傳任何照片</span>
+                        </v-sheet>
+                      </div>
+
+                      <v-card-actions class="mt-4 d-flex flex-column w-100" style="gap: 8px;">
+                        <template v-if="uploadImage.preview">
+                          <v-btn color="primary" variant="flat" prepend-icon="mdi-cloud-upload" block
+                            @click.stop="goUploadThumb" :loading="uploading">
+                            重新選擇
+                          </v-btn>
+                          <v-btn color="secondary" variant="tonal" prepend-icon="mdi-close-circle" block
+                            @click.stop="clearUploadPreview">
+                            取消預覽
+                          </v-btn>
+                        </template>
+                        <template v-else-if="hasExistingPhoto">
+                          <v-btn color="primary" variant="flat" prepend-icon="mdi-cloud-upload" block
+                            @click.stop="goUploadThumb" :loading="uploading">
+                            重新上傳
+                          </v-btn>
+                          <v-btn color="error" variant="tonal" prepend-icon="mdi-delete-outline" block
+                            @click.stop="removeExistingPhoto">
+                            刪除照片
+                          </v-btn>
+                        </template>
+                        <template v-else>
+                          <v-btn color="primary" variant="flat" prepend-icon="mdi-cloud-upload" block
+                            @click.stop="goUploadThumb" :loading="uploading">
+                            選擇照片
+                          </v-btn>
+                        </template>
                       </v-card-actions>
                     </v-card>
                   </v-col>
@@ -875,7 +915,7 @@
           <v-btn color="primary" variant="flat" @click="addOK" v-if="processType == 'add'">
             確認新增
           </v-btn>
-          <v-btn color="success" variant="flat" @click="editOK" v-if="processType == 'edit' && !pharmacistKey">
+          <v-btn color="success" variant="flat" @click="editOK" v-if="processType == 'edit'">
             確認修改
           </v-btn>
         </v-card-actions>
@@ -886,7 +926,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import dayjs from 'dayjs'
 import { useStore } from '@/stores/useStore'
 import api from '@/assets/js/api'
@@ -898,6 +938,13 @@ const dialog = ref(false)
 const form = ref(null)
 const fileInput = ref(null)
 const floatingPanel = ref(null)
+const uploadImage = reactive({ // 上傳的圖片資訊
+  file: null,
+  preview: ''
+})
+const defaultPicName = 'lazypic.jpg'
+const databaseName = 'user'
+
 
 const processType = ref('')
 const title = ref('')
@@ -1103,10 +1150,6 @@ const DisabilityCertOtherItems = [
   '第十類：其它類'
 ]
 
-const selectedFile = ref(null)
-const uploadId = ref('')
-const uploadFolder = ref('')
-
 const createDefaultList = () => ({
   hidden: '',
   p_code: '',
@@ -1129,6 +1172,10 @@ const createDefaultList = () => ({
   weight: '',
   usual_hospital: '',
   keepthings: '',
+  picInfo: {
+    picName: '',
+    picOriginalName: ''
+  },
   pic_url: 'lazypic.jpg',
   pic_url_familytree: 'lazypic.jpg',
   languages: [],
@@ -1180,6 +1227,24 @@ const createDefaultList = () => ({
 
 const list = reactive(createDefaultList())
 const oldList = ref()
+const hasExistingPhoto = computed(() => Boolean(list.picInfo?.picName))
+
+const normalizePicInfo = (source = {}) => {
+  const info = source.picInfo ?? {}
+  const picName = info.picName || source.pic_url || ''
+  return {
+    picName,
+    picOriginalName: info.picOriginalName ?? ''
+  }
+}
+
+const clearUploadPreview = () => {
+  uploadImage.file = null
+  uploadImage.preview = ''
+  if (fileInput.value) {
+    fileInput.value.value = ''
+  }
+}
 
 const age = () => {
   if (!list.birthday || list.birthday === '0000-00-00') return ''
@@ -1199,6 +1264,9 @@ const addProcess = async () => {
   titleColor.value = 'primary'
   idEdit.value = true
   disabled.value = true
+  clearUploadPreview()
+  list.picInfo = { picName: '', picOriginalName: '' }
+  list.pic_url = defaultPicName
   list.in_date = dayjs().format('YYYY-MM-DD')
 
   dialog.value = true
@@ -1208,12 +1276,16 @@ const addProcess = async () => {
 }
 
 const editProcess = (item) => {
+  console.log('editProcess item', item)
   processType.value = 'edit'
   title.value = '修改病歷資料'
   titleColor.value = 'secondary'
   idEdit.value = true
   disabled.value = true
+  clearUploadPreview()
   Object.assign(list, item)
+  list.picInfo = normalizePicInfo(item)
+  list.pic_url = list.picInfo.picName || defaultPicName
   oldList.value = item
 
   dialog.value = true
@@ -1283,6 +1355,12 @@ const addOK = async () => {
     return
   }
 
+
+  // 如果 uploadImage 有資料，代表有重上傳新圖片，則刪除舊圖片並更新圖片
+  if (uploadImage.file && uploadImage.file.size > 0) {
+    await uploadPicProcess()
+  }
+
   list.create_man = `${store.state.pData.username}(${dayjs().format('YYYY-MM-DD HH:mm:ss')})`;
   const postData = {
     datalist: JSON.stringify(list)
@@ -1325,11 +1403,16 @@ const editOK = async () => {
     return
   }
 
+  // 如果 uploadImage 有資料，代表有重上傳新圖片，則刪除舊圖片並更新圖片
+  if (uploadImage.file && uploadImage.file.size > 0) {
+    await uploadPicProcess()
+  }
+
   list.edit_man = `${store.state.pData.username}(${dayjs().format('YYYY-MM-DD HH:mm:ss')})` + (list.edit_man ? `;${list.edit_man}` : '').slice(0, 100)
   const postData = {
     snkey: list.snkey,
     datalist: JSON.stringify(list),
-    updateTime: dayjs().format('YYYY-MM-DD HH:mm:ss')    
+    updateTime: dayjs().format('YYYY-MM-DD HH:mm:ss')
   }
 
   const rs = await api.post('user', postData)
@@ -1340,59 +1423,108 @@ const editOK = async () => {
       message: '已修改',
       closeTime: 2,
     })
+
     emit('getAllData')
     dialog.value = false
+
+
   }
 }
 
-const onFileSelected = (event) => {
-  selectedFile.value = event.target.files?.[0] ?? null
-  if (!selectedFile.value) return
+const uploadPicProcess = async () => {
+  console.log('uploadPicProcess')
+  //如果原始資料存在舊圖片，則刪除舊圖片
+  if (list.picInfo && list.picInfo.picName && list.picInfo.picName !== defaultPicName) {
+    let rs = await delExistPic(list.picInfo.picName)
+    // console.log('delExistPic rs', rs)
+    if (rs?.state !== 1) {
+      store.showToastMulti({
+        type: 'error',
+        message: rs?.message ?? '舊圖片刪除失敗',
+        closeTime: 2,
+      })
+      return
+    }
+  }
 
-  const extension = selectedFile.value.name.split('.').pop().toLowerCase()
+  uploading.value = true
+  let rs
+  try {
+    rs = await onUpload(databaseName)
+    console.log('upload rs', rs)
+  } finally {
+    uploading.value = false
+  }
+
+  if (rs?.state === 1) {
+    list.picInfo = {
+      picName: rs.newName,
+      picOriginalName: uploadImage.file.name
+    }
+    list.pic_url = list.picInfo.picName || defaultPicName
+    clearUploadPreview()
+  } else {
+    store.showToastMulti({
+      type: 'error',
+      message: rs?.message ?? '圖片上傳失敗',
+      closeTime: 2,
+    })
+    return
+  }
+}
+
+//上傳圖片或檔案都適用
+const onUpload = (tablename) => {
+  const fd = new FormData()
+  fd.append("file", uploadImage.file)
+  return api.upload(tablename, fd)
+}
+
+const delExistPic = async (picName) => {
+  const url = `general/delPic/${databaseName}/${picName}`
+  const rs = await api.options(url)
+  console.log('delExistPic rs', rs)
+  return rs
+}
+
+const onFileSelected = (event) => {
+  const file = event.target.files?.[0] ?? null
+  if (!file) {
+    clearUploadPreview()
+    return
+  }
+
+  const extension = file.name.split('.').pop().toLowerCase()
   const fitType = ['gif', 'png', 'jpg', 'jpeg']
   let errorMsg = ''
   if (!fitType.includes(extension)) {
-    errorMsg = `檔案:${selectedFile.value.name}不是支持的影像檔案`
+    errorMsg = `檔案:${file.name}不是支持的影像檔案`
   }
-  if (selectedFile.value.size > 1024 * 1024 * 5) {
-    errorMsg = `檔案:${selectedFile.value.name}不能超過5M唷`
+  if (file.size > 1024 * 1024 * 5) {
+    errorMsg = `檔案:${file.name}不能超過5M唷`
   }
 
   if (errorMsg) {
     store.commit('snackbar', { msg: errorMsg, type: true, theme: 'warning' })
-    selectedFile.value = null
+    clearUploadPreview()
     return
   }
 
-  onUpload()
-}
-
-const onUpload = async () => {
-  if (!selectedFile.value) return
-  uploading.value = true
-  const fd = new FormData()
-  fd.append('snkey', uploadId.value)
-  fd.append('folder', uploadFolder.value)
-  fd.append('image', selectedFile.value)
-
-  try {
-    const rs = await api.upload('user', fd)
-    if (uploadFolder.value === 'thumb') {
-      oldList.value.pic_url = list.pic_url = rs?.success ?? list.pic_url
-    }
-    if (uploadFolder.value === 'familytree') {
-      oldList.value.pic_url_familytree = list.pic_url_familytree = rs?.success ?? list.pic_url_familytree
-    }
-  } finally {
-    uploading.value = false
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    uploadImage.preview = e.target?.result?.toString() ?? ''
   }
+  reader.readAsDataURL(file)
+  uploadImage.file = file
 }
 
+
+// 新增連絡人
 const newContact = () => {
   list.contactMan.push(createContactEntry())
 }
 
+// 刪除連絡人
 const delContact = (index) => {
   if (!Array.isArray(list.contactMan) || list.contactMan.length === 0) {
     list.contactMan = [createContactEntry()]
@@ -1405,18 +1537,35 @@ const delContact = (index) => {
   list.contactMan.splice(index, 1)
 }
 
+// 上傳照片 預覽階段
 const goUploadThumb = () => {
-  uploadFolder.value = 'thumb'
-  uploadId.value = list.snkey
   fileInput.value?.click()
 }
 
-const goUploadFamilyTree = () => {
-  uploadFolder.value = 'familytree'
-  uploadId.value = list.snkey
-  fileInput.value?.click()
+const removeExistingPhoto = async () => {
+  if (!hasExistingPhoto.value || !list.picInfo?.picName) return
+  const picName = list.picInfo.picName
+  const rs = await delExistPic(picName)
+  if (rs?.state == 1) {
+    list.picInfo.picName = ''
+    list.picInfo.picOriginalName = ''
+    list.pic_url = defaultPicName
+    clearUploadPreview()
+    store.showToastMulti({
+      type: 'success',
+      message: '已刪除照片',
+      closeTime: 2,
+    })
+  } else {
+    store.showToastMulti({
+      type: 'error',
+      message: rs?.message ?? '刪除照片失敗',
+      closeTime: 2,
+    })
+  }
 }
 
+// 跳轉到指定區段
 const scrollToSection = (id) => {
   nextTick(() => {
     const target = document.getElementById(id)
@@ -1426,6 +1575,7 @@ const scrollToSection = (id) => {
   })
 }
 
+// 區段錨點
 const sectionAnchors = computed(() =>
   [
     { id: 'section-personal', label: '個人基本資料' },
@@ -1438,7 +1588,7 @@ const sectionAnchors = computed(() =>
   ].filter((item) => item.condition ?? true)
 )
 
-const floatingPosition = reactive({
+const floatingPosition = reactive({ // 浮動面板位置
   top: null,
   left: null,
   bottom: 100,
@@ -1469,7 +1619,7 @@ const floatingStyle = computed(() => {
   return style
 })
 
-const dragState = reactive({
+const dragState = reactive({ // 拖曳狀態
   active: false,
   startX: 0,
   startY: 0,
@@ -1479,7 +1629,7 @@ const dragState = reactive({
   height: 0
 })
 
-const stopFloatingDrag = () => {
+const stopFloatingDrag = () => { // 停止拖曳
   if (!dragState.active) return
   dragState.active = false
   window.removeEventListener('pointermove', onFloatingDrag)
@@ -1505,7 +1655,7 @@ const onFloatingDrag = (event) => {
   floatingPosition.bottom = null
   floatingPosition.right = null
 }
-
+// 開始拖曳
 const startFloatingDrag = (event) => {
   if (!dialog.value) return
   if (event.button !== undefined && event.button !== 0 && event.pointerType !== 'touch') return
@@ -1533,7 +1683,6 @@ const startFloatingDrag = (event) => {
 }
 
 const baseUrl = computed(() => store.state.base_url)
-const pharmacistKey = computed(() => store.state.pData?.pharmacist_key ?? false)
 
 defineExpose({ addProcess, editProcess })
 

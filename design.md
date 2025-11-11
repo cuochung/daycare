@@ -3,3 +3,4 @@
 3. 依以上條件處理畫面的版面及配色
 4. 語法改為 vue3
 5. ui 使用 vuetify3；畫面結構儘量用 vuetify3的語法去架構
+6. api的用法是 import api from '@/assets/js/api.js'
