@@ -571,6 +571,7 @@ const handleEdit = async () => {
   loading.value = true
 
   const payload = sanitizeRecordForSave('edit')
+
   const response = await api.post('nursingplan', {
     snkey: record.snkey,
     datalist: JSON.stringify(payload),

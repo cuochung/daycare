@@ -26,6 +26,8 @@ const routes = [
         children: [
           { path: 'Signlife', name: 'Signlife', component: () => import('@/views/main/Documents/Signlife/index.vue') },
           { path: 'Nursingplan', name: 'Nursingplan', component: () => import('@/views/main/Documents/Nursingplan/index.vue') },
+          { path: 'Nursingrecord', name: 'Nursingrecord', component: () => import('@/views/main/Documents/Nursingrecord/index.vue') },
+          { path: 'PriceList', name: 'PriceList', component: () => import('@/views/main/Documents/PriceList/index.vue') },
 
           // { path: 'recordlist', name: 'recordlist', component: resolve => require(['../views/document/RecordList.vue'], resolve) },
           // { path: 'adaptlist', name: 'adaptlist', component: resolve => require(['../views/document/AdaptList.vue'], resolve) },
@@ -38,8 +40,8 @@ const routes = [
           // { path: 'hour72', name: 'hour72', component: resolve => require(['../views/document/Hour72.vue'], resolve) },
           // { path: 'sociopsychologicallist', name: 'sociopsychologicallist', component: resolve => require(['../views/document/SociopsychologicalList.vue'], resolve) },
           // { path: 'nursingassessment', name: 'nursingassessment', component: resolve => require(['../views/document/Nursingassessment.vue'], resolve) },
-          // { path: 'nursingrecordlist', name: 'nursingrecordlist', component: resolve => require(['../views/document/NursingrecordList.vue'], resolve) },
-          // { path: 'pricelist', name: 'pricelist', component: resolve => require(['../views/document/PriceList.vue'], resolve) },
+          
+          
           // { path: 'inspectionreportlist', name: 'inspectionreportlist', component: resolve => require(['../views/document/InspectionreportList.vue'], resolve) },
           // { path: 'pipelinelist', name: 'pipelinelist', component: resolve => require(['../views/document/PipelineList.vue'], resolve) },
           // { path: 'servicerecordlist', name: 'servicerecordlist', component: resolve => require(['../views/document/ServicerecordList.vue'], resolve) },
@@ -87,6 +89,7 @@ const routes = [
 
   //列印區
   { path: '/NursingplanPrint', name: 'NursingplanPrint', component: () => import('@/views/main/Documents/Nursingplan/PrintPage.vue') },
+  { path: '/NursingrecordPrint', name: 'NursingrecordPrint', component: () => import('@/views/main/Documents/Nursingrecord/PrintPage.vue') },
   // {
   //   path: '/orderpage',
   //   name: 'orderpage',
