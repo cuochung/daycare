@@ -1,7 +1,7 @@
 <template>
   <div class="signlife">
     <v-container fluid class="pa-0">
-        <v-row>
+      <v-row>
         <v-col cols="12">
           <v-sheet class="signlife__hero" rounded="xl" elevation="0">
             <div class="d-flex flex-column flex-md-row justify-space-between align-start">
@@ -60,8 +60,8 @@
             <div class="summary-value">{{ filteredCount }}</div>
             <div class="summary-caption">符合條件的顯示筆數</div>
           </v-card>
-          </v-col>
-          <v-col cols="12" md="4">
+        </v-col>
+        <v-col cols="12" md="4">
           <v-card variant="tonal" color="success" rounded="xl" class="signlife__summary-card">
             <v-icon size="28" class="mb-2">mdi-note-text-outline</v-icon>
             <div class="summary-title">最新備註</div>
@@ -87,12 +87,12 @@
                 </v-btn>
                 <v-btn color="primary" variant="flat" prepend-icon="mdi-plus-circle" @click="openAdd">
                   新增紀錄
-              </v-btn>
+                </v-btn>
               </v-col>
             </v-row>
           </v-sheet>
-          </v-col>
-        </v-row>
+        </v-col>
+      </v-row>
 
       <v-row class="mt-2">
         <v-col cols="12">
@@ -114,7 +114,7 @@
                   <v-chip size="small" variant="tonal" color="primary" prepend-icon="mdi-calendar">
                     依日期時間由新到舊排序
                   </v-chip>
-      </v-card-title>
+                </v-card-title>
                 <v-divider />
                 <v-card-text class="pa-0">
                   <v-table class="signlife__table" fixed-header>
@@ -183,16 +183,20 @@
                         <td>{{ raw?.gcs_m }}</td>
                         <td>{{ raw?.stool }}</td>
                         <td class="text-truncate" style="max-width: 220px;">{{ raw?.note }}</td>
-                        <td v-if="showCreateName">{{ (raw?.create_man || '').split('(')[0] }}</td>
-                        <td v-if="showCreateInfo">{{ raw?.create_man }}</td>
+                        <td v-if="showCreateName">{{ (raw?.createInfo?.name || '').split('(')[0] }}</td>
+                        <td v-if="showCreateInfo">{{ raw?.createInfo?.name }} ({{ raw?.createInfo?.time }})</td>
                         <td v-if="showEditInfo" class="text-truncate" style="max-width: 240px;">
-                          {{ raw?.edit_man }}
+                          <div v-if="item.raw.editInfo" class="text-truncate" style="max-width: 400px">
+                            <span v-for="(i, index) in item.raw.editInfo" :key="index">
+                              {{ `${i.name}(${i.time})` }}
+                            </span>
+                          </div>
                         </td>
                       </tr>
                     </tbody>
                   </v-table>
-          </v-card-text>
-        </v-card>
+                </v-card-text>
+              </v-card>
             </template>
           </PaginatedIterator>
         </v-col>

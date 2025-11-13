@@ -219,7 +219,7 @@ const documentItems = [
   { title: '跌倒危險因子評估表', route: '/main/Documents/falllist', color: 'primary', authKey: 'pass', visable: false, icon: 'mdi-alert-decagram' },
   { title: 'Braden壓力性損傷風險評估表', route: '/main/Documents/bradenlist', color: 'primary', authKey: 'pass', visable: false, icon: 'mdi-bandage' },
   { title: '護理計畫單', route: '/main/Documents/Nursingplan', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-stethoscope' },
-  { title: '入院護理評估', route: '/main/Documents/nursingassessment', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-nurse' },
+  // { title: '入院護理評估', route: '/main/Documents/nursingassessment', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-nurse' },
   { title: '護理紀錄', route: '/main/Documents/nursingrecordlist', color: 'primary', authKey: 'pharmacist', visable: true, icon: 'mdi-notebook-edit' },
   { title: '計價單', route: '/main/Documents/pricelist', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-cash-register' },
   { title: '管路使用紀錄', route: '/main/Documents/pipelinelist', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-needle' },

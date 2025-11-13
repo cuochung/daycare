@@ -1,34 +1,5 @@
 <template>
   <div class="pa-4 pb-6">
-    <!-- <v-slide-y-transition>
-      <v-sheet v-if="dialog" ref="floatingPanel" class="position-fixed d-flex flex-column floating-nav"
-        color="primary-lighten-5" variant="tonal" elevation="8" rounded="xl" :style="floatingStyle">
-        <div class="d-flex align-center px-4 pt-4" style="cursor: move;" @pointerdown.prevent.stop="startFloatingDrag">
-          <v-icon color="primary" size="20" class="mr-2">mdi-map-marker-path</v-icon>
-          <span class="text-subtitle-2 font-weight-bold text-primary">快速導覽</span>
-        </div>
-        <v-divider class="mx-4"></v-divider>
-        <div class="d-flex flex-column px-4 pb-4" style="gap: 8px;">
-          <v-btn v-for="anchor in sectionAnchors" :key="anchor.id" color="primary" variant="tonal" size="small" block
-            @click="scrollToSection(anchor.id)">
-            {{ anchor.label }}
-          </v-btn>
-
-          <v-divider></v-divider>
-
-          <v-btn color="error" variant="tonal" size="small" block @click="dialog = false">
-            關閉
-          </v-btn>
-          <v-btn color="primary" variant="flat" @click="addOK" v-if="processType == 'add'">
-            確認新增
-          </v-btn>
-          <v-btn color="success" variant="flat" @click="editOK" v-if="processType == 'edit'">
-            確認修改
-          </v-btn>
-        </div>
-      </v-sheet>
-    </v-slide-y-transition> -->
-
     <v-dialog v-model="dialog" fullscreen persistent>
       <template #activator="{ props }">
         <v-btn v-bind="props" class="add-record-btn" color="primary" variant="elevated" size="large"
@@ -96,8 +67,6 @@
                       <v-col cols="12" sm="4">
                         <v-text-field label="病歷號" v-model="list.p_code" :rules="emptyRules" variant="outlined"
                           ref="p_code" :readonly="processType == 'add'"></v-text-field>
-                        <!-- <v-text-field v-else label="病歷號" v-model="list.p_code" :rules="emptyRules" variant="outlined"
-                          ref="p_code"></v-text-field> -->
                       </v-col>
                       <v-col cols="12" sm="4">
                         <v-text-field label="姓名" v-model="list.name" :rules="emptyRules" autofocus
@@ -289,7 +258,6 @@
                   <v-col cols="12" sm="2" class="d-flex align-center">
                     <v-text-field type="date" label="到期日" v-model="list.obstacleInput.date"
                       variant="outlined"></v-text-field>
-                    <!-- <v-icon class="ml-2" color="secondary" @click="list.obstacleInput.date = '0000-00-00'">mdi-window-close</v-icon> -->
                   </v-col>
                   <v-col cols="12" sm="2">
                     <v-btn color="primary" block variant="flat" @click="addObstacle">新增障礙設定</v-btn>
@@ -1181,33 +1149,21 @@ const DisabilityCertOtherItems = [
 ]
 
 const createDefaultList = () => ({
+  createInfo: {},
+  editInfo: [],
+  picInfo: {
+    picName: '',
+    picOriginalName: ''
+  },
   hidden: '',
   p_code: '',
   name: '',
-  sex: '',
-  publicexpenses: '',
-  publicexpenses_content: '',
-  dnr: '',
-  dnr_content: '',
-  in_date: dayjs().format('YYYY-MM-DD'),
-  out_date: '',
-  birthday: '',
-  id_num: '',
-  source: '',
-  source_content: '',
-  enterfn: '',
-  enterfn_content: '',
   faith: '',
   height: '',
   weight: '',
   usual_hospital: '',
   keepthings: '',
-  picInfo: {
-    picName: '',
-    picOriginalName: ''
-  },
-  pic_url: 'lazypic.jpg',
-  pic_url_familytree: 'lazypic.jpg',
+  
   languages: [],
   language1: '',
   language2: '',
@@ -1391,7 +1347,11 @@ const addOK = async () => {
     await uploadPicProcess()
   }
 
-  list.create_man = `${store.state.pData.username}(${dayjs().format('YYYY-MM-DD HH:mm:ss')})`;
+  list.createInfo = {
+    snkey: store.state.pData.snkey,
+    name: store.state.pData.username,
+    time: dayjs().format('YYYY-MM-DD HH:mm:ss')
+  }
   const postData = {
     datalist: JSON.stringify(list)
   }
@@ -1438,7 +1398,11 @@ const editOK = async () => {
     await uploadPicProcess()
   }
 
-  list.edit_man = `${store.state.pData.username}(${dayjs().format('YYYY-MM-DD HH:mm:ss')})` + (list.edit_man ? `;${list.edit_man}` : '').slice(0, 100)
+  list.editInfo.unshift({
+    snkey: store.state.pData.snkey,
+    name: store.state.pData.username,
+    time: dayjs().format('YYYY-MM-DD HH:mm:ss')
+  })
   const postData = {
     snkey: list.snkey,
     datalist: JSON.stringify(list),
@@ -1456,7 +1420,8 @@ const editOK = async () => {
 
     emit('getAllData')
     dialog.value = false
-
+    store.state.uData = list
+    // sessionStorage.setItem('uData', JSON.stringify(list))
 
   }
 }
@@ -1618,100 +1583,7 @@ const sectionAnchors = computed(() =>
   ].filter((item) => item.condition ?? true)
 )
 
-// const floatingPosition = reactive({ // 浮動面板位置
-//   top: null,
-//   left: null,
-//   bottom: 50,
-//   right: 32
-// })
 
-// const floatingStyle = computed(() => {
-//   const style = {
-//     width: '220px',
-//     gap: '8px',
-//     zIndex: 9999,
-//     opacity: 0.6,
-//     transition: 'opacity 0.2s ease'
-//   }
-
-//   if (floatingPosition.top != null) {
-//     style.top = `${floatingPosition.top}px`
-//   }
-//   if (floatingPosition.left != null) {
-//     style.left = `${floatingPosition.left}px`
-//   }
-//   if (floatingPosition.bottom != null) {
-//     style.bottom = `${floatingPosition.bottom}px`
-//   }
-//   if (floatingPosition.right != null) {
-//     style.right = `${floatingPosition.right}px`
-//   }
-
-//   return style
-// })
-
-// const dragState = reactive({ // 拖曳狀態
-//   active: false,
-//   startX: 0,
-//   startY: 0,
-//   initialTop: 0,
-//   initialLeft: 0,
-//   width: 0,
-//   height: 0
-// })
-
-// const stopFloatingDrag = () => { // 停止拖曳
-//   if (!dragState.active) return
-//   dragState.active = false
-//   window.removeEventListener('pointermove', onFloatingDrag)
-//   window.removeEventListener('pointerup', stopFloatingDrag)
-//   window.removeEventListener('pointercancel', stopFloatingDrag)
-// }
-
-// const onFloatingDrag = (event) => {
-//   if (!dragState.active) return
-
-//   const deltaX = event.clientX - dragState.startX
-//   const deltaY = event.clientY - dragState.startY
-
-//   const minOffset = 16
-//   const maxTop = Math.max(minOffset, window.innerHeight - dragState.height - minOffset)
-//   const maxLeft = Math.max(minOffset, window.innerWidth - dragState.width - minOffset)
-
-//   const nextTop = Math.min(Math.max(dragState.initialTop + deltaY, minOffset), maxTop)
-//   const nextLeft = Math.min(Math.max(dragState.initialLeft + deltaX, minOffset), maxLeft)
-
-//   floatingPosition.top = nextTop
-//   floatingPosition.left = nextLeft
-//   floatingPosition.bottom = null
-//   floatingPosition.right = null
-// }
-// 開始拖曳
-// const startFloatingDrag = (event) => {
-//   if (!dialog.value) return
-//   if (event.button !== undefined && event.button !== 0 && event.pointerType !== 'touch') return
-
-//   const panelEl = floatingPanel.value?.$el ?? floatingPanel.value
-//   if (!panelEl) return
-
-//   const rect = panelEl.getBoundingClientRect()
-//   dragState.active = true
-//   dragState.startX = event.clientX
-//   dragState.startY = event.clientY
-//   dragState.initialTop = rect.top
-//   dragState.initialLeft = rect.left
-//   dragState.width = rect.width
-//   dragState.height = rect.height
-
-//   floatingPosition.top = rect.top
-//   floatingPosition.left = rect.left
-//   floatingPosition.bottom = null
-//   floatingPosition.right = null
-
-//   window.addEventListener('pointermove', onFloatingDrag)
-//   window.addEventListener('pointerup', stopFloatingDrag)
-//   window.addEventListener('pointercancel', stopFloatingDrag)
-// }
 
 const baseUrl = computed(() => store.state.base_url)
 
@@ -1722,48 +1594,10 @@ const stripWrapperCharacters = (value) =>
     .replace(/^[\[{\s]*/, '')
     .replace(/[\]}\s]*$/, '')
 
-const splitToCleanArray = (value) =>
-  stripWrapperCharacters(value)
-    .split(',')
-    .map((item) => item.replace(/["']/g, '').trim())
-    .filter(Boolean)
 
-const parseObjectArrayString = (value) => {
-  const cleaned = stripWrapperCharacters(value)
-  if (!cleaned) return []
-  return cleaned
-    .split('},{')
-    .map((chunk) =>
-      chunk
-        .replace(/^{/, '')
-        .replace(/}$/, '')
-        .split(',')
-        .reduce((acc, pair) => {
-          const [rawKey, ...rawValue] = pair.split(':')
-          if (!rawKey || !rawValue.length) return acc
-          const key = rawKey.replace(/["'\s]/g, '')
-          const valueStr = rawValue.join(':').replace(/["']/g, '').trim()
-          acc[key] = valueStr
-          return acc
-        }, {})
-    )
-    .filter((item) => Object.keys(item).length)
-}
-
-onMounted(async () => {
-  // await getUserItems()
-})
-
-// onBeforeUnmount(() => {
-//   stopFloatingDrag()
-// })
 </script>
 
 <style scoped lang="scss">
-.floating-nav:hover {
-  opacity: 1 !important;
-}
-
 .add-record-btn {
   padding-inline: 24px;
   letter-spacing: 0.05em;

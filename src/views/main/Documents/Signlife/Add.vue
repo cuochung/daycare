@@ -126,8 +126,8 @@ const createDefaultRecord = () => ({
   gcs_m: '',
   stool: '',
   note: '',
-  create_man: '',
-  edit_man: '',
+  createInfo: {},
+  editInfo: [],
 })
 
 const record = reactive(createDefaultRecord())
@@ -181,7 +181,11 @@ const handleAdd = async () => {
 
   const timeNow = dayjs().format('YYYY-MM-DD HH:mm:ss')
   record.u_snkey = store.state.uData?.snkey ?? ''
-  record.create_man = `${store.state.pData?.username ?? ''} (${timeNow})`
+  record.createInfo = {
+    snkey: store.state.pData.snkey,
+    name: store.state.pData.username,
+    time: timeNow
+  }
 
   let postData = {
     datalist: JSON.stringify(record)
@@ -212,7 +216,11 @@ const handleEdit = async () => {
   loading.value = true
 
   const timeNow = dayjs().format('YYYY-MM-DD HH:mm:ss')
-  record.edit_man = `${store.state.pData?.username ?? ''} (${timeNow})` + record.edit_man ? `, ${record.edit_man}` : ''
+  record.editInfo.unshift({
+    snkey: store.state.pData.snkey,
+    name: store.state.pData.username,
+    time: timeNow
+  })
 
   let postData = {
     snkey: record.snkey,
@@ -256,7 +264,11 @@ const checkBloodSugar = async () => {
         quantity: 1,
         price: feeData.price,
     note: '(A)single',
-    create_man: `${store.state.pData?.username ?? ''} (${dayjs().format('YYYY-MM-DD HH:mm:ss')})`,
+    createInfo: {
+      snkey: store.state.pData.snkey,
+      name: store.state.pData.username,
+      time: dayjs().format('YYYY-MM-DD HH:mm:ss')
+    },
   }
 
   await api.add('accounting', payload)

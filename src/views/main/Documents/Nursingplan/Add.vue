@@ -340,8 +340,8 @@ const createDefaultRecord = () => ({
   target: '',
   measures: '',
   plan: '',
-  create_man: '',
-  edit_man: '',
+  createInfo: {},
+  editInfo: [],
 })
 
 const record = reactive(createDefaultRecord())
@@ -500,7 +500,6 @@ const appendTemplate = (field, value) => {
 
 const sanitizeRecordForSave = (mode = 'add') => {
   const now = dayjs().format('YYYY-MM-DD HH:mm:ss')
-  const operator = `${store.state.pData?.username ?? ''} (${now})`
   const payload = {
     ...record,
     u_snkey: store.state.uData?.snkey ?? '',
@@ -508,10 +507,17 @@ const sanitizeRecordForSave = (mode = 'add') => {
   }
 
   if (mode === 'add') {
-    payload.create_man = operator
-    payload.edit_man = ''
+    payload.createInfo = {
+      snkey: store.state.pData.snkey,
+      name: store.state.pData.username,
+      time: now
+    }
   } else {
-    payload.edit_man = operator + payload.edit_man
+    payload.editInfo.unshift({
+      snkey: store.state.pData.snkey,
+      name: store.state.pData.username,
+      time: now
+    })
   }
 
   return payload

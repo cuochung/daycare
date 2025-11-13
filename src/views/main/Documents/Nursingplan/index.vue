@@ -202,15 +202,18 @@
                         <td class="text-wrap">{{ raw?.target }}</td>
                         <td class="text-wrap">{{ raw?.measures }}</td>
                         <td class="text-wrap">{{ raw?.plan }}</td>
-                        <td v-if="showCreateName">{{ (raw?.create_man || '').split('(')[0] }}</td>
-                        <td v-if="showCreateInfo">{{ raw?.create_man }}</td>
+                        <td v-if="showCreateName">{{ (raw?.createInfo?.name || '').split('(')[0] }}</td>
+                        <td v-if="showCreateInfo">{{ raw?.createInfo?.name }} ({{ raw?.createInfo?.time }})</td>
                         <td
                           v-if="showEditInfo"
                           class="text-truncate"
                           style="max-width: 260px;"
-                          :title="raw?.edit_man"
                         >
-                          {{ raw?.edit_man }}
+                          <div v-if="item.raw.editInfo" class="text-truncate" style="max-width: 400px">
+                            <span v-for="(i, index) in item.raw.editInfo" :key="index">
+                              {{ `${i.name}(${i.time})` }}
+                            </span>
+                          </div>
                         </td>
                       </tr>
                     </tbody>

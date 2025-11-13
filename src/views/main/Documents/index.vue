@@ -105,7 +105,6 @@
 import { computed, ref, onMounted, getCurrentInstance, watch, onBeforeUnmount } from 'vue'
 import dayjs from 'dayjs'
 import NavbarDocument from './NavbarDocument.vue'
-import FloatingPanel from '@/components/FloatingPanel.vue'
 
 
 import api from '@/assets/js/api.js'
@@ -156,14 +155,14 @@ const reloadPage = () => {
 const syncCurrentUser = () => {
   const cached = sessionStorage.getItem('uData')
   if (!cached) {
-    currentUser.value = {}
+    currentUser.value = store.state.uData ?? {}
     return
   }
   try {
     const parsed = JSON.parse(cached)
-    currentUser.value = parsed ?? {}
+    currentUser.value = parsed ?? store.state.uData ?? {}
   } catch (error) {
-    currentUser.value = {}
+    currentUser.value = store.state.uData ?? {}
   }
 }
 

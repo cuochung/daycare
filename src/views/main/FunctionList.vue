@@ -1,7 +1,7 @@
 <template>
   <div class="functionlist tableImage">
     <div class="justTransparent mt-3" style="height:100%">
-      <v-row appear tag="transition-group">
+      <v-row appear tag="transition-group" class="pa-4">
         <v-col class="align-center pa-0 py-1" cols="6" md="3" v-for="(item,index) in items" :key="item.label" v-ripple
           :data-index="index">
           <div class="zoneStyle myTransparent ma-2 px-4 py-2 rounded-xl" v-if="item.keyName != 'exit'">
@@ -52,6 +52,7 @@ const logout = () => {
 
 
 <style scoped>
+
 .zoneStyle{
   transition: transform 0.5s ease;
   cursor: pointer;

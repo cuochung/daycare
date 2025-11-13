@@ -151,7 +151,10 @@ const emit = defineEmits(['getAllData'])
 
 // Refs
 const dialog = ref(false)
-const list = ref({})
+const list = ref({
+  createInfo: {},
+  editInfo: []
+})
 const processType = ref('')
 const title = ref('')
 const titleStyle = ref('')
@@ -189,7 +192,11 @@ const addProcess = () => {
   processType.value = "add"
   title.value = "新增人員資料"
   titleStyle.value = "dialog-title dialog-title--add"
-  list.value = { ...keyItems.value }
+  list.value = { 
+    ...keyItems.value,
+    createInfo: {},
+    editInfo: []
+   }
   nextTick(() => {
     form.value.resetValidation()
   })
@@ -215,6 +222,7 @@ const addOK = async () => {
   const { valid } = await form.value.validate()
   if (valid) {
     list.value.createInfo = {
+      snkey: store.state.pData.snkey,
       name: store.state.pData.username,
       time: dayjs().format("YYYY-MM-DD HH:mm:ss")
     }
@@ -242,8 +250,9 @@ const editOK = async () => {
   // 確認修改
   const { valid } = await form.value.validate()
   if (valid) {
-    if (!list.value.editInfo) list.value.editInfo = []
+    
     list.value.editInfo.unshift({
+      snkey: store.state.pData.snkey,
       name: store.state.pData.username,
       time: dayjs().format("YYYY-MM-DD HH:mm:ss")
     })

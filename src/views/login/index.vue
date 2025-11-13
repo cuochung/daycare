@@ -177,8 +177,11 @@ const checkLogin = async () => {
           title: '停權中!!! 無法登入!!'
         })
       } else {
-        store.pData = response.pData
-        sessionStorage.setItem('pData', JSON.stringify(response.pData))
+        let pData = response.pData
+        delete pData.account
+        delete pData.password
+        store.pData = pData
+        sessionStorage.setItem('pData', JSON.stringify(pData))
         sessionStorage.setItem('logined', 'logined')
         router.push('/main/functionlist')
         proxy.$swal({

@@ -131,30 +131,31 @@
                           <v-chip size="small" class="status-chip status-chip--edit" variant="tonal">
                             最後異動：{{ raw?.updateTime ?? '--' }}
                           </v-chip>
-                          <v-chip v-if="raw?.publicexpenses === 'true'" size="small" class="status-chip status-chip--public"
-                            variant="tonal">
+                          <v-chip v-if="raw?.publicexpenses === 'true'" size="small"
+                            class="status-chip status-chip--public" variant="tonal">
                             公費
                           </v-chip>
                           <v-chip v-if="raw?.dnr === 'true'" size="small" class="status-chip status-chip--dnr"
                             variant="tonal">
                             <v-icon size="16">mdi-heart-circle</v-icon>
                           </v-chip>
+                          
                         </div>
 
                         <template #append>
                           <div class="d-flex align-center">
                             <v-tooltip text="開啟照護紀錄" location="bottom">
                               <template #activator="{ props }">
-                                <v-btn icon size="small" color="success" variant="tonal" class="mr-1"
-                                  v-bind="props" @click.stop="goDocument(raw)">
+                                <v-btn icon size="small" color="success" variant="tonal" class="mr-1" v-bind="props"
+                                  @click.stop="goDocument(raw)">
                                   <v-icon>mdi-view-list</v-icon>
                                 </v-btn>
                               </template>
                             </v-tooltip>
                             <v-tooltip text="列印病歷表" location="bottom">
                               <template #activator="{ props }">
-                                <v-btn icon size="small" color="primary" variant="tonal" class="mr-1"
-                                  v-bind="props" @click.stop="print(raw)">
+                                <v-btn icon size="small" color="primary" variant="tonal" class="mr-1" v-bind="props"
+                                  @click.stop="print(raw)">
                                   <v-icon>mdi-printer</v-icon>
                                 </v-btn>
                               </template>
