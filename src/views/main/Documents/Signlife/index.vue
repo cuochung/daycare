@@ -295,25 +295,27 @@ const openEdit = (record) => {
 
 const askDelete = (record) => {
   proxy.$swal({
-    title: '確認要刪除這筆紀錄嗎？',
+    title: '確認要刪除這筆紀錄嗎？?',
     text: '此操作無法復原，請再次確認。',
     icon: 'warning',
+    toast: false,
+    timer: null,
+    showConfirmButton: true,
     showCancelButton: true,
-    confirmButtonText: '確認刪除',
-    cancelButtonText: '取消',
+    position: 'center'
   }).then(async (result) => {
     if (!result.isConfirmed) return
 
-    const payload = {
+    const postData = {
       snkey: record.snkey,
       tablename: 'signlife',
-      info: JSON.stringify({
+      datalist: JSON.stringify({
         ...record,
         delman: `${store.state.pData?.username ?? ''} (${dayjs().format('YYYY-MM-DD HH:mm:ss')})`,
       }),
     }
 
-    const rs = await api.delete('signlife', payload)
+    const rs = await api.delete('signlife', postData)
     if (rs?.state == 1) {
       store.showToastMulti({
         type: 'success',
@@ -470,6 +472,12 @@ onMounted(() => {
   padding: 20px;
   text-align: center;
   color: rgba(53, 88, 80, 0.9);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
 
   .summary-title {
     font-size: 0.95rem;

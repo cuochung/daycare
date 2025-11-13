@@ -4,3 +4,4 @@
 4. 語法改為 vue3
 5. ui 使用 vuetify3；畫面結構儘量用 vuetify3的語法去架構
 6. api的用法是 import api from '@/assets/js/api.js'
+7. api使用到 general/getBykey 時;一律改為 byjson/searchByKeyValue

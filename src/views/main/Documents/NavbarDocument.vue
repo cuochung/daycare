@@ -69,7 +69,7 @@
           <v-row dense>
             <v-col v-for="item in documentButtons" :key="item.route" cols="12" sm="6" md="4">
               <v-btn block rounded="lg" :color="item.color" variant="flat" class="document-sheet-btn"
-                @click="navigateTo(item.route)">
+                @click="handleNavigate(item.route)">
                 <v-icon class="mr-2">{{ item.icon }}</v-icon>
                 <span>{{ item.title }}</span>
               </v-btn>
@@ -85,7 +85,7 @@
           <v-row dense>
             <v-col v-for="item in mohwButtons" :key="item.route" cols="12" sm="6" md="4">
               <v-btn block rounded="lg" :color="item.color" variant="flat" class="document-sheet-btn"
-                @click="navigateTo(item.route)">
+                @click="handleNavigate(item.route)">
                 <v-icon class="mr-2">{{ item.icon }}</v-icon>
                 <span>{{ item.title }}</span>
               </v-btn>
@@ -101,7 +101,7 @@
           <v-row dense>
             <v-col v-for="item in evaluationButtons" :key="item.route" cols="12" sm="6" md="4">
               <v-btn block rounded="lg" :color="item.color" variant="flat" class="document-sheet-btn"
-                @click="navigateTo(item.route)">
+                @click="handleNavigate(item.route)">
                 <v-icon class="mr-2">{{ item.icon }}</v-icon>
                 <span>{{ item.title }}</span>
               </v-btn>
@@ -155,7 +155,7 @@
       </v-card>
     </v-navigation-drawer>
 
-    <UserAddDialog ref="userDialogRef" class="d-none" @getAllData="fetchAllUsers" />
+    <UserAddDialog ref="userDialogRef" @getAllData="fetchAllUsers" :isHidden="true" />
   </div>
 </template>
 
@@ -212,58 +212,58 @@ const filteredUsers = computed(() => {
 })
 
 const documentItems = [
-  { title: '就醫及藥品紀錄維護', route: '/main/document/medicinerecordlist', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-pill' },
-  { title: '生命徵象紀錄單', route: '/main/document/signlifelist', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-heart-pulse' },
-  { title: '住民定期評估表', route: '/main/document/recordlist', color: 'primary', authKey: 'pass', visable: false, icon: 'mdi-calendar-clock' },
-  { title: '柯氏/巴氏(ADL)量表', route: '/main/document/kblist', color: 'primary', authKey: 'pass', visable: false, icon: 'mdi-walk' },
-  { title: '跌倒危險因子評估表', route: '/main/document/falllist', color: 'primary', authKey: 'pass', visable: false, icon: 'mdi-alert-decagram' },
-  { title: 'Braden壓力性損傷風險評估表', route: '/main/document/bradenlist', color: 'primary', authKey: 'pass', visable: false, icon: 'mdi-bandage' },
-  { title: '護理計畫單', route: '/main/document/nursingplanlist', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-stethoscope' },
-  { title: '入院護理評估', route: '/main/document/nursingassessment', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-nurse' },
-  { title: '護理紀錄', route: '/main/document/nursingrecordlist', color: 'primary', authKey: 'pharmacist', visable: true, icon: 'mdi-notebook-edit' },
-  { title: '計價單', route: '/main/document/pricelist', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-cash-register' },
-  { title: '管路使用紀錄', route: '/main/document/pipelinelist', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-needle' },
-  { title: '檢驗報告單', route: '/main/document/inspectionreportlist', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-flask' },
-  { title: '簡易心智狀態 SPMSQ', route: '/main/document/spmsqlist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-brain' },
-  { title: '72 小時適應評估紀錄表', route: '/main/document/hour72', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-clock-outline' },
-  { title: '社會心理認知功能評估表', route: '/main/document/sociopsychologicallist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-account-group' },
-  { title: '個案服務紀錄表', route: '/main/document/servicerecordlist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-file-document-edit-outline' },
-  { title: '憂鬱量表 (GDS)', route: '/main/document/melancholylist', color: 'warning', authKey: 'pass', visable: false, icon: 'mdi-emoticon-sad' },
-  { title: '適應性評估表', route: '/main/document/adaptabilitylist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-account-switch' },
-  { title: '個案服務處遇計畫表', route: '/main/document/treatmentlist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-file-cog' },
-  { title: '復健評估表', route: '/main/document/rehabilitationlist', color: 'success', authKey: 'pass', visable: true, icon: 'mdi-wheelchair' },
-  { title: '72 小時營養篩檢表', route: '/main/document/hour72nutrition', color: 'pink', authKey: 'pass', visable: true, icon: 'mdi-food-apple' },
-  { title: '營養評估單', route: '/main/document/nutritionlist', color: 'pink', authKey: 'pass', visable: true, icon: 'mdi-food-variant' },
-  { title: '轉介照會單', route: '/main/document/consultationlist', color: 'pink', authKey: 'pass', visable: true, icon: 'mdi-account-arrow-right' },
-  { title: '72 小時藥師評估表', route: '/main/document/pharmacistevaluationlist', color: 'grey', authKey: 'pharmacist', visable: true, icon: 'mdi-clipboard-list' },
-  { title: '用藥評估紀錄表', route: '/main/document/medicationevaluationlist', color: 'grey', authKey: 'pharmacist', visable: true, icon: 'mdi-prescription' },
+  { title: '就醫及藥品紀錄維護', route: '/main/Documents/medicinerecordlist', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-pill' },
+  { title: '生命徵象紀錄單', route: '/main/Documents/Signlife', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-heart-pulse' },
+  { title: '住民定期評估表', route: '/main/Documents/recordlist', color: 'primary', authKey: 'pass', visable: false, icon: 'mdi-calendar-clock' },
+  { title: '柯氏/巴氏(ADL)量表', route: '/main/Documents/kblist', color: 'primary', authKey: 'pass', visable: false, icon: 'mdi-walk' },
+  { title: '跌倒危險因子評估表', route: '/main/Documents/falllist', color: 'primary', authKey: 'pass', visable: false, icon: 'mdi-alert-decagram' },
+  { title: 'Braden壓力性損傷風險評估表', route: '/main/Documents/bradenlist', color: 'primary', authKey: 'pass', visable: false, icon: 'mdi-bandage' },
+  { title: '護理計畫單', route: '/main/Documents/Nursingplan', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-stethoscope' },
+  { title: '入院護理評估', route: '/main/Documents/nursingassessment', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-nurse' },
+  { title: '護理紀錄', route: '/main/Documents/nursingrecordlist', color: 'primary', authKey: 'pharmacist', visable: true, icon: 'mdi-notebook-edit' },
+  { title: '計價單', route: '/main/Documents/pricelist', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-cash-register' },
+  { title: '管路使用紀錄', route: '/main/Documents/pipelinelist', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-needle' },
+  { title: '檢驗報告單', route: '/main/Documents/inspectionreportlist', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-flask' },
+  { title: '簡易心智狀態 SPMSQ', route: '/main/Documents/spmsqlist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-brain' },
+  { title: '72 小時適應評估紀錄表', route: '/main/Documents/hour72', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-clock-outline' },
+  { title: '社會心理認知功能評估表', route: '/main/Documents/sociopsychologicallist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-account-group' },
+  { title: '個案服務紀錄表', route: '/main/Documents/servicerecordlist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-file-document-edit-outline' },
+  { title: '憂鬱量表 (GDS)', route: '/main/Documents/melancholylist', color: 'warning', authKey: 'pass', visable: false, icon: 'mdi-emoticon-sad' },
+  { title: '適應性評估表', route: '/main/Documents/adaptabilitylist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-account-switch' },
+  { title: '個案服務處遇計畫表', route: '/main/Documents/treatmentlist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-file-cog' },
+  { title: '復健評估表', route: '/main/Documents/rehabilitationlist', color: 'success', authKey: 'pass', visable: true, icon: 'mdi-wheelchair' },
+  { title: '72 小時營養篩檢表', route: '/main/Documents/hour72nutrition', color: 'pink', authKey: 'pass', visable: true, icon: 'mdi-food-apple' },
+  { title: '營養評估單', route: '/main/Documents/nutritionlist', color: 'pink', authKey: 'pass', visable: true, icon: 'mdi-food-variant' },
+  { title: '轉介照會單', route: '/main/Documents/consultationlist', color: 'pink', authKey: 'pass', visable: true, icon: 'mdi-account-arrow-right' },
+  { title: '72 小時藥師評估表', route: '/main/Documents/pharmacistevaluationlist', color: 'grey', authKey: 'pharmacist', visable: true, icon: 'mdi-clipboard-list' },
+  { title: '用藥評估紀錄表', route: '/main/Documents/medicationevaluationlist', color: 'grey', authKey: 'pharmacist', visable: true, icon: 'mdi-prescription' },
 ]
 
 const mohwItems = [
-  { title: '健康習慣', route: '/main/document/HealthyHabits', color: 'primary', authKey: 'pass', icon: 'mdi-run-fast' },
-  { title: '疾病史', route: '/main/document/MedicalHistories', color: 'primary', authKey: 'pass', icon: 'mdi-medical-bag' },
-  { title: '藥物安全性評估', route: '/main/document/DrugSafeties', color: 'primary', authKey: 'pass', icon: 'mdi-shield-check' },
-  { title: '身體評估', route: '/main/document/BodyEvaluations', color: 'primary', authKey: 'pass', icon: 'mdi-human' },
-  { title: '壓力性損傷危險評估', route: '/main/document/PressureInjuries', color: 'primary', authKey: 'pass', icon: 'mdi-bandage' },
-  { title: '跌倒危險性評估', route: '/main/document/FallRisks', color: 'primary', authKey: 'pass', icon: 'mdi-alert-decagram' },
-  { title: '日常生活功能評估', route: '/main/document/ADLs', color: 'primary', authKey: 'pass', icon: 'mdi-hand-back-right' },
-  { title: '工具性日常生活活動評估', route: '/main/document/IADLs', color: 'primary', authKey: 'pass', icon: 'mdi-tools' },
-  { title: '認知功能評估', route: '/main/document/Dementias', color: 'primary', authKey: 'pass', icon: 'mdi-brain' },
-  { title: '簡式健康量表評估', route: '/main/document/BSRS5s', color: 'primary', authKey: 'pass', icon: 'mdi-chart-bubble' },
-  { title: '情緒問題評估', route: '/main/document/GeriatricDepressionScales', color: 'primary', authKey: 'pass', icon: 'mdi-emoticon-sad' },
-  { title: '簡易營養評估', route: '/main/document/MNASFs', color: 'primary', authKey: 'pass', icon: 'mdi-food' },
-  { title: '疼痛評估', route: '/main/document/PainEvaluations', color: 'primary', authKey: 'pass', icon: 'mdi-head-flash' },
-  { title: '衰弱評估', route: '/main/document/SOFs', color: 'primary', authKey: 'pass', icon: 'mdi-account-alert' },
-  { title: '需求摘要與照護計畫', route: '/main/document/CaseSummaryPlan', color: 'success', authKey: 'pass', icon: 'mdi-file-tree' },
-  { title: '照護紀錄', route: '/main/document/CareRecord', color: 'success', authKey: 'pass', icon: 'mdi-file-document' },
+  { title: '健康習慣', route: '/main/Documents/HealthyHabits', color: 'primary', authKey: 'pass', icon: 'mdi-run-fast' },
+  { title: '疾病史', route: '/main/Documents/MedicalHistories', color: 'primary', authKey: 'pass', icon: 'mdi-medical-bag' },
+  { title: '藥物安全性評估', route: '/main/Documents/DrugSafeties', color: 'primary', authKey: 'pass', icon: 'mdi-shield-check' },
+  { title: '身體評估', route: '/main/Documents/BodyEvaluations', color: 'primary', authKey: 'pass', icon: 'mdi-human' },
+  { title: '壓力性損傷危險評估', route: '/main/Documents/PressureInjuries', color: 'primary', authKey: 'pass', icon: 'mdi-bandage' },
+  { title: '跌倒危險性評估', route: '/main/Documents/FallRisks', color: 'primary', authKey: 'pass', icon: 'mdi-alert-decagram' },
+  { title: '日常生活功能評估', route: '/main/Documents/ADLs', color: 'primary', authKey: 'pass', icon: 'mdi-hand-back-right' },
+  { title: '工具性日常生活活動評估', route: '/main/Documents/IADLs', color: 'primary', authKey: 'pass', icon: 'mdi-tools' },
+  { title: '認知功能評估', route: '/main/Documents/Dementias', color: 'primary', authKey: 'pass', icon: 'mdi-brain' },
+  { title: '簡式健康量表評估', route: '/main/Documents/BSRS5s', color: 'primary', authKey: 'pass', icon: 'mdi-chart-bubble' },
+  { title: '情緒問題評估', route: '/main/Documents/GeriatricDepressionScales', color: 'primary', authKey: 'pass', icon: 'mdi-emoticon-sad' },
+  { title: '簡易營養評估', route: '/main/Documents/MNASFs', color: 'primary', authKey: 'pass', icon: 'mdi-food' },
+  { title: '疼痛評估', route: '/main/Documents/PainEvaluations', color: 'primary', authKey: 'pass', icon: 'mdi-head-flash' },
+  { title: '衰弱評估', route: '/main/Documents/SOFs', color: 'primary', authKey: 'pass', icon: 'mdi-account-alert' },
+  { title: '需求摘要與照護計畫', route: '/main/Documents/CaseSummaryPlan', color: 'success', authKey: 'pass', icon: 'mdi-file-tree' },
+  { title: '照護紀錄', route: '/main/Documents/CareRecord', color: 'success', authKey: 'pass', icon: 'mdi-file-document' },
 ]
 
 const evaluationMetricItems = [
-  { title: '跌倒事件分析登記表', route: '/main/document/FallEvent', color: 'info', authKey: 'pass', icon: 'mdi-alert' },
-  { title: '壓力性損傷登記表', route: '/main/document/PressureEvent', color: 'info', authKey: 'pass', icon: 'mdi-bandage' },
-  { title: '感染登記表', route: '/main/document/InfectionEvent', color: 'info', authKey: 'pass', icon: 'mdi-virus' },
-  { title: '約束登記表', route: '/main/document/ConstraintEvent', color: 'info', authKey: 'pass', icon: 'mdi-lock' },
-  { title: '非計畫性轉急性住院登記表', route: '/main/document/UnplannedEvent', color: 'info', authKey: 'pass', icon: 'mdi-hospital' },
+  { title: '跌倒事件分析登記表', route: '/main/Documents/FallEvent', color: 'info', authKey: 'pass', icon: 'mdi-alert' },
+  { title: '壓力性損傷登記表', route: '/main/Documents/PressureEvent', color: 'info', authKey: 'pass', icon: 'mdi-bandage' },
+  { title: '感染登記表', route: '/main/Documents/InfectionEvent', color: 'info', authKey: 'pass', icon: 'mdi-virus' },
+  { title: '約束登記表', route: '/main/Documents/ConstraintEvent', color: 'info', authKey: 'pass', icon: 'mdi-lock' },
+  { title: '非計畫性轉急性住院登記表', route: '/main/Documents/UnplannedEvent', color: 'info', authKey: 'pass', icon: 'mdi-hospital' },
 ]
 
 const documentButtons = computed(() => {
@@ -349,6 +349,16 @@ const handleShowUser = () => {
 const handleOpenSheet = () => {
   collapseActions()
   sheetOpen.value = true
+}
+
+const handleNavigate = (route) => {
+  console.log('handleNavigate route', route)
+  if (route.startsWith('/main/Documentss/')) {
+    handleOpenSheet()
+  } else {
+    router.push(route)
+  }
+  sheetOpen.value = false
 }
 
 watch(

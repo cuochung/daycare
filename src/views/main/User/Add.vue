@@ -1,7 +1,7 @@
 <template>
   <div class="pa-4 pb-6">
     <v-slide-y-transition>
-      <v-sheet v-if="dialog" ref="floatingPanel" class="position-fixed d-flex flex-column" color="primary-lighten-5"
+      <v-sheet v-if="dialog" ref="floatingPanel" class="position-fixed d-flex flex-column floating-nav" color="primary-lighten-5"
         variant="tonal" elevation="8" rounded="xl" :style="floatingStyle">
         <div class="d-flex align-center px-4 pt-4" style="cursor: move;" @pointerdown.prevent.stop="startFloatingDrag">
           <v-icon color="primary" size="20" class="mr-2">mdi-map-marker-path</v-icon>
@@ -32,7 +32,7 @@
     <v-dialog v-model="dialog" fullscreen persistent>
       <template #activator="{ props }">
         <v-btn v-bind="props" class="add-record-btn" color="primary" variant="elevated" size="large"
-          prepend-icon="mdi-plus-circle" rounded="pill" elevation="6" @click="addProcess">
+          prepend-icon="mdi-plus-circle" rounded="pill" elevation="6" @click="addProcess" v-if="!isHidden">
           新增住民資料
         </v-btn>
       </template>
@@ -934,6 +934,10 @@ import api from '@/assets/js/api'
 const store = useStore()
 const emit = defineEmits(['getAllData'])
 
+const props = defineProps({
+  isHidden: { type: Boolean, default: false },
+});
+
 const dialog = ref(false)
 const form = ref(null)
 const fileInput = ref(null)
@@ -1591,7 +1595,7 @@ const sectionAnchors = computed(() =>
 const floatingPosition = reactive({ // 浮動面板位置
   top: null,
   left: null,
-  bottom: 100,
+  bottom: 50,
   right: 32
 })
 
@@ -1600,7 +1604,8 @@ const floatingStyle = computed(() => {
     width: '220px',
     gap: '8px',
     zIndex: 9999,
-    opacity: 0.9
+    opacity: 0.6,
+    transition: 'opacity 0.2s ease'
   }
 
   if (floatingPosition.top != null) {
@@ -1729,6 +1734,10 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="scss">
+.floating-nav:hover {
+  opacity: 1 !important;
+}
+
 .add-record-btn {
   padding-inline: 24px;
   letter-spacing: 0.05em;

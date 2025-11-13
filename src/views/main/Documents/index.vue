@@ -70,11 +70,10 @@
                 v-if="photoSrc">
                 <v-img :src="photoSrc" :alt="currentUser.name || 'resident photo'" cover />
               </v-avatar>
-              <v-avatar size="120" class="summary-photo__avatar" color="primary-lighten-4" variant="tonal"
-                v-else>
+              <v-avatar size="120" class="summary-photo__avatar" color="primary-lighten-4" variant="tonal" v-else>
                 <v-icon color="primary" size="56">mdi-account-circle</v-icon>
               </v-avatar>
-              <span class="summary-photo__hint" v-if="!photoSrc">尚未上傳照片</span>
+              <!-- <span class="summary-photo__hint" v-if="!photoSrc">尚未上傳照片</span> -->
             </div>
           </v-sheet>
         </v-col>
@@ -106,6 +105,8 @@
 import { computed, ref, onMounted, getCurrentInstance, watch, onBeforeUnmount } from 'vue'
 import dayjs from 'dayjs'
 import NavbarDocument from './NavbarDocument.vue'
+
+
 import api from '@/assets/js/api.js'
 import { useStore } from '@/stores/useStore'
 const store = useStore()
