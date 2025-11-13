@@ -1,8 +1,8 @@
 <template>
   <div class="pa-4 pb-6">
-    <v-slide-y-transition>
-      <v-sheet v-if="dialog" ref="floatingPanel" class="position-fixed d-flex flex-column floating-nav" color="primary-lighten-5"
-        variant="tonal" elevation="8" rounded="xl" :style="floatingStyle">
+    <!-- <v-slide-y-transition>
+      <v-sheet v-if="dialog" ref="floatingPanel" class="position-fixed d-flex flex-column floating-nav"
+        color="primary-lighten-5" variant="tonal" elevation="8" rounded="xl" :style="floatingStyle">
         <div class="d-flex align-center px-4 pt-4" style="cursor: move;" @pointerdown.prevent.stop="startFloatingDrag">
           <v-icon color="primary" size="20" class="mr-2">mdi-map-marker-path</v-icon>
           <span class="text-subtitle-2 font-weight-bold text-primary">快速導覽</span>
@@ -27,7 +27,7 @@
           </v-btn>
         </div>
       </v-sheet>
-    </v-slide-y-transition>
+    </v-slide-y-transition> -->
 
     <v-dialog v-model="dialog" fullscreen persistent>
       <template #activator="{ props }">
@@ -38,6 +38,31 @@
       </template>
 
       <v-card rounded="xl" elevation="6">
+        <FloatingPanel :title="'快速導覽'">
+          <v-slide-y-transition>
+            <v-sheet color="primary-lighten-5" variant="tonal" elevation="8">
+              <div class="d-flex flex-column pa-2" style="gap: 8px;">
+                <v-btn v-for="anchor in sectionAnchors" :key="anchor.id" color="primary" variant="tonal" size="small"
+                  block @click="scrollToSection(anchor.id)">
+                  {{ anchor.label }}
+                </v-btn>
+
+                <v-divider></v-divider>
+
+                <v-btn color="error" variant="tonal" size="small" block @click="dialog = false">
+                  關閉
+                </v-btn>
+                <v-btn color="primary" variant="flat" @click="addOK" v-if="processType == 'add'">
+                  確認新增
+                </v-btn>
+                <v-btn color="success" variant="flat" @click="editOK" v-if="processType == 'edit'">
+                  確認修改
+                </v-btn>
+              </div>
+            </v-sheet>
+          </v-slide-y-transition>
+        </FloatingPanel>
+
         <v-sheet :color="titleColor" class="d-flex align-center px-6 py-4" rounded="t-xl" elevation="0">
           <span class="text-h6 font-weight-bold text-white">{{ title }}</span>
           <v-spacer></v-spacer>
@@ -109,8 +134,8 @@
                           v-model="list.birthday" variant="outlined"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="3" class="d-flex align-center">
-                        <v-text-field :label="`身分證字號${idEdit ? '(鎖定)' : '(可修改)'}`" v-model="list.id_num" counter="10" variant="outlined"
-                          :readonly="idEdit && processType == 'edit'"></v-text-field>
+                        <v-text-field :label="`身分證字號${idEdit ? '(鎖定)' : '(可修改)'}`" v-model="list.id_num" counter="10"
+                          variant="outlined" :readonly="idEdit && processType == 'edit'"></v-text-field>
                         <v-btn color="secondary" variant="tonal" size="small" @click.stop="idEdit = false"
                           v-if="processType == 'edit'">
                           修改
@@ -930,6 +955,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'v
 import dayjs from 'dayjs'
 import { useStore } from '@/stores/useStore'
 import api from '@/assets/js/api'
+import FloatingPanel from '@/components/FloatingPanel.vue' //浮動功能的組件；放到中間的內容就會有浮動拖曳效果
 
 const store = useStore()
 const emit = defineEmits(['getAllData'])
@@ -941,7 +967,7 @@ const props = defineProps({
 const dialog = ref(false)
 const form = ref(null)
 const fileInput = ref(null)
-const floatingPanel = ref(null)
+// const floatingPanel = ref(null)
 const uploadImage = reactive({ // 上傳的圖片資訊
   file: null,
   preview: ''
@@ -1592,100 +1618,100 @@ const sectionAnchors = computed(() =>
   ].filter((item) => item.condition ?? true)
 )
 
-const floatingPosition = reactive({ // 浮動面板位置
-  top: null,
-  left: null,
-  bottom: 50,
-  right: 32
-})
+// const floatingPosition = reactive({ // 浮動面板位置
+//   top: null,
+//   left: null,
+//   bottom: 50,
+//   right: 32
+// })
 
-const floatingStyle = computed(() => {
-  const style = {
-    width: '220px',
-    gap: '8px',
-    zIndex: 9999,
-    opacity: 0.6,
-    transition: 'opacity 0.2s ease'
-  }
+// const floatingStyle = computed(() => {
+//   const style = {
+//     width: '220px',
+//     gap: '8px',
+//     zIndex: 9999,
+//     opacity: 0.6,
+//     transition: 'opacity 0.2s ease'
+//   }
 
-  if (floatingPosition.top != null) {
-    style.top = `${floatingPosition.top}px`
-  }
-  if (floatingPosition.left != null) {
-    style.left = `${floatingPosition.left}px`
-  }
-  if (floatingPosition.bottom != null) {
-    style.bottom = `${floatingPosition.bottom}px`
-  }
-  if (floatingPosition.right != null) {
-    style.right = `${floatingPosition.right}px`
-  }
+//   if (floatingPosition.top != null) {
+//     style.top = `${floatingPosition.top}px`
+//   }
+//   if (floatingPosition.left != null) {
+//     style.left = `${floatingPosition.left}px`
+//   }
+//   if (floatingPosition.bottom != null) {
+//     style.bottom = `${floatingPosition.bottom}px`
+//   }
+//   if (floatingPosition.right != null) {
+//     style.right = `${floatingPosition.right}px`
+//   }
 
-  return style
-})
+//   return style
+// })
 
-const dragState = reactive({ // 拖曳狀態
-  active: false,
-  startX: 0,
-  startY: 0,
-  initialTop: 0,
-  initialLeft: 0,
-  width: 0,
-  height: 0
-})
+// const dragState = reactive({ // 拖曳狀態
+//   active: false,
+//   startX: 0,
+//   startY: 0,
+//   initialTop: 0,
+//   initialLeft: 0,
+//   width: 0,
+//   height: 0
+// })
 
-const stopFloatingDrag = () => { // 停止拖曳
-  if (!dragState.active) return
-  dragState.active = false
-  window.removeEventListener('pointermove', onFloatingDrag)
-  window.removeEventListener('pointerup', stopFloatingDrag)
-  window.removeEventListener('pointercancel', stopFloatingDrag)
-}
+// const stopFloatingDrag = () => { // 停止拖曳
+//   if (!dragState.active) return
+//   dragState.active = false
+//   window.removeEventListener('pointermove', onFloatingDrag)
+//   window.removeEventListener('pointerup', stopFloatingDrag)
+//   window.removeEventListener('pointercancel', stopFloatingDrag)
+// }
 
-const onFloatingDrag = (event) => {
-  if (!dragState.active) return
+// const onFloatingDrag = (event) => {
+//   if (!dragState.active) return
 
-  const deltaX = event.clientX - dragState.startX
-  const deltaY = event.clientY - dragState.startY
+//   const deltaX = event.clientX - dragState.startX
+//   const deltaY = event.clientY - dragState.startY
 
-  const minOffset = 16
-  const maxTop = Math.max(minOffset, window.innerHeight - dragState.height - minOffset)
-  const maxLeft = Math.max(minOffset, window.innerWidth - dragState.width - minOffset)
+//   const minOffset = 16
+//   const maxTop = Math.max(minOffset, window.innerHeight - dragState.height - minOffset)
+//   const maxLeft = Math.max(minOffset, window.innerWidth - dragState.width - minOffset)
 
-  const nextTop = Math.min(Math.max(dragState.initialTop + deltaY, minOffset), maxTop)
-  const nextLeft = Math.min(Math.max(dragState.initialLeft + deltaX, minOffset), maxLeft)
+//   const nextTop = Math.min(Math.max(dragState.initialTop + deltaY, minOffset), maxTop)
+//   const nextLeft = Math.min(Math.max(dragState.initialLeft + deltaX, minOffset), maxLeft)
 
-  floatingPosition.top = nextTop
-  floatingPosition.left = nextLeft
-  floatingPosition.bottom = null
-  floatingPosition.right = null
-}
+//   floatingPosition.top = nextTop
+//   floatingPosition.left = nextLeft
+//   floatingPosition.bottom = null
+//   floatingPosition.right = null
+// }
 // 開始拖曳
-const startFloatingDrag = (event) => {
-  if (!dialog.value) return
-  if (event.button !== undefined && event.button !== 0 && event.pointerType !== 'touch') return
+// const startFloatingDrag = (event) => {
+//   if (!dialog.value) return
+//   if (event.button !== undefined && event.button !== 0 && event.pointerType !== 'touch') return
 
-  const panelEl = floatingPanel.value?.$el ?? floatingPanel.value
-  if (!panelEl) return
+//   const panelEl = floatingPanel.value?.$el ?? floatingPanel.value
+//   if (!panelEl) return
 
-  const rect = panelEl.getBoundingClientRect()
-  dragState.active = true
-  dragState.startX = event.clientX
-  dragState.startY = event.clientY
-  dragState.initialTop = rect.top
-  dragState.initialLeft = rect.left
-  dragState.width = rect.width
-  dragState.height = rect.height
+//   const rect = panelEl.getBoundingClientRect()
+//   dragState.active = true
+//   dragState.startX = event.clientX
+//   dragState.startY = event.clientY
+//   dragState.initialTop = rect.top
+//   dragState.initialLeft = rect.left
+//   dragState.width = rect.width
+//   dragState.height = rect.height
 
-  floatingPosition.top = rect.top
-  floatingPosition.left = rect.left
-  floatingPosition.bottom = null
-  floatingPosition.right = null
+//   floatingPosition.top = rect.top
+//   floatingPosition.left = rect.left
+//   floatingPosition.bottom = null
+//   floatingPosition.right = null
 
-  window.addEventListener('pointermove', onFloatingDrag)
-  window.addEventListener('pointerup', stopFloatingDrag)
-  window.addEventListener('pointercancel', stopFloatingDrag)
-}
+//   window.addEventListener('pointermove', onFloatingDrag)
+//   window.addEventListener('pointerup', stopFloatingDrag)
+//   window.addEventListener('pointercancel', stopFloatingDrag)
+// }
 
 const baseUrl = computed(() => store.state.base_url)
 
@@ -1728,9 +1754,9 @@ onMounted(async () => {
   // await getUserItems()
 })
 
-onBeforeUnmount(() => {
-  stopFloatingDrag()
-})
+// onBeforeUnmount(() => {
+//   stopFloatingDrag()
+// })
 </script>
 
 <style scoped lang="scss">

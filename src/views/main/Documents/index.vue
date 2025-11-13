@@ -105,6 +105,7 @@
 import { computed, ref, onMounted, getCurrentInstance, watch, onBeforeUnmount } from 'vue'
 import dayjs from 'dayjs'
 import NavbarDocument from './NavbarDocument.vue'
+import FloatingPanel from '@/components/FloatingPanel.vue'
 
 
 import api from '@/assets/js/api.js'
