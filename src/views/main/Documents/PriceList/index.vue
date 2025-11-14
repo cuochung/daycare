@@ -20,12 +20,12 @@
               </div>
 
               <div class="d-flex align-center gap-2 flex-wrap">
-                <v-chip variant="tonal" color="primary">
+                <!-- <v-chip variant="tonal" color="primary">
                   住民：{{ residentName }}
                 </v-chip>
                 <v-chip variant="tonal" color="secondary">
                   住編：{{ residentCode }}
-                </v-chip>
+                </v-chip> -->
                 <v-btn color="primary" variant="flat" prepend-icon="mdi-plus-circle" :disabled="!hasUser"
                   @click="openAddDialog">
                   新增計價項目
