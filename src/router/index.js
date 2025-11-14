@@ -28,6 +28,7 @@ const routes = [
           { path: 'Nursingplan', name: 'Nursingplan', component: () => import('@/views/main/Documents/Nursingplan/index.vue') },
           { path: 'Nursingrecord', name: 'Nursingrecord', component: () => import('@/views/main/Documents/Nursingrecord/index.vue') },
           { path: 'PriceList', name: 'PriceList', component: () => import('@/views/main/Documents/PriceList/index.vue') },
+          { path: 'Pipeline', name: 'Pipeline', component: () => import('@/views/main/Documents/Pipeline/index.vue') },
 
           // { path: 'recordlist', name: 'recordlist', component: resolve => require(['../views/document/RecordList.vue'], resolve) },
           // { path: 'adaptlist', name: 'adaptlist', component: resolve => require(['../views/document/AdaptList.vue'], resolve) },
@@ -43,7 +44,7 @@ const routes = [
           
           
           // { path: 'inspectionreportlist', name: 'inspectionreportlist', component: resolve => require(['../views/document/InspectionreportList.vue'], resolve) },
-          // { path: 'pipelinelist', name: 'pipelinelist', component: resolve => require(['../views/document/PipelineList.vue'], resolve) },
+          
           // { path: 'servicerecordlist', name: 'servicerecordlist', component: resolve => require(['../views/document/ServicerecordList.vue'], resolve) },
           // { path: 'melancholylist', name: 'melancholylist', component: resolve => require(['../views/document/MelancholyList.vue'], resolve) },
           // { path: 'adaptabilitylist', name: 'adaptabilitylist', component: resolve => require(['../views/document/AdaptabilityList.vue'], resolve) },
