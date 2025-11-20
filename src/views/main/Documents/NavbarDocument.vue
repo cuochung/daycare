@@ -223,7 +223,7 @@ const documentItems = [
   { title: '護理紀錄', route: '/main/Documents/Nursingrecord', color: 'primary', authKey: 'pharmacist', visable: true, icon: 'mdi-notebook-edit' },
   { title: '計價單', route: '/main/Documents/PriceList', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-cash-register' },
   { title: '管路使用紀錄', route: '/main/Documents/Pipeline', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-needle' },
-  { title: '檢驗報告單', route: '/main/Documents/inspectionreportlist', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-flask' },
+  { title: '檢驗報告單', route: '/main/Documents/Inspectionreport', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-flask' },
   { title: '簡易心智狀態 SPMSQ', route: '/main/Documents/spmsqlist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-brain' },
   { title: '72 小時適應評估紀錄表', route: '/main/Documents/hour72', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-clock-outline' },
   { title: '社會心理認知功能評估表', route: '/main/Documents/sociopsychologicallist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-account-group' },

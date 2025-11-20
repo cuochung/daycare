@@ -1,15 +1,40 @@
 {
-    "snkey": "4",
-    "name": "一般鼻胃管",
-    "unit": "18",
-    "start_date": "2025-11-14",
-    "end_date": "2025-11-15",
-    "note": "123",
-    "editInfo": [
-        {
-            "snkey": "31",
-            "name": "系統管理員",
-            "time": "2025-11-14 19:54:34"
-        }
-    ]
+    "date": "2025-11-20",
+    "location": "1",
+    "leukocyte": "2",
+    "erythrocyte": "3",
+    "hemoglobin": "",
+    "platelet": "",
+    "albumin": "",
+    "glycosylatedhemoglobin": "",
+    "got": "",
+    "gpt": "",
+    "bloodsugar": "",
+    "cholesterol": "",
+    "tg": "",
+    "bun": "",
+    "cre": "",
+    "ua": "",
+    "na": "",
+    "k": "",
+    "hdlldl": "",
+    "ph": "",
+    "urineprotein": "",
+    "ob": "",
+    "rbc": "",
+    "wbc": "",
+    "bacteria": "",
+    "glu": "",
+    "urine": "",
+    "sputum": "",
+    "note": "",
+    "dispose": "",
+    "track": "",
+    "u_snkey": "12",
+    "createInfo": {
+        "snkey": "31",
+        "name": "系統管理員",
+        "time": "2025-11-20 19:34:20"
+    },
+    "editInfo": []
 }
