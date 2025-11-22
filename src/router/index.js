@@ -32,6 +32,7 @@ const routes = [
           { path: 'Inspectionreport', name: 'Inspectionreport', component: () => import('@/views/main/Documents/Inspectionreport/index.vue') },
           { path: 'Spmsq', name: 'Spmsq', component: () => import('@/views/main/Documents/Spmsq/index.vue') },
           { path: 'Hour72', name: 'Hour72', component: () => import('@/views/main/Documents/Hour72/index.vue') },
+          { path: 'Sociopsychological', name: 'Sociopsychological', component: () => import('@/views/main/Documents/Sociopsychological/index.vue') },
 
 
           // { path: 'recordlist', name: 'recordlist', component: resolve => require(['../views/document/RecordList.vue'], resolve) },
@@ -41,7 +42,7 @@ const routes = [
           // { path: 'bradenlist', name: 'bradenlist', component: resolve => require(['../views/document/BradenList.vue'], resolve) },
           // { path: 'medicinerecordlist', name: 'medicinerecordlist', component: resolve => require(['../views/document/MedicineRecordList.vue'], resolve) },
           
-          // { path: 'sociopsychologicallist', name: 'sociopsychologicallist', component: resolve => require(['../views/document/SociopsychologicalList.vue'], resolve) },
+          
           // { path: 'nursingassessment', name: 'nursingassessment', component: resolve => require(['../views/document/Nursingassessment.vue'], resolve) },
           
           
@@ -95,6 +96,8 @@ const routes = [
   { path: '/InspectionreportPrint', name: 'InspectionreportPrint', component: () => import('@/views/main/Documents/Inspectionreport/PrintPage.vue') },
   { path: '/MultiDocumentPrint', name: 'MultiDocumentPrint', component: () => import('@/views/print/MultiDocumentPrint.vue') },
   { path: '/Hour72Print', name: 'Hour72Print', component: () => import('@/views/main/Documents/Hour72/PrintPage.vue') },
+  { path: '/SociopsychologicalPrint', name: 'SociopsychologicalPrint', component: () => import('@/views/main/Documents/Sociopsychological/PrintPage.vue') },
+  
   // {
   //   path: '/orderpage',
   //   name: 'orderpage',

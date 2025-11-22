@@ -1,23 +1,48 @@
 {
-    "date": "2025-11-21",
-    "physiologicalNeeds": [
-        "穩定生理"
+    "date": "2025-11-22",
+    "stateConsciousness": [
+        "清楚",
+        "其他"
     ],
-    "psychologicalAssessments": [
-        "害怕"
+    "stateConsciousnessOther": "123",
+    "mentalState": [
+        "佳",
+        "其他"
     ],
+    "mentalStateOther": "321",
+    "socialNeedsAssessment": [
+        "發脾氣",
+        "其他"
+    ],
+    "socialNeedsAssessmentOther": "555",
+    "interpersonalRelationship": [],
+    "interpersonalRelationshipOther": "",
+    "emotionalState": [],
+    "emotionalStateOther": "",
+    "psychologicalAssessment": [],
     "psychologicalAssessmentOther": "",
-    "socialNeedsAssessments": [],
-    "socialNeedsAssessmentOther": "",
-    "cognitiveFunctionAssessments": [],
-    "cognitiveFunctionAssessmentOther": "",
-    "encounterPlans": [],
-    "encounterPlanOther": "",
-    "u_snkey": "12",
+    "mainCommunicationMethods": [],
+    "mainCommunicationMethodsOther": "",
+    "communicationEffect": [],
+    "communicationEffectOther": "",
+    "languageComprehension": [],
+    "languageComprehensionOther": "",
+    "languageExpression": [],
+    "languageExpressionOther": "",
+    "otherBehavior": [],
+    "otherBehaviorOther": "",
+    "comprehensiveAssessmentRecommendations": "test123",
+    "snkey": "1",
     "createInfo": {
         "snkey": "31",
         "name": "系統管理員",
-        "time": "2025-11-21 18:52:21"
+        "time": "2025-11-22 17:04:00"
     },
-    "editInfo": []
+    "editInfo": [
+        {
+            "snkey": "31",
+            "name": "系統管理員",
+            "time": "2025-11-22 17:05:59"
+        }
+    ]
 }
