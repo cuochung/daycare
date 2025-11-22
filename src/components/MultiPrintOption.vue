@@ -24,7 +24,7 @@
             class="mb-4"
             icon="mdi-information-outline"
           >
-            <div class="d-flex justify-end gp-2 mb-3">
+            <div class="d-flex justify-end ga-2 mb-3">
               <v-btn
                 color="primary"
                 variant="tonal"

@@ -1410,7 +1410,6 @@ const editOK = async () => {
   }
 
   const rs = await api.post('user', postData)
-  console.log('edit process rs', rs)
   if (rs?.state == 1) {
     store.showToastMulti({
       type: 'success',
@@ -1421,7 +1420,7 @@ const editOK = async () => {
     emit('getAllData')
     dialog.value = false
     store.state.uData = list
-    // sessionStorage.setItem('uData', JSON.stringify(list))
+    sessionStorage.setItem('uData', JSON.stringify(list))
 
   }
 }

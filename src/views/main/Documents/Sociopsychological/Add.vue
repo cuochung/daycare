@@ -1,12 +1,26 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="1200">
-    <v-card rounded="xl">
-      <v-card-title :class="titleClass" class="d-flex align-center">
-        <v-icon :color="titleIconColor" class="mr-2">{{ titleIcon }}</v-icon>
-        <span class="text-h6 font-weight-bold">{{ title }}</span>
-        <v-spacer />
-        <v-btn icon="mdi-close" variant="text" @click="closeDialog" />
-      </v-card-title>
+    <v-card rounded="xl" class="sociopsychological-add">
+      <v-sheet
+        class="sociopsychological-add__header px-6 py-4"
+        :color="headerColor"
+        rounded="t-xl"
+      >
+        <div class="d-flex align-center justify-space-between">
+          <div class="d-flex align-center">
+            <v-avatar size="48" :color="headerColor" class="mr-4">
+              <v-icon color="white" size="26">mdi-account-group</v-icon>
+            </v-avatar>
+            <div>
+              <h2 class="text-h6 font-weight-bold mb-1">{{ headerTitle }}</h2>
+              <p class="text-body-2 text-medium-emphasis mb-0">
+                {{ headerSubtitle }}
+              </p>
+            </div>
+          </div>
+          <v-btn icon="mdi-close" variant="text" @click="closeDialog" />
+        </div>
+      </v-sheet>
 
       <v-divider />
 
@@ -321,21 +335,17 @@ const languageExpressionOptions = ref([
 
 const otherBehaviorOptions = ref(['沒問題', '過動', '離座遊走', '自言自語', '無法評估', '其他'])
 
-const title = computed(() => {
-  return process.value === 'add' ? '新增資料' : '修改資料'
+const headerTitle = computed(() => {
+  return process.value === 'add' ? '新增社會心理評估' : '修改社會心理評估'
 })
 
-const titleClass = computed(() => {
-  return process.value === 'add' ? 'bg-error' : 'bg-success'
-})
+const headerSubtitle = computed(() =>
+  process.value === 'add'
+    ? '評估住民意識狀態、精神狀態、社會需求與人際關係等。'
+    : '更新社會心理評估，追蹤住民心理社會狀況變化。'
+)
 
-const titleIcon = computed(() => {
-  return process.value === 'add' ? 'mdi-plus-circle' : 'mdi-pencil'
-})
-
-const titleIconColor = computed(() => {
-  return process.value === 'add' ? 'error' : 'success'
-})
+const headerColor = computed(() => (process.value === 'add' ? 'primary' : 'success'))
 
 const resetForm = () => {
   list.value = {
@@ -550,6 +560,12 @@ defineExpose({
 </script>
 
 <style scoped lang="scss">
+.sociopsychological-add {
+  &__header {
+    background-image: linear-gradient(135deg, rgba(33, 150, 243, 0.12), rgba(33, 150, 243, 0.04));
+  }
+}
+
 .sociopsychological-add-alert-left-border {
   border-left: 4px solid rgb(var(--v-theme-primary)) !important;
 }

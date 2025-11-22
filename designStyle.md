@@ -17,3 +17,4 @@
       showCancelButton: true,
       position: 'center'
     })
+10. 遇到 Add.vue 的頁面；頁面設計的 title；參照 /pipeline/Add.vue 的 title 設計

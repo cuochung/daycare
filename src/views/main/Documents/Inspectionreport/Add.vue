@@ -1,19 +1,26 @@
 <template>
   <v-dialog v-model="dialog" max-width="900px" persistent>
-    <v-card rounded="xl">
-      <v-card-title
-        :class="titleClass"
-        class="d-flex align-center"
+    <v-card rounded="xl" class="inspectionreport-add">
+      <v-sheet
+        class="inspectionreport-add__header px-6 py-4"
+        :color="headerColor"
+        rounded="t-xl"
       >
-        <v-icon :color="titleIconColor" class="mr-2">{{ titleIcon }}</v-icon>
-        <span class="text-h6 font-weight-bold">{{ title }}</span>
-        <v-spacer />
-        <v-btn
-          icon="mdi-close"
-          variant="text"
-          @click="closeDialog"
-        />
-      </v-card-title>
+        <div class="d-flex align-center justify-space-between">
+          <div class="d-flex align-center">
+            <v-avatar size="48" :color="headerColor" class="mr-4">
+              <v-icon color="white" size="26">mdi-clipboard-text</v-icon>
+            </v-avatar>
+            <div>
+              <h2 class="text-h6 font-weight-bold mb-1">{{ headerTitle }}</h2>
+              <p class="text-body-2 text-medium-emphasis mb-0">
+                {{ headerSubtitle }}
+              </p>
+            </div>
+          </div>
+          <v-btn icon="mdi-close" variant="text" @click="closeDialog" />
+        </div>
+      </v-sheet>
 
       <v-divider />
 
@@ -432,23 +439,17 @@ const loading = ref(false)
 const process = ref('')
 const formData = ref({})
 
-const title = computed(() => {
+const headerTitle = computed(() => {
   return process.value === 'add' ? '新增檢驗報告單' : '修改檢驗報告單'
 })
 
-const titleClass = computed(() => {
-  return process.value === 'add'
-    ? 'bg-error-lighten-2'
-    : 'bg-success-lighten-2'
-})
+const headerSubtitle = computed(() =>
+  process.value === 'add'
+    ? '記錄檢驗報告數據，包含血液、尿液等各項檢驗結果。'
+    : '更新檢驗報告單，保留完整醫療記錄。'
+)
 
-const titleIcon = computed(() => {
-  return process.value === 'add' ? 'mdi-plus-circle' : 'mdi-pencil'
-})
-
-const titleIconColor = computed(() => {
-  return process.value === 'add' ? 'error' : 'success'
-})
+const headerColor = computed(() => (process.value === 'add' ? 'primary' : 'success'))
 
 const rules = {
   required: (v) => !!v || '不可空白',
@@ -641,6 +642,10 @@ defineExpose({
 
 <style scoped lang="scss">
 .inspectionreport-add {
+  &__header {
+    background-image: linear-gradient(135deg, rgba(33, 150, 243, 0.12), rgba(33, 150, 243, 0.04));
+  }
+
   &__table {
     width: 100%;
 

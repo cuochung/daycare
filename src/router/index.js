@@ -33,7 +33,7 @@ const routes = [
           { path: 'Spmsq', name: 'Spmsq', component: () => import('@/views/main/Documents/Spmsq/index.vue') },
           { path: 'Hour72', name: 'Hour72', component: () => import('@/views/main/Documents/Hour72/index.vue') },
           { path: 'Sociopsychological', name: 'Sociopsychological', component: () => import('@/views/main/Documents/Sociopsychological/index.vue') },
-
+          { path: 'Servicerecord', name: 'Servicerecord', component: () => import('@/views/main/Documents/Servicerecord/index.vue') },
 
           // { path: 'recordlist', name: 'recordlist', component: resolve => require(['../views/document/RecordList.vue'], resolve) },
           // { path: 'adaptlist', name: 'adaptlist', component: resolve => require(['../views/document/AdaptList.vue'], resolve) },
@@ -47,7 +47,7 @@ const routes = [
           
           
           
-          // { path: 'servicerecordlist', name: 'servicerecordlist', component: resolve => require(['../views/document/ServicerecordList.vue'], resolve) },
+          
           // { path: 'melancholylist', name: 'melancholylist', component: resolve => require(['../views/document/MelancholyList.vue'], resolve) },
           // { path: 'adaptabilitylist', name: 'adaptabilitylist', component: resolve => require(['../views/document/AdaptabilityList.vue'], resolve) },
           // { path: 'rehabilitationlist', name: 'rehabilitationlist', component: resolve => require(['../views/document/RehabilitationList.vue'], resolve) },
@@ -97,6 +97,7 @@ const routes = [
   { path: '/MultiDocumentPrint', name: 'MultiDocumentPrint', component: () => import('@/views/print/MultiDocumentPrint.vue') },
   { path: '/Hour72Print', name: 'Hour72Print', component: () => import('@/views/main/Documents/Hour72/PrintPage.vue') },
   { path: '/SociopsychologicalPrint', name: 'SociopsychologicalPrint', component: () => import('@/views/main/Documents/Sociopsychological/PrintPage.vue') },
+  { path: '/ServicerecordPrint', name: 'ServicerecordPrint', component: () => import('@/views/main/Documents/Servicerecord/PrintPage.vue') },
   
   // {
   //   path: '/orderpage',

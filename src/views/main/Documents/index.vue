@@ -18,7 +18,7 @@
                   </p>
                 </div>
               </div>
-              <div class="d-flex align-center gp-3">
+              <div class="d-flex align-center ga-3">
                 <v-chip class="hero-chip" prepend-icon="mdi-theme-light-dark" size="small" variant="outlined">
                   Daycare Style
                 </v-chip>

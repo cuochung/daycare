@@ -5,7 +5,7 @@
         <div class="d-flex align-center justify-space-between">
           <div class="d-flex align-center">
             <v-avatar size="48" color="white" variant="tonal" class="mr-4">
-              <v-icon :color="headerIconColor" size="26">mdi-cash-register</v-icon>
+              <v-icon color="white" size="26">mdi-cash-register</v-icon>
             </v-avatar>
             <div>
               <h2 class="text-h6 font-weight-bold mb-1">{{ headerTitle }}</h2>

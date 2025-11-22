@@ -17,7 +17,7 @@
                   <p class="hero-subtitle mb-0">維護日間照護服務團隊，掌握權限與任職資訊。</p>
                 </div>
               </div>
-              <div class="d-flex align-center gp-3">
+              <div class="d-flex align-center ga-3">
                 <v-chip class="hero-chip" prepend-icon="mdi-theme-light-dark" size="small" variant="outlined">
                   Daycare Style
                 </v-chip>
@@ -125,7 +125,7 @@
                           @click.stop="suspensionSet(item.raw)"></v-checkbox>
                       </td>
                       <td>
-                        <div class="d-flex flex-wrap gp-2">
+                        <div class="d-flex flex-wrap ga-2">
                           <div v-for="authKey in authKeys" :key="authKey.label">
                             <v-chip :class="authKey.class" :color="authKey.color"
                               v-if="item.raw[`${authKey.keyName}_key`]">

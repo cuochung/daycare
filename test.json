@@ -1,48 +1,16 @@
 {
     "date": "2025-11-22",
-    "stateConsciousness": [
-        "清楚",
-        "其他"
-    ],
-    "stateConsciousnessOther": "123",
-    "mentalState": [
-        "佳",
-        "其他"
-    ],
-    "mentalStateOther": "321",
-    "socialNeedsAssessment": [
-        "發脾氣",
-        "其他"
-    ],
-    "socialNeedsAssessmentOther": "555",
-    "interpersonalRelationship": [],
-    "interpersonalRelationshipOther": "",
-    "emotionalState": [],
-    "emotionalStateOther": "",
-    "psychologicalAssessment": [],
-    "psychologicalAssessmentOther": "",
-    "mainCommunicationMethods": [],
-    "mainCommunicationMethodsOther": "",
-    "communicationEffect": [],
-    "communicationEffectOther": "",
-    "languageComprehension": [],
-    "languageComprehensionOther": "",
-    "languageExpression": [],
-    "languageExpressionOther": "",
-    "otherBehavior": [],
-    "otherBehaviorOther": "",
-    "comprehensiveAssessmentRecommendations": "test123",
-    "snkey": "1",
+    "target": "個案本人",
+    "type": "定期訪視",
+    "location": "個案家中",
+    "model": "直接服務",
+    "simplecontent": "123",
+    "nextplan": "456",
+    "u_snkey": "12",
     "createInfo": {
         "snkey": "31",
         "name": "系統管理員",
-        "time": "2025-11-22 17:04:00"
+        "time": "2025-11-22 20:31:39"
     },
-    "editInfo": [
-        {
-            "snkey": "31",
-            "name": "系統管理員",
-            "time": "2025-11-22 17:05:59"
-        }
-    ]
+    "editInfo": []
 }

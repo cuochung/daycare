@@ -4,7 +4,7 @@
       <v-sheet :color="headerColor" class="d-flex align-center justify-space-between px-6 py-4" rounded="t-xl">
         <div class="d-flex align-center">
           <v-avatar size="48" color="white" variant="tonal" class="mr-4">
-            <v-icon :color="headerIconColor" size="28">mdi-heart-pulse</v-icon>
+            <v-icon color="white" size="28">mdi-heart-pulse</v-icon>
           </v-avatar>
           <div>
             <h2 class="text-h6 font-weight-bold mb-1">{{ headerTitle }}</h2>
@@ -138,8 +138,8 @@ const headerSubtitle = computed(() =>
     ? '填寫住民本次評估的生理監測結果，促進跨團隊資訊共享。'
     : '更新既有紀錄，維持數據正確性與一致性。'
 )
-const headerColor = computed(() => (processType.value === 'add' ? 'primary-lighten-4' : 'teal-lighten-4'))
-const headerIconColor = computed(() => (processType.value === 'add' ? 'primary' : 'teal-darken-2'))
+const headerColor = computed(() => (processType.value === 'add' ? 'primary' : 'success'))
+const headerIconColor = computed(() => (processType.value === 'add' ? 'primary' : 'success'))
 
 const resetRecord = () => {
   Object.assign(record, createDefaultRecord())

@@ -16,7 +16,7 @@
                   </p>
                 </div>
               </div>
-              <div class="d-flex align-center gp-3">
+              <div class="d-flex align-center ga-3">
                 <v-chip class="nursingplan__tag" prepend-icon="mdi-theme-light-dark" variant="outlined" size="small">
                   Daycare Style
                 </v-chip>
@@ -26,7 +26,7 @@
               </div>
             </div>
             <v-divider class="my-4" />
-            <div class="nursingplan__meta d-flex flex-wrap gp-3">
+            <div class="nursingplan__meta d-flex flex-wrap ga-3">
               <v-chip variant="tonal" color="primary">
                 住民：{{ residentName }}
               </v-chip>
@@ -88,7 +88,7 @@
                   inset
                 />
               </v-col>
-              <v-col cols="12" md="6" class="d-flex justify-end gp-2 mt-3 mt-md-0">
+              <v-col cols="12" md="6" class="d-flex justify-end ga-2 mt-3 mt-md-0">
                 <v-btn
                   color="tertiary"
                   variant="tonal"

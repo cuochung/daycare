@@ -16,7 +16,7 @@
               </p>
             </div>
           </div>
-          <div class="d-flex align-center gp-3">
+          <div class="d-flex align-center ga-3">
             <v-chip variant="tonal" color="white" size="small" prepend-icon="mdi-account-heart">
               {{ residentCode }}｜{{ residentName }}
             </v-chip>
@@ -53,7 +53,7 @@
           </v-row>
 
           <v-sheet class="nursingrecord-add__shortcut px-4 py-4 mb-5" rounded="lg" border>
-            <div class="d-flex align-center justify-space-between flex-wrap gp-2 mb-3">
+            <div class="d-flex align-center justify-space-between flex-wrap ga-2 mb-3">
               <div class="text-subtitle-2 font-weight-medium text-medium-emphasis">
                 快速載入既有資料，縮短整理時間
               </div>

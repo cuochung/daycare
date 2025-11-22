@@ -227,7 +227,7 @@ const documentItems = [
   { title: '簡易心智狀態 SPMSQ', route: '/main/Documents/Spmsq', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-brain' },
   { title: '72 小時適應評估紀錄表', route: '/main/Documents/Hour72', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-clock-outline' },
   { title: '社會心理認知功能評估表', route: '/main/Documents/Sociopsychological', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-account-group' },
-  { title: '個案服務紀錄表', route: '/main/Documents/servicerecordlist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-file-document-edit-outline' },
+  { title: '個案服務紀錄表', route: '/main/Documents/Servicerecord', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-file-document-edit-outline' },
   { title: '憂鬱量表 (GDS)', route: '/main/Documents/melancholylist', color: 'warning', authKey: 'pass', visable: false, icon: 'mdi-emoticon-sad' },
   { title: '適應性評估表', route: '/main/Documents/adaptabilitylist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-account-switch' },
   { title: '個案服務處遇計畫表', route: '/main/Documents/treatmentlist', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-file-cog' },

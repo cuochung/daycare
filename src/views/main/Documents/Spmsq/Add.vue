@@ -1,12 +1,26 @@
 <template>
   <v-dialog v-model="dialog" persistent>
-    <v-card rounded="xl">
-      <v-card-title :class="titleClass" class="d-flex align-center">
-        <v-icon :color="titleIconColor" class="mr-2">{{ titleIcon }}</v-icon>
-        <span class="text-h6 font-weight-bold">{{ title }}</span>
-        <v-spacer />
-        <v-btn icon="mdi-close" variant="text" @click="closeDialog" />
-      </v-card-title>
+    <v-card rounded="xl" class="spmsq-add">
+      <v-sheet
+        class="spmsq-add__header px-6 py-4"
+        :color="headerColor"
+        rounded="t-xl"
+      >
+        <div class="d-flex align-center justify-space-between">
+          <div class="d-flex align-center">
+            <v-avatar size="48" :color="headerColor" class="mr-4">
+              <v-icon color="white" size="26">mdi-brain</v-icon>
+            </v-avatar>
+            <div>
+              <h2 class="text-h6 font-weight-bold mb-1">{{ headerTitle }}</h2>
+              <p class="text-body-2 text-medium-emphasis mb-0">
+                {{ headerSubtitle }}
+              </p>
+            </div>
+          </div>
+          <v-btn icon="mdi-close" variant="text" @click="closeDialog" />
+        </div>
+      </v-sheet>
 
       <v-divider />
 
@@ -179,23 +193,17 @@ const answerOptions = [
   { title: 'X (錯誤)', value: '1' },
 ]
 
-const title = computed(() => {
+const headerTitle = computed(() => {
   return process.value === 'add' ? '新增簡易心智狀態SPMSQ' : '修改簡易心智狀態SPMSQ'
 })
 
-const titleClass = computed(() => {
-  return process.value === 'add'
-    ? 'bg-error-lighten-2'
-    : 'bg-success-lighten-2'
-})
+const headerSubtitle = computed(() =>
+  process.value === 'add'
+    ? '評估住民認知功能，記錄簡易心智狀態問卷結果。'
+    : '更新簡易心智狀態評估，追蹤認知功能變化。'
+)
 
-const titleIcon = computed(() => {
-  return process.value === 'add' ? 'mdi-plus-circle' : 'mdi-pencil'
-})
-
-const titleIconColor = computed(() => {
-  return process.value === 'add' ? 'error' : 'success'
-})
+const headerColor = computed(() => (process.value === 'add' ? 'primary' : 'success'))
 
 const total = computed(() => {
   let totalPoint = 0
@@ -397,6 +405,10 @@ defineExpose({
 
 <style scoped lang="scss">
 .spmsq-add {
+  &__header {
+    background-image: linear-gradient(135deg, rgba(33, 150, 243, 0.12), rgba(33, 150, 243, 0.04));
+  }
+
   &__table {
     width: 100%;
 

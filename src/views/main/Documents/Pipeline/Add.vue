@@ -4,12 +4,11 @@
       <v-sheet
         class="pipeline-add__header px-6 py-4"
         :color="headerColor"
-        variant="tonal"
         rounded="t-xl"
       >
         <div class="d-flex align-center justify-space-between">
           <div class="d-flex align-center">
-            <v-avatar size="48" color="white" variant="tonal" class="mr-4">
+            <v-avatar size="48" :color="headerColor" class="mr-4">
               <v-icon color="white" size="26">mdi-pipe-wrench</v-icon>
             </v-avatar>
             <div>

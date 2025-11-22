@@ -4,14 +4,14 @@
       <v-sheet :color="headerColor" class="d-flex align-center justify-space-between px-6 py-4" rounded="t-xl">
         <div class="d-flex align-center">
           <v-avatar size="48" color="white" variant="tonal" class="mr-4">
-            <v-icon :color="headerIconColor" size="28">mdi-stethoscope</v-icon>
+            <v-icon color="white" size="28">mdi-stethoscope</v-icon>
           </v-avatar>
           <div>
             <h2 class="text-h6 font-weight-bold mb-1">{{ headerTitle }}</h2>
             <p class="text-body-2 mb-0">{{ headerSubtitle }}</p>
           </div>
         </div>
-        <div class="d-flex align-center gp-2">
+        <div class="d-flex align-center ga-2">
           <!-- <v-btn variant="text" size="small" color="primary" prepend-icon="mdi-sync" @click="loadTemplates">
             更新範本
           </v-btn> -->
@@ -352,8 +352,8 @@ const headerSubtitle = computed(() =>
     ? '請依據評估結果填寫護理計畫內容，支援跨團隊協同照護。'
     : '更新護理計畫資訊，確保照護記錄的一致性與完整性。'
 )
-const headerColor = computed(() => (processType.value === 'add' ? 'primary-lighten-5' : 'teal-lighten-5'))
-const headerIconColor = computed(() => (processType.value === 'add' ? 'primary' : 'teal-darken-2'))
+const headerColor = computed(() => (processType.value === 'add' ? 'primary' : 'success'))
+const headerIconColor = computed(() => (processType.value === 'add' ? 'primary' : 'success'))
 
 const requiredDateRules = [(v) => !!v || '請選擇評值日期']
 const requiredTextRules = [(v) => !!v || '此欄位不可空白']

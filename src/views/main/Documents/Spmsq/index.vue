@@ -83,7 +83,7 @@
                 <v-text-field v-model="searchKey" variant="outlined" density="comfortable" class="pr-md-4"
                   prepend-inner-icon="mdi-magnify" label="搜尋關鍵字（日期、評估結果等）" hide-details inset />
               </v-col>
-              <v-col cols="12" md="6" class="d-flex justify-end gp-2 mt-3 mt-md-0 flex-wrap">
+              <v-col cols="12" md="6" class="d-flex justify-end ga-2 mt-3 mt-md-0 flex-wrap">
                 <v-chip v-for="token in searchTokens" :key="token" color="primary" variant="tonal" size="small"
                   prepend-icon="mdi-pound">
                   {{ token }}
