@@ -1,41 +1,36 @@
 <template>
-  <div class="inspectionreport">
-    <InspectionreportAddDialog ref="addDialogRef" @refresh="fetchRecords" />
-    <InspectionreportPrintOption ref="printDialogRef" />
+  <div class="spmsq">
+    <SpmsqAddDialog ref="addDialogRef" @refresh="fetchRecords" />
 
     <v-container fluid class="pa-0">
       <v-row>
         <v-col cols="12">
-          <v-sheet class="inspectionreport__hero" rounded="xl" elevation="0">
+          <v-sheet class="spmsq__hero" rounded="xl" elevation="0">
             <div class="d-flex flex-column flex-md-row justify-space-between align-start">
               <div class="d-flex align-center mb-4 mb-md-0">
                 <v-avatar size="56" color="primary" variant="tonal" class="mr-4">
-                  <v-icon color="primary" size="32">mdi-clipboard-text-search</v-icon>
+                  <v-icon color="primary" size="32">mdi-brain</v-icon>
                 </v-avatar>
                 <div>
-                  <h2 class="inspectionreport__title mb-1">檢驗報告單</h2>
-                  <p class="inspectionreport__subtitle mb-0">
-                    追蹤住民的各項檢驗數據與健康指標變化。
+                  <h2 class="spmsq__title mb-1">簡易心智狀態SPMSQ</h2>
+                  <p class="spmsq__subtitle mb-0">
+                    評估住民的心智功能狀態，包含時間、地點、記憶等面向。
                   </p>
                 </div>
               </div>
 
-              <div class="d-flex align-center ga-2 flex-wrap">
-                <v-btn color="tertiary" variant="tonal" prepend-icon="mdi-printer"
-                  :disabled="!hasUser || !filteredCount" @click="openPrintOptions">
-                  匯出列印
-                </v-btn>
+              <div class="d-flex align-center ga-2">
+                <MultiPrintSelect :print-choice="printChoice" :print-items="printItems" @change-choice="changeChoice" />
                 <v-btn color="primary" variant="flat" prepend-icon="mdi-plus-circle" :disabled="!hasUser"
                   @click="openAddDialog">
-                  新增檢驗報告
+                  新增評估
                 </v-btn>
-
               </div>
             </div>
 
             <v-divider class="my-4" />
 
-            <div class="inspectionreport__meta d-flex flex-wrap gp-3">
+            <div class="spmsq__meta d-flex flex-wrap ga-3">
               <v-chip variant="tonal" color="primary">
                 住民：{{ residentName }}
               </v-chip>
@@ -46,7 +41,7 @@
                 總筆數：{{ totalCount }}
               </v-chip>
               <v-chip v-if="latestRecord" variant="text" color="teal" prepend-icon="mdi-calendar-clock">
-                最新報告：{{ formatDate(latestRecord.date) }}
+                最新評估：{{ formatDate(latestRecord.raw?.date) }}
               </v-chip>
             </div>
           </v-sheet>
@@ -55,15 +50,15 @@
 
       <v-row class="mt-4" dense>
         <v-col cols="12" md="4">
-          <v-card variant="tonal" color="primary" rounded="xl" class="inspectionreport__summary-card">
+          <v-card variant="tonal" color="primary" rounded="xl" class="spmsq__summary-card">
             <v-icon size="28" class="mb-2">mdi-format-list-numbered</v-icon>
-            <div class="summary-title">總報告筆數</div>
+            <div class="summary-title">總評估筆數</div>
             <div class="summary-value">{{ totalCount }}</div>
-            <div class="summary-caption">目前載入的檢驗報告資料</div>
+            <div class="summary-caption">目前載入的評估資料</div>
           </v-card>
         </v-col>
         <v-col cols="12" md="4">
-          <v-card variant="tonal" color="info" rounded="xl" class="inspectionreport__summary-card">
+          <v-card variant="tonal" color="info" rounded="xl" class="spmsq__summary-card">
             <v-icon size="28" class="mb-2">mdi-magnify</v-icon>
             <div class="summary-title">搜尋結果</div>
             <div class="summary-value">{{ filteredCount }}</div>
@@ -71,22 +66,22 @@
           </v-card>
         </v-col>
         <v-col cols="12" md="4">
-          <v-card variant="tonal" color="success" rounded="xl" class="inspectionreport__summary-card">
-            <v-icon size="28" class="mb-2">mdi-hospital-building</v-icon>
-            <div class="summary-title">檢驗地點數</div>
-            <div class="summary-value">{{ uniqueLocationsCount }}</div>
-            <div class="summary-caption">不同檢驗地點的數量</div>
+          <v-card variant="tonal" color="success" rounded="xl" class="spmsq__summary-card">
+            <v-icon size="28" class="mb-2">mdi-check-circle</v-icon>
+            <div class="summary-title">已選擇列印</div>
+            <div class="summary-value">{{ printItems.length }}</div>
+            <div class="summary-caption">準備列印的評估筆數</div>
           </v-card>
         </v-col>
       </v-row>
 
       <v-row class="mt-4">
         <v-col cols="12">
-          <v-sheet class="inspectionreport__toolbar" rounded="xl" elevation="0">
+          <v-sheet class="spmsq__toolbar" rounded="xl" elevation="0">
             <v-row align="center" no-gutters>
               <v-col cols="12" md="6">
                 <v-text-field v-model="searchKey" variant="outlined" density="comfortable" class="pr-md-4"
-                  prepend-inner-icon="mdi-magnify" label="搜尋關鍵字（日期、地點、檢驗項目等）" hide-details inset />
+                  prepend-inner-icon="mdi-magnify" label="搜尋關鍵字（日期、評估結果等）" hide-details inset />
               </v-col>
               <v-col cols="12" md="6" class="d-flex justify-end gp-2 mt-3 mt-md-0 flex-wrap">
                 <v-chip v-for="token in searchTokens" :key="token" color="primary" variant="tonal" size="small"
@@ -103,12 +98,12 @@
         <v-col cols="12">
           <v-alert v-if="!hasUser" type="warning" variant="tonal" border="start" color="warning" class="mb-4"
             icon="mdi-account-search">
-            尚未選擇住民，請先至住民清單選擇後再維護檢驗報告單資料。
+            尚未選擇住民，請先至住民清單選擇後再維護評估資料。
           </v-alert>
 
           <v-alert v-else-if="hasUser && !filteredCount" type="info" variant="tonal" border="start" color="primary"
             class="mb-4" icon="mdi-information-outline">
-            目前沒有符合搜尋條件的資料，可調整搜尋條件或新增檢驗報告。
+            目前沒有符合搜尋條件的資料，可調整搜尋條件或新增評估。
           </v-alert>
 
           <v-progress-linear v-if="loading" indeterminate color="primary" class="mb-4" />
@@ -116,7 +111,7 @@
           <PaginatedIterator v-if="filteredCount" :items="filteredItems" v-model:items-per-page="itemsPerPage"
             :items-per-page-options="itemsPerPageOptions">
             <template #default="{ items }">
-              <v-card class="inspectionreport__table-card" rounded="xl" variant="outlined">
+              <v-card class="spmsq__table-card" rounded="xl" variant="outlined">
                 <v-card-title class="d-flex align-center">
                   <div class="text-subtitle-1 font-weight-bold">顯示筆數：{{ filteredCount }}</div>
                   <v-spacer />
@@ -126,22 +121,37 @@
                 </v-card-title>
                 <v-divider />
                 <v-card-text class="pa-0">
-                  <v-table class="inspectionreport__table" fixed-header>
+                  <v-table class="spmsq__table" fixed-header>
                     <thead>
                       <tr>
-                        <th style="width: 60px;" class="text-center">操作</th>
-                        <th style="width: 140px;">日期</th>
-                        <th style="width: 200px;">檢驗地點</th>
-                        <th v-if="canShowCreatorName" style="width: 160px;">紀錄人姓名</th>
-                        <th v-if="canShowCreatorInfo" style="width: 220px;">紀錄人紀錄</th>
-                        <th v-if="canShowEditorInfo" style="width: 220px;">修改紀錄</th>
+                        <th rowspan="3" style="width: 80px;" class="text-center">操作</th>
+                        <th rowspan="2" style="width: 120px;">評估日期</th>
+                        <th colspan="12">簡易心智狀態SPMSQ</th>
+                        <th rowspan="2" v-if="canShowCreatorName" style="width: 160px;">紀錄人姓名</th>
+                        <th rowspan="2" v-if="canShowCreatorInfo" style="width: 220px;">紀錄人紀錄</th>
+                        <th rowspan="2" v-if="canShowEditorInfo" style="width: 220px;">修改紀錄</th>
+                      </tr>
+                      <tr>
+                        <th>1.</th>
+                        <th>2.</th>
+                        <th>3.</th>
+                        <th>4-1.</th>
+                        <th>4-2.</th>
+                        <th>5.</th>
+                        <th>6.</th>
+                        <th>7.</th>
+                        <th>8.</th>
+                        <th>9.</th>
+                        <th>10.</th>
+                        <th>錯幾題</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(record, index) in items"
-                        :key="record.snkey || record.raw?.snkey || `inspection-${index}`">
-                        <td class="text-center">
-                          <v-menu v-if="hasUser" location="bottom">
+                      <tr v-for="(record, index) in items" :key="record.snkey || record.raw.snkey || `spmsq-${index}`">
+                        <td>
+                          <v-checkbox v-if="!printChoice" :model-value="record.raw?.check || false" label="列印選擇"
+                            hide-details @update:model-value="(value) => updateCheck(record, value)" @click.stop />
+                          <v-menu v-else-if="hasUser" location="bottom">
                             <template #activator="{ props }">
                               <v-btn v-bind="props" variant="text" icon="mdi-dots-vertical" color="primary" />
                             </template>
@@ -163,25 +173,36 @@
                         </td>
                         <td>
                           <div class="text-body-2 font-weight-medium">
-                            {{ formatDate(record.raw.date) }}
+                            {{ formatDate(record.raw?.date) }}
                           </div>
                         </td>
-                        <td>
-                          <div class="text-body-2">
-                            {{ record.raw.location || '—' }}
-                          </div>
+                        <td>{{ formatAnswer(record.raw?.q1) }}</td>
+                        <td>{{ formatAnswer(record.raw?.q2) }}</td>
+                        <td>{{ formatAnswer(record.raw?.q3) }}</td>
+                        <td>{{ formatAnswer(record.raw?.['q4-1']) }}</td>
+                        <td>{{ formatAnswer(record.raw?.['q4-2']) }}</td>
+                        <td>{{ formatAnswer(record.raw?.q5) }}</td>
+                        <td>{{ formatAnswer(record.raw?.q6) }}</td>
+                        <td>{{ formatAnswer(record.raw?.q7) }}</td>
+                        <td>{{ formatAnswer(record.raw?.q8) }}</td>
+                        <td>{{ formatAnswer(record.raw?.q9) }}</td>
+                        <td>{{ formatAnswer(record.raw?.q10) }}</td>
+                        <td class="font-weight-bold">
+                          <v-chip :color="getTotalColor(record.raw?.total)" variant="tonal">
+                            {{ record.raw?.total ?? 0 }}
+                          </v-chip>
                         </td>
                         <td v-if="canShowCreatorName">
-                          {{ record.raw.createInfo?.name ?? '' }}
+                          {{ record.raw?.createInfo?.name ?? '' }}
                         </td>
                         <td v-if="canShowCreatorInfo">
                           <div class="text-body-2">
-                            {{ record.raw.createInfo ? `${record.raw.createInfo.name} (${record.raw.createInfo.time})` :
-                            '' }}
+                            {{ record.raw?.createInfo ? `${record.raw.createInfo.name} (${record.raw.createInfo.time})`
+                            : '' }}
                           </div>
                         </td>
                         <td v-if="canShowEditorInfo">
-                          <div class="text-body-2 text-truncate inspectionreport__edit-info">
+                          <div class="text-body-2 text-truncate spmsq__edit-info">
                             {{
                             Array.isArray(record.raw?.editInfo)
                             ? record.raw.editInfo.map((i) => `${i.name} (${i.time})`).join('，')
@@ -207,17 +228,16 @@ import dayjs from 'dayjs'
 import { computed, getCurrentInstance, ref, watch } from 'vue'
 
 import PaginatedIterator from '@/components/PaginatedIterator.vue'
+import MultiPrintSelect from '@/components/MultiPrintSelect.vue'
 import api from '@/assets/js/api.js'
 import { useStore } from '@/stores/useStore'
 
-import InspectionreportAddDialog from './Add.vue'
-import InspectionreportPrintOption from './PrintOption.vue'
+import SpmsqAddDialog from './Add.vue'
 
 const store = useStore()
 const { proxy } = getCurrentInstance()
 
 const addDialogRef = ref(null)
-const printDialogRef = ref(null)
 
 const records = ref([])
 const searchKey = ref('')
@@ -228,6 +248,8 @@ const itemsPerPageOptions = [
   { value: 30, title: '30' },
 ]
 const loading = ref(false)
+const printChoice = ref(true)
+const printItems = ref([])
 
 const hasUser = computed(() => Boolean(store.state?.uData?.snkey))
 const residentName = computed(() => store.state?.uData?.name ?? '未選擇住民')
@@ -248,15 +270,6 @@ const filteredItems = computed(() => {
 
 const filteredCount = computed(() => filteredItems.value.length)
 
-const uniqueLocationsCount = computed(() => {
-  const locations = new Set(
-    records.value
-      .map((item) => item.raw?.location)
-      .filter(Boolean)
-  )
-  return locations.size
-})
-
 const canShowCreatorName = computed(() => Boolean(store.state?.cData?.isShowCreaterName))
 const canShowCreatorInfo = computed(() => Boolean(store.state?.cData?.isShowCreaterInfo))
 const canShowEditorInfo = computed(() => Boolean(store.state?.cData?.isShowEditerInfo))
@@ -266,11 +279,40 @@ const formatDate = (date) => {
   return parsed.isValid() ? parsed.format('YYYY/MM/DD') : date ?? ''
 }
 
+const formatAnswer = (value) => {
+  if (value === '0') return 'O'
+  if (value === '1') return 'X'
+  return '—'
+}
+
+const getTotalColor = (total) => {
+  const num = parseInt(total) || 0
+  if (num <= 2) return 'success'
+  if (num <= 4) return 'warning'
+  if (num <= 7) return 'orange'
+  return 'error'
+}
+
+const parseAction = (value) => {
+  if (!value) return null
+  const parts = value.split('(')
+  return {
+    name: parts[0] ?? '',
+    time: parts[1] ? parts[1].replace(')', '') : '',
+  }
+}
+
+const parseEditInfo = (value) => {
+  if (!value) return []
+  return value.split(';').map((item) => parseAction(item)).filter(Boolean)
+}
+
 const normalizeRecord = (row) => {
   const parsed = JSON.parse(row.datalist || '{}')
   return {
     ...parsed,
     snkey: row.snkey,
+    check: false,
   }
 }
 
@@ -297,7 +339,7 @@ const fetchRecords = async () => {
     key: 'u_snkey',
     value: store.state.uData.snkey,
   }
-  const url = `byjson/searchByKeyValue/${store.state.databaseName}/inspectionreport`
+  const url = `byjson/searchByKeyValue/${store.state.databaseName}/spmsq`
   const response = await api.options(url, payload)
 
   records.value = sortRecords((response ?? []).map(normalizeRecord))
@@ -306,7 +348,7 @@ const fetchRecords = async () => {
 
 const openAddDialog = () => {
   if (!hasUser.value) {
-    proxy?.$swal?.({ icon: 'warning', title: '請先選擇住民，再新增檢驗報告單。' })
+    proxy?.$swal?.({ icon: 'warning', title: '請先選擇住民，再新增評估資料。' })
     return
   }
   addDialogRef.value?.openForAdd()
@@ -316,16 +358,57 @@ const openEdit = (record) => {
   addDialogRef.value?.openForEdit(record)
 }
 
-const openPrintOptions = () => {
-  if (!hasUser.value || !filteredCount.value) return
-  printDialogRef.value?.open(records.value.map((r) => r.raw))
+const changeChoice = () => {
+  printChoice.value = !printChoice.value
+  records.value.forEach((item) => {
+    item.check = false
+    if (item.raw) item.raw.check = false
+  })
+  printItems.value = []
+}
+
+const updateCheck = (record, value) => {
+  // 更新 check 狀態
+  if (record.raw) {
+    record.raw.check = value
+  }
+  record.check = value
+  
+  // 計算選中的項目
+  const selected = records.value.filter((item) => {
+    return item.raw?.check || item.check
+  })
+  
+  // 檢查是否超過5筆
+  if (selected.length > 5) {
+    store.showToastMulti({
+      type: 'warning',
+      message: '單次列印指定數最多5筆！',
+      closeTime: 3,
+    })
+    // 取消剛才的選擇
+    if (record.raw) {
+      record.raw.check = false
+    }
+    record.check = false
+    return
+  }
+  
+  // 更新 printItems
+  const finalSelected = records.value.filter((item) => {
+    return item.raw?.check || item.check
+  })
+  printItems.value = finalSelected.map((item) => ({
+    ...(item.raw || item),
+    date: item.raw?.date || item.date,
+  }))
 }
 
 const askDelete = (record) => {
   proxy.$swal({
-    title: '確認要刪除這筆檢驗報告單嗎？',
+    title: '確認要刪除這筆評估資料嗎？',
+    text: '刪除後將無法復原，請再次確認。',
     icon: 'warning',
-    showCancelButton: true,
     toast: false,
     timer: null,
     showConfirmButton: true,
@@ -337,22 +420,22 @@ const askDelete = (record) => {
     const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')
     const payload = {
       snkey: record.snkey,
-      tablename: 'inspectionreport',
+      tablename: 'spmsq',
       info: JSON.stringify({
         ...record,
         delman: `${store.state?.pData?.username ?? ''} (${timestamp})`,
       }),
     }
 
-    const response = await api.delete('inspectionreport', payload)
+    const response = await api.delete('spmsq', payload)
     if (response?.state == 1) {
       store.showToastMulti({
         type: 'success',
-        message: '檢驗報告單已刪除',
+        message: '評估資料已刪除',
         closeTime: 2,
       })
       fetchRecords()
-          } else {
+    } else {
       store.showToastMulti({
         type: 'error',
         message: '刪除失敗，請稍後再試',
@@ -372,7 +455,7 @@ watch(
 </script>
 
 <style scoped lang="scss">
-.inspectionreport {
+.spmsq {
   &__hero {
     padding: 28px;
     background: linear-gradient(135deg, rgba(33, 150, 243, 0.12), rgba(33, 150, 243, 0.04));

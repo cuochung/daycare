@@ -88,7 +88,7 @@
                 <v-card-title class="d-flex align-center user-panel__title">
                   <div class="text-subtitle-1 font-weight-bold">顯示筆數：{{ filteredCount }}</div>
                   <v-spacer></v-spacer>
-                  <div class="d-flex align-center gap-2">
+                  <div class="d-flex align-center gp-2">
                     <v-chip size="small" prepend-icon="mdi-safety-goggles" variant="tonal">
                       DNR {{ dnrCount }}
                     </v-chip>
@@ -127,7 +127,7 @@
                           入住：{{ raw?.in_date || '未知' }}
                         </v-list-item-subtitle>
 
-                        <div class="d-flex align-center flex-wrap mt-2 gap-2">
+                        <div class="d-flex align-center flex-wrap mt-2 gp-2">
                           <v-chip size="small" class="status-chip status-chip--edit" variant="tonal">
                             最後異動：{{ raw?.updateTime ?? '--' }}
                           </v-chip>
@@ -514,7 +514,7 @@ onMounted(async () => {
     box-shadow: 0 4px 12px var(--daycare-shadow);
   }
 
-  .gap-2 {
+  .gp-2 {
     gap: 8px;
   }
 

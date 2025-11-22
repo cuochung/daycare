@@ -19,7 +19,7 @@
                 </div>
               </div>
 
-              <div class="d-flex align-center gap-2 flex-wrap">
+              <div class="d-flex align-center gp-2 flex-wrap">
                 <!-- <v-chip variant="tonal" color="primary">
                   住民：{{ residentName }}
                 </v-chip>
@@ -71,7 +71,7 @@
                 <v-text-field v-model="searchKey" variant="outlined" density="comfortable" class="pr-md-4"
                   prepend-inner-icon="mdi-magnify" label="搜尋關鍵字（日期、項目、備註等）" hide-details inset />
               </v-col>
-              <v-col cols="12" md="6" class="d-flex justify-end gap-2 mt-3 mt-md-0 flex-wrap">
+              <v-col cols="12" md="6" class="d-flex justify-end gp-2 mt-3 mt-md-0 flex-wrap">
                 <v-chip v-for="token in searchTokens" :key="token" color="primary" variant="tonal" size="small"
                   prepend-icon="mdi-pound">
                   {{ token }}
@@ -134,9 +134,15 @@
                             </template>
                             <v-list density="compact">
                               <v-list-item @click="openEdit(record)">
+                                <template #prepend>
+                                  <v-icon color="primary">mdi-square-edit-outline</v-icon>
+                                </template>
                                 <v-list-item-title>修改</v-list-item-title>
                               </v-list-item>
                               <v-list-item @click="askDelete(record)">
+                                <template #prepend>
+                                  <v-icon color="error">mdi-delete-outline</v-icon>
+                                </template>
                                 <v-list-item-title>刪除</v-list-item-title>
                               </v-list-item>
                             </v-list>
@@ -166,15 +172,16 @@
                         </td>
                         <td v-if="canShowCreatorInfo">
                           <div class="text-body-2">
-                            {{ record.raw.createInfo ? `${record.raw.createInfo.name} (${record.raw.createInfo.time})` : '' }}
+                            {{ record.raw.createInfo ? `${record.raw.createInfo.name} (${record.raw.createInfo.time})` :
+                            '' }}
                           </div>
                         </td>
                         <td v-if="canShowEditorInfo">
                           <div class="text-body-2 text-truncate pricelist__edit-info">
                             {{
-                              Array.isArray(record.raw.editInfo)
-                                ? record.raw.editInfo.map((i) => `${i.name} (${i.time})`).join('，')
-                                : ''
+                            Array.isArray(record.raw.editInfo)
+                            ? record.raw.editInfo.map((i) => `${i.name} (${i.time})`).join('，')
+                            : ''
                             }}
                           </div>
                         </td>

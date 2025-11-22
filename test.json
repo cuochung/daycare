@@ -1,40 +1,23 @@
 {
-    "date": "2025-11-20",
-    "location": "1",
-    "leukocyte": "2",
-    "erythrocyte": "3",
-    "hemoglobin": "",
-    "platelet": "",
-    "albumin": "",
-    "glycosylatedhemoglobin": "",
-    "got": "",
-    "gpt": "",
-    "bloodsugar": "",
-    "cholesterol": "",
-    "tg": "",
-    "bun": "",
-    "cre": "",
-    "ua": "",
-    "na": "",
-    "k": "",
-    "hdlldl": "",
-    "ph": "",
-    "urineprotein": "",
-    "ob": "",
-    "rbc": "",
-    "wbc": "",
-    "bacteria": "",
-    "glu": "",
-    "urine": "",
-    "sputum": "",
-    "note": "",
-    "dispose": "",
-    "track": "",
+    "date": "2025-11-21",
+    "physiologicalNeeds": [
+        "穩定生理"
+    ],
+    "psychologicalAssessments": [
+        "害怕"
+    ],
+    "psychologicalAssessmentOther": "",
+    "socialNeedsAssessments": [],
+    "socialNeedsAssessmentOther": "",
+    "cognitiveFunctionAssessments": [],
+    "cognitiveFunctionAssessmentOther": "",
+    "encounterPlans": [],
+    "encounterPlanOther": "",
     "u_snkey": "12",
     "createInfo": {
         "snkey": "31",
         "name": "系統管理員",
-        "time": "2025-11-20 19:34:20"
+        "time": "2025-11-21 18:52:21"
     },
     "editInfo": []
 }

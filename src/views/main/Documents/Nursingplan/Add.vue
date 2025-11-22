@@ -11,7 +11,7 @@
             <p class="text-body-2 mb-0">{{ headerSubtitle }}</p>
           </div>
         </div>
-        <div class="d-flex align-center gap-2">
+        <div class="d-flex align-center gp-2">
           <!-- <v-btn variant="text" size="small" color="primary" prepend-icon="mdi-sync" @click="loadTemplates">
             更新範本
           </v-btn> -->

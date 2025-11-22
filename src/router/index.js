@@ -30,19 +30,19 @@ const routes = [
           { path: 'PriceList', name: 'PriceList', component: () => import('@/views/main/Documents/PriceList/index.vue') },
           { path: 'Pipeline', name: 'Pipeline', component: () => import('@/views/main/Documents/Pipeline/index.vue') },
           { path: 'Inspectionreport', name: 'Inspectionreport', component: () => import('@/views/main/Documents/Inspectionreport/index.vue') },
+          { path: 'Spmsq', name: 'Spmsq', component: () => import('@/views/main/Documents/Spmsq/index.vue') },
+          { path: 'Hour72', name: 'Hour72', component: () => import('@/views/main/Documents/Hour72/index.vue') },
+
 
           // { path: 'recordlist', name: 'recordlist', component: resolve => require(['../views/document/RecordList.vue'], resolve) },
           // { path: 'adaptlist', name: 'adaptlist', component: resolve => require(['../views/document/AdaptList.vue'], resolve) },
           // { path: 'kblist', name: 'kblist', component: resolve => require(['../views/document/KbList.vue'], resolve) },
-          // { path: 'spmsqlist', name: 'spmsqlist', component: resolve => require(['../views/document/SpmsqList.vue'], resolve) },
           // { path: 'falllist', name: 'falllist', component: resolve => require(['../views/document/FallList.vue'], resolve) },
           // { path: 'bradenlist', name: 'bradenlist', component: resolve => require(['../views/document/BradenList.vue'], resolve) },
           // { path: 'medicinerecordlist', name: 'medicinerecordlist', component: resolve => require(['../views/document/MedicineRecordList.vue'], resolve) },
           
-          // { path: 'hour72', name: 'hour72', component: resolve => require(['../views/document/Hour72.vue'], resolve) },
           // { path: 'sociopsychologicallist', name: 'sociopsychologicallist', component: resolve => require(['../views/document/SociopsychologicalList.vue'], resolve) },
           // { path: 'nursingassessment', name: 'nursingassessment', component: resolve => require(['../views/document/Nursingassessment.vue'], resolve) },
-          
           
           
           
@@ -93,6 +93,8 @@ const routes = [
   { path: '/NursingplanPrint', name: 'NursingplanPrint', component: () => import('@/views/main/Documents/Nursingplan/PrintPage.vue') },
   { path: '/NursingrecordPrint', name: 'NursingrecordPrint', component: () => import('@/views/main/Documents/Nursingrecord/PrintPage.vue') },
   { path: '/InspectionreportPrint', name: 'InspectionreportPrint', component: () => import('@/views/main/Documents/Inspectionreport/PrintPage.vue') },
+  { path: '/MultiDocumentPrint', name: 'MultiDocumentPrint', component: () => import('@/views/print/MultiDocumentPrint.vue') },
+  { path: '/Hour72Print', name: 'Hour72Print', component: () => import('@/views/main/Documents/Hour72/PrintPage.vue') },
   // {
   //   path: '/orderpage',
   //   name: 'orderpage',

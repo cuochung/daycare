@@ -19,7 +19,7 @@
                   </p>
                 </div>
               </div>
-              <div class="d-flex align-center gap-2 flex-wrap">
+              <div class="d-flex align-center gp-2 flex-wrap">
                 <v-btn color="tertiary" variant="tonal" prepend-icon="mdi-printer"
                   :disabled="!hasUser || !filteredCount" @click="openPrintOptions">
                   匯出列印
@@ -33,7 +33,7 @@
 
             <v-divider class="my-4" />
 
-            <div class="nursingrecord__meta d-flex flex-wrap gap-3">
+            <div class="nursingrecord__meta d-flex flex-wrap gp-3">
               <v-chip variant="tonal" color="primary">
                 住民：{{ residentName }}
               </v-chip>
@@ -86,7 +86,7 @@
                 <v-text-field v-model="searchKey" variant="outlined" density="comfortable" class="pr-md-4"
                   prepend-inner-icon="mdi-magnify" label="搜尋關鍵字（日期、項目、護理內容等）" hide-details inset />
               </v-col>
-              <v-col cols="12" md="6" class="d-flex justify-end gap-2 mt-3 mt-md-0">
+              <v-col cols="12" md="6" class="d-flex justify-end gp-2 mt-3 mt-md-0">
                 <v-chip v-for="token in searchTokens" :key="token" color="primary" variant="tonal" size="small"
                   prepend-icon="mdi-pound">
                   {{ token }}
@@ -147,9 +147,15 @@
                             </template>
                             <v-list density="compact">
                               <v-list-item @click="openEdit(record.raw)" :disabled="!canEdit(record.raw)">
+                                <template #prepend>
+                                  <v-icon color="primary">mdi-square-edit-outline</v-icon>
+                                </template>
                                 <v-list-item-title>修改</v-list-item-title>
                               </v-list-item>
                               <v-list-item @click="askDelete(record.raw)" :disabled="!canEdit(record.raw)">
+                                <template #prepend>
+                                  <v-icon color="error">mdi-delete-outline</v-icon>
+                                </template>
                                 <v-list-item-title>刪除</v-list-item-title>
                               </v-list-item>
                             </v-list>
@@ -166,7 +172,7 @@
                           </div>
                         </td>
                         <td>
-                          <div class="d-flex align-center gap-2">
+                          <div class="d-flex align-center gp-2">
                             <span>{{ record.raw.project || '—' }}</span>
                             <v-chip v-if="record.raw.focus === 'true'" color="error" variant="tonal" size="x-small"
                               prepend-icon="mdi-alarm-light">

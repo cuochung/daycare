@@ -19,7 +19,7 @@
                 </div>
               </div>
 
-              <div class="d-flex align-center gap-2 flex-wrap">
+              <div class="d-flex align-center gp-2 flex-wrap">
                 <v-btn
                   color="primary"
                   variant="flat"
@@ -34,7 +34,7 @@
 
             <v-divider class="my-4" />
 
-            <div class="pipeline__meta d-flex flex-wrap gap-3">
+            <div class="pipeline__meta d-flex flex-wrap gp-3">
               <v-chip variant="tonal" color="primary">
                 住民：{{ residentName }}
               </v-chip>
@@ -95,7 +95,7 @@
                   inset
                 />
               </v-col>
-              <v-col cols="12" md="6" class="d-flex justify-end gap-2 mt-3 mt-md-0 flex-wrap">
+              <v-col cols="12" md="6" class="d-flex justify-end gp-2 mt-3 mt-md-0 flex-wrap">
                 <v-chip
                   v-for="token in searchTokens"
                   :key="token"
@@ -194,16 +194,22 @@
                             </template>
                             <v-list density="compact">
                               <v-list-item @click="openEdit(record.raw)">
+                                <template #prepend>
+                                  <v-icon color="primary">mdi-square-edit-outline</v-icon>
+                                </template>
                                 <v-list-item-title>修改</v-list-item-title>
                               </v-list-item>
                               <v-list-item @click="askDelete(record.raw)">
+                                <template #prepend>
+                                  <v-icon color="error">mdi-delete-outline</v-icon>
+                                </template>
                                 <v-list-item-title>刪除</v-list-item-title>
                               </v-list-item>
                             </v-list>
                           </v-menu>
                         </td>
                         <td>
-                          <div class="d-flex align-center gap-2">
+                          <div class="d-flex align-center gp-2">
                             <span class="text-body-2 font-weight-medium">{{ record.raw.name || '—' }}</span>
                             <v-chip
                               v-if="isActive(record.raw)"
