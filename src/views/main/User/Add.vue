@@ -880,7 +880,7 @@
             </v-card>
 
             <!-- 訪視設定 -->
-            <v-card id="section-visit" variant="outlined" rounded="lg" elevation="1">
+            <v-card id="section-visit" variant="outlined" rounded="lg" elevation="1" class="mb-6">
               <v-card-title class="d-flex align-center py-4">
                 <v-avatar size="40" color="secondary" variant="tonal" class="mr-4">
                   <v-icon color="secondary" size="24">mdi-account-group-outline</v-icon>
@@ -896,6 +896,91 @@
                 <v-checkbox v-model="list.visitLimit" label="限制訪客" hide-details></v-checkbox>
                 <v-textarea v-model="list.visitLimitContent" label="限制內容" v-show="list.visitLimit"
                   variant="outlined"></v-textarea>
+              </v-card-text>
+            </v-card>
+
+            <!-- 家族圖譜 -->
+            <v-card id="section-familytree" variant="outlined" rounded="lg" elevation="1">
+              <v-card-title class="d-flex align-center py-4">
+                <v-avatar size="40" color="primary" variant="tonal" class="mr-4">
+                  <v-icon color="primary" size="24">mdi-family-tree</v-icon>
+                </v-avatar>
+                <div class="d-flex flex-column">
+                  <span class="text-subtitle-1 font-weight-bold text-primary">家族圖譜</span>
+                  <span class="text-body-2 text-medium-emphasis">上傳與維護家族圖譜資訊</span>
+                </div>
+              </v-card-title>
+              <v-divider></v-divider>
+
+              <v-card-text class="pt-6">
+                <input type="file" ref="familyTreeFileInput" @change="onFamilyTreeFileSelected" style="display:none" />
+                <v-card color="primary-lighten-5" variant="tonal" elevation="0" rounded="lg"
+                  class="pa-4 d-flex flex-column align-center">
+                  <v-icon color="primary" size="32" class="mb-2">mdi-family-tree</v-icon>
+                  <span class="text-subtitle-2 text-primary mb-4">家族圖譜</span>
+
+                  <div class="w-100">
+                    <v-sheet v-if="familyTreeImage.preview" color="white" rounded="lg"
+                      class="d-flex align-center justify-center pa-2">
+                      <v-img :src="familyTreeImage.preview" aspect-ratio="16/9" rounded="lg" cover>
+                        <v-overlay absolute :model-value="uploadingFamilyTree" class="d-flex align-center justify-center">
+                          <v-progress-circular color="primary" indeterminate size="32"></v-progress-circular>
+                        </v-overlay>
+                      </v-img>
+                    </v-sheet>
+
+                    <v-sheet v-else-if="hasExistingFamilyTree" color="white" rounded="lg"
+                      class="d-flex align-center justify-center pa-2">
+                      <v-img :src="`${baseUrl}/upload/familytree/${list.familyTreeInfo.picName}`"
+                        :lazy-src="`${baseUrl}/upload/familytree/${defaultPicName}`" aspect-ratio="16/9"
+                        rounded="lg" cover>
+                        <template #placeholder>
+                          <v-row class="fill-height ma-0" align="center" justify="center">
+                            <v-progress-circular color="primary" indeterminate size="32"></v-progress-circular>
+                          </v-row>
+                        </template>
+                        <v-overlay absolute :model-value="uploadingFamilyTree" class="d-flex align-center justify-center">
+                          <v-progress-circular color="primary" indeterminate size="32"></v-progress-circular>
+                        </v-overlay>
+                      </v-img>
+                    </v-sheet>
+
+                    <v-sheet v-else color="white" rounded="lg"
+                      class="d-flex flex-column align-center justify-center pa-6" style="min-height: 220px;">
+                      <v-icon color="primary" size="36" class="mb-2">mdi-image-off-outline</v-icon>
+                      <span class="text-body-2 text-medium-emphasis">未上傳任何圖譜</span>
+                    </v-sheet>
+                  </div>
+
+                  <v-card-actions class="mt-4 d-flex flex-column w-100" style="gap: 8px;">
+                    <template v-if="familyTreeImage.preview">
+                      <v-btn color="primary" variant="flat" prepend-icon="mdi-cloud-upload" block
+                        @click.stop="goUploadFamilyTree" :loading="uploadingFamilyTree">
+                        重新選擇
+                      </v-btn>
+                      <v-btn color="secondary" variant="tonal" prepend-icon="mdi-close-circle" block
+                        @click.stop="clearFamilyTreePreview">
+                        取消預覽
+                      </v-btn>
+                    </template>
+                    <template v-else-if="hasExistingFamilyTree">
+                      <v-btn color="primary" variant="flat" prepend-icon="mdi-cloud-upload" block
+                        @click.stop="goUploadFamilyTree" :loading="uploadingFamilyTree">
+                        重新上傳
+                      </v-btn>
+                      <v-btn color="error" variant="tonal" prepend-icon="mdi-delete-outline" block
+                        @click.stop="removeExistingFamilyTree">
+                        刪除圖譜
+                      </v-btn>
+                    </template>
+                    <template v-else>
+                      <v-btn color="primary" variant="flat" prepend-icon="mdi-cloud-upload" block
+                        @click.stop="goUploadFamilyTree" :loading="uploadingFamilyTree">
+                        選擇圖譜
+                      </v-btn>
+                    </template>
+                  </v-card-actions>
+                </v-card>
               </v-card-text>
             </v-card>
           </v-form>
@@ -935,13 +1020,19 @@ const props = defineProps({
 const dialog = ref(false)
 const form = ref(null)
 const fileInput = ref(null)
+const familyTreeFileInput = ref(null)
 // const floatingPanel = ref(null)
 const uploadImage = reactive({ // 上傳的圖片資訊
   file: null,
   preview: ''
 })
+const familyTreeImage = reactive({ // 上傳的家族圖譜資訊
+  file: null,
+  preview: ''
+})
 const defaultPicName = 'lazypic.jpg'
 const databaseName = 'user'
+const familyTreeDatabaseName = 'familytree'
 
 
 const processType = ref('')
@@ -954,6 +1045,7 @@ const emptyObjRules = [v => Boolean(Object.keys(v || {})[0]) || "不可空白"]
 const disabled = ref(true)
 const loading = ref(false)
 const uploading = ref(false)
+const uploadingFamilyTree = ref(false)
 const idEdit = ref(true)
 
 const sexitems = ['男', '女']
@@ -1208,16 +1300,30 @@ const createDefaultList = () => ({
     DisabilityCert: { Value: '無', Other: [] }
   },
   visitLimit: false,
-  visitLimitContent: ''
+  visitLimitContent: '',
+  familyTreeInfo: {
+    picName: '',
+    picOriginalName: ''
+  }
 })
 
 const list = reactive(createDefaultList())
 const oldList = ref()
 const hasExistingPhoto = computed(() => Boolean(list.picInfo?.picName))
+const hasExistingFamilyTree = computed(() => Boolean(list.familyTreeInfo?.picName))
 
 const normalizePicInfo = (source = {}) => {
   const info = source.picInfo ?? {}
   const picName = info.picName || source.pic_url || ''
+  return {
+    picName,
+    picOriginalName: info.picOriginalName ?? ''
+  }
+}
+
+const normalizeFamilyTreeInfo = (source = {}) => {
+  const info = source.familyTreeInfo ?? {}
+  const picName = info.picName || source.familyTree_url || ''
   return {
     picName,
     picOriginalName: info.picOriginalName ?? ''
@@ -1229,6 +1335,14 @@ const clearUploadPreview = () => {
   uploadImage.preview = ''
   if (fileInput.value) {
     fileInput.value.value = ''
+  }
+}
+
+const clearFamilyTreePreview = () => {
+  familyTreeImage.file = null
+  familyTreeImage.preview = ''
+  if (familyTreeFileInput.value) {
+    familyTreeFileInput.value.value = ''
   }
 }
 
@@ -1251,8 +1365,11 @@ const addProcess = async () => {
   idEdit.value = true
   disabled.value = true
   clearUploadPreview()
+  clearFamilyTreePreview()
   list.picInfo = { picName: '', picOriginalName: '' }
   list.pic_url = defaultPicName
+  list.familyTreeInfo = { picName: '', picOriginalName: '' }
+  list.familyTree_url = defaultPicName
   list.in_date = dayjs().format('YYYY-MM-DD')
 
   dialog.value = true
@@ -1269,9 +1386,12 @@ const editProcess = (item) => {
   idEdit.value = true
   disabled.value = true
   clearUploadPreview()
+  clearFamilyTreePreview()
   Object.assign(list, item)
   list.picInfo = normalizePicInfo(item)
   list.pic_url = list.picInfo.picName || defaultPicName
+  list.familyTreeInfo = normalizeFamilyTreeInfo(item)
+  list.familyTree_url = list.familyTreeInfo.picName || defaultPicName
   oldList.value = item
 
   dialog.value = true
@@ -1347,6 +1467,11 @@ const addOK = async () => {
     await uploadPicProcess()
   }
 
+  // 如果 familyTreeImage 有資料，代表有重上傳新圖譜，則刪除舊圖譜並更新圖譜
+  if (familyTreeImage.file && familyTreeImage.file.size > 0) {
+    await uploadFamilyTreeProcess()
+  }
+
   list.createInfo = {
     snkey: store.state.pData.snkey,
     name: store.state.pData.username,
@@ -1396,6 +1521,11 @@ const editOK = async () => {
   // 如果 uploadImage 有資料，代表有重上傳新圖片，則刪除舊圖片並更新圖片
   if (uploadImage.file && uploadImage.file.size > 0) {
     await uploadPicProcess()
+  }
+
+  // 如果 familyTreeImage 有資料，代表有重上傳新圖譜，則刪除舊圖譜並更新圖譜
+  if (familyTreeImage.file && familyTreeImage.file.size > 0) {
+    await uploadFamilyTreeProcess()
   }
 
   list.editInfo.unshift({
@@ -1559,6 +1689,120 @@ const removeExistingPhoto = async () => {
   }
 }
 
+// 上傳家族圖譜 預覽階段
+const goUploadFamilyTree = () => {
+  familyTreeFileInput.value?.click()
+}
+
+const onFamilyTreeFileSelected = (event) => {
+  const file = event.target.files?.[0] ?? null
+  if (!file) {
+    clearFamilyTreePreview()
+    return
+  }
+
+  const extension = file.name.split('.').pop().toLowerCase()
+  const fitType = ['gif', 'png', 'jpg', 'jpeg']
+  let errorMsg = ''
+  if (!fitType.includes(extension)) {
+    errorMsg = `檔案:${file.name}不是支持的影像檔案`
+  }
+  if (file.size > 1024 * 1024 * 5) {
+    errorMsg = `檔案:${file.name}不能超過5M唷`
+  }
+
+  if (errorMsg) {
+    store.commit('snackbar', { msg: errorMsg, type: true, theme: 'warning' })
+    clearFamilyTreePreview()
+    return
+  }
+
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    familyTreeImage.preview = e.target?.result?.toString() ?? ''
+  }
+  reader.readAsDataURL(file)
+  familyTreeImage.file = file
+}
+
+const uploadFamilyTreeProcess = async () => {
+  console.log('uploadFamilyTreeProcess')
+  //如果原始資料存在舊圖譜，則刪除舊圖譜
+  if (list.familyTreeInfo && list.familyTreeInfo.picName && list.familyTreeInfo.picName !== defaultPicName) {
+    let rs = await delExistFamilyTreePic(list.familyTreeInfo.picName)
+    if (rs?.state !== 1) {
+      store.showToastMulti({
+        type: 'error',
+        message: rs?.message ?? '舊圖譜刪除失敗',
+        closeTime: 2,
+      })
+      return
+    }
+  }
+
+  uploadingFamilyTree.value = true
+  let rs
+  try {
+    rs = await onUploadFamilyTree(familyTreeDatabaseName)
+    console.log('upload family tree rs', rs)
+  } finally {
+    uploadingFamilyTree.value = false
+  }
+
+  if (rs?.state === 1) {
+    list.familyTreeInfo = {
+      picName: rs.newName,
+      picOriginalName: familyTreeImage.file.name
+    }
+    list.familyTree_url = list.familyTreeInfo.picName || defaultPicName
+    clearFamilyTreePreview()
+  } else {
+    store.showToastMulti({
+      type: 'error',
+      message: rs?.message ?? '圖譜上傳失敗',
+      closeTime: 2,
+    })
+    return
+  }
+}
+
+//上傳家族圖譜
+const onUploadFamilyTree = (tablename) => {
+  const fd = new FormData()
+  fd.append("file", familyTreeImage.file)
+  return api.upload(tablename, fd)
+}
+
+const delExistFamilyTreePic = async (picName) => {
+  const url = `general/delPic/${familyTreeDatabaseName}/${picName}`
+  const rs = await api.options(url)
+  console.log('delExistFamilyTreePic rs', rs)
+  return rs
+}
+
+const removeExistingFamilyTree = async () => {
+  if (!hasExistingFamilyTree.value || !list.familyTreeInfo?.picName) return
+  const picName = list.familyTreeInfo.picName
+  const rs = await delExistFamilyTreePic(picName)
+  if (rs?.state == 1) {
+    list.familyTreeInfo.picName = ''
+    list.familyTreeInfo.picOriginalName = ''
+    list.familyTree_url = defaultPicName
+    clearFamilyTreePreview()
+    store.showToastMulti({
+      type: 'success',
+      message: '已刪除圖譜',
+      closeTime: 2,
+    })
+  } else {
+    store.showToastMulti({
+      type: 'error',
+      message: rs?.message ?? '刪除圖譜失敗',
+      closeTime: 2,
+    })
+  }
+}
+
 // 跳轉到指定區段
 const scrollToSection = (id) => {
   nextTick(() => {
@@ -1578,7 +1822,8 @@ const sectionAnchors = computed(() =>
     { id: 'section-language', label: '語言與婚姻資訊' },
     { id: 'section-contacts', label: '連絡人資料' },
     { id: 'section-nursing', label: '入院護理評估' },
-    { id: 'section-visit', label: '訪視設定' }
+    { id: 'section-visit', label: '訪視設定' },
+    { id: 'section-familytree', label: '家族圖譜' }
   ].filter((item) => item.condition ?? true)
 )
 
