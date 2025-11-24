@@ -18,3 +18,12 @@
       position: 'center'
     })
 10. 遇到 Add.vue 的頁面；頁面設計的 title；參照 /pipeline/Add.vue 的 title 設計
+11. 遇到 PrintPage.vue 時，使用到 bootstrap的都移除；表格採實體線設計
+12. 遇到 index.vue 的頁面；使用到  normalizeRecord 時，保持下方的程式碼處理就可以了
+const normalizeRecord = (row) => {
+  const parsed = JSON.parse(row.datalist || '{}')
+  return {
+    ...parsed,
+    snkey: row.snkey,
+  }
+}

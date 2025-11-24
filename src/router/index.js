@@ -34,6 +34,7 @@ const routes = [
           { path: 'Hour72', name: 'Hour72', component: () => import('@/views/main/Documents/Hour72/index.vue') },
           { path: 'Sociopsychological', name: 'Sociopsychological', component: () => import('@/views/main/Documents/Sociopsychological/index.vue') },
           { path: 'Servicerecord', name: 'Servicerecord', component: () => import('@/views/main/Documents/Servicerecord/index.vue') },
+          { path: 'Adaptability', name: 'Adaptability', component: () => import('@/views/main/Documents/Adaptability/index.vue') },
 
           // { path: 'recordlist', name: 'recordlist', component: resolve => require(['../views/document/RecordList.vue'], resolve) },
           // { path: 'adaptlist', name: 'adaptlist', component: resolve => require(['../views/document/AdaptList.vue'], resolve) },
@@ -49,7 +50,7 @@ const routes = [
           
           
           // { path: 'melancholylist', name: 'melancholylist', component: resolve => require(['../views/document/MelancholyList.vue'], resolve) },
-          // { path: 'adaptabilitylist', name: 'adaptabilitylist', component: resolve => require(['../views/document/AdaptabilityList.vue'], resolve) },
+          
           // { path: 'rehabilitationlist', name: 'rehabilitationlist', component: resolve => require(['../views/document/RehabilitationList.vue'], resolve) },
           // { path: 'treatmentlist', name: 'treatmentlist', component: resolve => require(['../views/document/TreatmentList.vue'], resolve) },
           // { path: 'hour72nutrition', name: 'hour72nutrition', component: resolve => require(['../views/document/Hour72Nutrition.vue'], resolve) },
@@ -98,6 +99,7 @@ const routes = [
   { path: '/Hour72Print', name: 'Hour72Print', component: () => import('@/views/main/Documents/Hour72/PrintPage.vue') },
   { path: '/SociopsychologicalPrint', name: 'SociopsychologicalPrint', component: () => import('@/views/main/Documents/Sociopsychological/PrintPage.vue') },
   { path: '/ServicerecordPrint', name: 'ServicerecordPrint', component: () => import('@/views/main/Documents/Servicerecord/PrintPage.vue') },
+  { path: '/AdaptabilityPrint', name: 'AdaptabilityPrint', component: () => import('@/views/main/Documents/Adaptability/PrintPage.vue') },
   
   // {
   //   path: '/orderpage',

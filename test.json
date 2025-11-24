@@ -1,16 +1,43 @@
 {
-    "date": "2025-11-22",
-    "target": "個案本人",
-    "type": "定期訪視",
-    "location": "個案家中",
-    "model": "直接服務",
-    "simplecontent": "123",
-    "nextplan": "456",
+    "question1": {
+        "score": 0,
+        "text": "無法評估"
+    },
+    "question2": {
+        "score": 1,
+        "text": "欠佳"
+    },
+    "question3": {
+        "score": 1,
+        "text": "鬱悶"
+    },
+    "question4": {
+        "score": 2,
+        "text": "偶違常"
+    },
+    "question5": {
+        "score": 3,
+        "text": "主動"
+    },
+    "question6": {
+        "score": 2,
+        "text": "月訪"
+    },
+    "result_description": "123456789",
+    "total": 9,
     "u_snkey": "12",
+    "date": "2025-11-24",
     "createInfo": {
         "snkey": "31",
         "name": "系統管理員",
-        "time": "2025-11-22 20:31:39"
+        "time": "2025-11-24 14:54:39"
     },
-    "editInfo": []
+    "editInfo": [
+        {
+            "snkey": "31",
+            "name": "系統管理員",
+            "time": "2025-11-24 15:03:31"
+        }
+    ],
+    "snkey": "3"
 }
