@@ -36,6 +36,7 @@ const routes = [
           { path: 'Servicerecord', name: 'Servicerecord', component: () => import('@/views/main/Documents/Servicerecord/index.vue') },
           { path: 'Adaptability', name: 'Adaptability', component: () => import('@/views/main/Documents/Adaptability/index.vue') },
           { path: 'Treatment', name: 'Treatment', component: () => import('@/views/main/Documents/Treatment/index.vue') },
+          { path: 'Rehabilitation', name: 'Rehabilitation', component: () => import('@/views/main/Documents/Rehabilitation/index.vue') },
 
           // { path: 'recordlist', name: 'recordlist', component: resolve => require(['../views/document/RecordList.vue'], resolve) },
           // { path: 'adaptlist', name: 'adaptlist', component: resolve => require(['../views/document/AdaptList.vue'], resolve) },
@@ -52,7 +53,7 @@ const routes = [
           
           // { path: 'melancholylist', name: 'melancholylist', component: resolve => require(['../views/document/MelancholyList.vue'], resolve) },
           
-          // { path: 'rehabilitationlist', name: 'rehabilitationlist', component: resolve => require(['../views/document/RehabilitationList.vue'], resolve) },
+          
           
           // { path: 'hour72nutrition', name: 'hour72nutrition', component: resolve => require(['../views/document/Hour72Nutrition.vue'], resolve) },
           // { path: 'nutritionlist', name: 'nutritionlist', component: resolve => require(['../views/document/NutritionList.vue'], resolve) },
@@ -102,6 +103,7 @@ const routes = [
   { path: '/ServicerecordPrint', name: 'ServicerecordPrint', component: () => import('@/views/main/Documents/Servicerecord/PrintPage.vue') },
   { path: '/AdaptabilityPrint', name: 'AdaptabilityPrint', component: () => import('@/views/main/Documents/Adaptability/PrintPage.vue') },
   { path: '/TreatmentPrint', name: 'TreatmentPrint', component: () => import('@/views/main/Documents/Treatment/PrintPage.vue') },
+  { path: '/print/rehabilitationprint', name: 'RehabilitationPrint', component: () => import('@/views/main/Documents/Rehabilitation/PrintPage.vue') },
   
   // {
   //   path: '/orderpage',

@@ -231,7 +231,7 @@ const documentItems = [
   { title: '憂鬱量表 (GDS)', route: '/main/Documents/melancholylist', color: 'warning', authKey: 'pass', visable: false, icon: 'mdi-emoticon-sad' },
   { title: '適應性評估表', route: '/main/Documents/Adaptability', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-account-switch' },
   { title: '個案服務處遇計畫表', route: '/main/Documents/Treatment', color: 'warning', authKey: 'pass', visable: true, icon: 'mdi-file-cog' },
-  { title: '復健評估表', route: '/main/Documents/rehabilitationlist', color: 'success', authKey: 'pass', visable: true, icon: 'mdi-wheelchair' },
+  { title: '復健評估表', route: '/main/Documents/Rehabilitation', color: 'success', authKey: 'pass', visable: true, icon: 'mdi-wheelchair' },
   { title: '72 小時營養篩檢表', route: '/main/Documents/hour72nutrition', color: 'pink', authKey: 'pass', visable: true, icon: 'mdi-food-apple' },
   { title: '營養評估單', route: '/main/Documents/nutritionlist', color: 'pink', authKey: 'pass', visable: true, icon: 'mdi-food-variant' },
   { title: '轉介照會單', route: '/main/Documents/consultationlist', color: 'pink', authKey: 'pass', visable: true, icon: 'mdi-account-arrow-right' },

@@ -351,7 +351,7 @@ const askDelete = (record) => {
     const payload = {
       snkey: record.snkey,
       tablename: 'adaptability',
-      info: JSON.stringify({
+      datalist: JSON.stringify({
         ...record,
         delman: `${store.state?.pData?.username ?? ''} (${timestamp})`,
       }),

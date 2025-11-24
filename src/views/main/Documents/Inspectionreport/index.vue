@@ -324,8 +324,8 @@ const openPrintOptions = () => {
 const askDelete = (record) => {
   proxy.$swal({
     title: '確認要刪除這筆檢驗報告單嗎？',
+    text: '刪除後將無法復原，請再次確認。',
     icon: 'warning',
-    showCancelButton: true,
     toast: false,
     timer: null,
     showConfirmButton: true,
@@ -338,7 +338,7 @@ const askDelete = (record) => {
     const payload = {
       snkey: record.snkey,
       tablename: 'inspectionreport',
-      info: JSON.stringify({
+      datalist: JSON.stringify({
         ...record,
         delman: `${store.state?.pData?.username ?? ''} (${timestamp})`,
       }),

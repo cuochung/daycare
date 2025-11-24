@@ -350,22 +350,23 @@ const openPrintOptions = () => {
 const askDelete = (plan) => {
   proxy.$swal({
     title: '確認要刪除這筆護理計畫嗎？',
-    text: '此操作無法復原，請再次確認。',
+    text: '刪除後將無法復原，請再次確認。',
     icon: 'warning',
     toast: false,
     timer: null,
     showConfirmButton: true,
     showCancelButton: true,
-    position: 'center'
+    position: 'center',
   }).then(async (result) => {
-    if (!result.isConfirmed) return
+    if (!result?.isConfirmed) return
 
+    const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')
     const postData = {
       snkey: plan.snkey,
       tablename: 'nursingplan',
       datalist: JSON.stringify({
         ...plan,
-        delman: `${store.state.pData?.username ?? ''} (${dayjs().format('YYYY-MM-DD HH:mm:ss')})`,
+        delman: `${store.state?.pData?.username ?? ''} (${timestamp})`,
       }),
     }
 

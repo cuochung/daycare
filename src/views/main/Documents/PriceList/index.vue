@@ -133,13 +133,13 @@
                               <v-btn v-bind="props" variant="text" icon="mdi-dots-vertical" color="primary" />
                             </template>
                             <v-list density="compact">
-                              <v-list-item @click="openEdit(record)">
+                              <v-list-item @click="openEdit(record.raw)">
                                 <template #prepend>
                                   <v-icon color="primary">mdi-square-edit-outline</v-icon>
                                 </template>
                                 <v-list-item-title>修改</v-list-item-title>
                               </v-list-item>
-                              <v-list-item @click="askDelete(record)">
+                              <v-list-item @click="askDelete(record.raw)">
                                 <template #prepend>
                                   <v-icon color="error">mdi-delete-outline</v-icon>
                                 </template>
@@ -155,10 +155,10 @@
                         </td>
                         <td>
                           <div class="text-body-2 font-weight-medium">
-                            {{ record.raw.feeInfo?.name ?? '—' }}
+                            {{ record.raw.feeInfo.name ?? '—' }}
                           </div>
                         </td>
-                        <td>{{ record.raw.feeInfo?.kind || '—' }}</td>
+                        <td>{{ record.raw.feeInfo.kind ?? '—' }}</td>
                         <td class="text-right">{{ formatCurrency(record.raw.price) }}</td>
                         <td class="text-right">{{ record.raw.quantity }}</td>
                         <td class="text-right font-weight-medium">{{ formatCurrency(record.raw.subtotal) }}</td>
@@ -258,93 +258,6 @@ const formatCurrency = (value) => {
   return Number(value).toLocaleString('zh-TW', { minimumFractionDigits: 0 })
 }
 
-const parseLegacyActor = (value) => {
-  if (!value) return null
-  if (typeof value === 'object') {
-    if (!value.name && value.username) {
-      return { name: value.username, time: value.time ?? '' }
-    }
-    return {
-      name: value.name ?? value.label ?? '',
-      time: value.time ?? '',
-    }
-  }
-  const [name = '', time = ''] = String(value).split('(')
-  return {
-    name: name.trim(),
-    time: time ? time.replace(')', '').trim() : '',
-  }
-}
-
-const parseLegacyEditors = (value) => {
-  if (!value) return []
-  if (Array.isArray(value)) return value
-  return String(value)
-    .split(';')
-    .map((item) => item.trim())
-    .filter(Boolean)
-    .map((item) => parseLegacyActor(item))
-    .filter(Boolean)
-}
-
-const normalizeRecord = (row, feeItemsMap) => {
-  if (!row) return null
-  const parsed = (() => {
-    try {
-      return JSON.parse(row.datalist ?? '{}')
-    } catch (error) {
-      console.warn('parse accounting datalist failed', error)
-      return {}
-    }
-  })()
-
-  const feeSnkey = parsed.fee_snkey ?? row.fee_snkey
-  const feeInfo = feeItemsMap.get(feeSnkey ?? '')
-  if (!feeInfo) return null
-
-  const quantity = Number(parsed.quantity ?? row.quantity ?? 0) || 0
-  const price = Number(parsed.price ?? row.price ?? feeInfo.price ?? 0) || 0
-  const subtotal = quantity * price
-
-  const createInfo =
-    parsed.createInfo ??
-    parseLegacyActor(parsed.create_man ?? row.create_man) ??
-    parseLegacyActor(row.create_man)
-
-  const editInfo = Array.isArray(parsed.editInfo) && parsed.editInfo.length
-    ? parsed.editInfo
-    : parseLegacyEditors(parsed.edit_man ?? row.edit_man)
-
-  return {
-    snkey: row.snkey,
-    date: parsed.date ?? row.date ?? '',
-    quantity,
-    price,
-    subtotal,
-    note: parsed.note ?? row.note ?? '',
-    feeInfo: {
-      snkey: feeInfo.snkey,
-      name: feeInfo.name,
-      kind: feeInfo.kind,
-      unit: feeInfo.unit,
-    },
-    createInfo,
-    editInfo,
-    raw: {
-      ...parsed,
-      snkey: row.snkey,
-      fee_snkey: feeInfo.snkey,
-      date: parsed.date ?? row.date ?? '',
-      quantity,
-      price,
-      subtotal,
-      note: parsed.note ?? row.note ?? '',
-      createInfo,
-      editInfo,
-    },
-  }
-}
-
 const sortRecords = (list) => {
   return [...list].sort((a, b) => {
     const dateCompare = dayjs(b.date).diff(dayjs(a.date))
@@ -376,22 +289,25 @@ const fetchRecords = async () => {
   const url = `byjson/searchByKeyValue/${store.state.databaseName}/accounting`
   const response = await api.options(url, payload)
 
-  const feeItemsMap = new Map(
-    feeItems.value.map((item) => [
-      item.snkey,
-      {
-        snkey: item.snkey,
-        name: item.name,
-        kind: item.kind,
-        unit: item.unit,
-        price: Number(item.price) || 0,
-      },
-    ])
-  )
+  let feeItemsMap = feeItems.value
 
-  const data = (response ?? [])
-    .map((row) => normalizeRecord(row, feeItemsMap))
-    .filter((item) => item !== null)
+  const data = (response ?? []).map((row) => ({
+    ...JSON.parse(row.datalist || '{}'),
+    snkey: row.snkey,
+  })).map((item) => {
+    const feeInfo = feeItemsMap.find((i) => i.snkey === item.fee_snkey) ?? {}
+    const price = Number(item.price) || 0
+    const quantity = Number(item.quantity) || 0
+    const subtotal = price * quantity
+    
+    return {
+      ...item,
+      feeInfo,
+      price,
+      quantity,
+      subtotal,
+    }
+  })
 
   const excludeKinds = ['固定費類', '車資類']
   records.value = sortRecords(data.filter((row) => !excludeKinds.includes(row.feeInfo?.kind ?? '')))
@@ -408,30 +324,19 @@ const openAddDialog = () => {
 }
 
 const openEdit = (record) => {
-  const fee = {
-    snkey: record.feeInfo?.snkey ?? '',
-    text: `${record.feeInfo?.name ?? ''}｜${record.feeInfo?.kind ?? ''}`,
-    price: record.price,
-  }
-
-  addDialogRef.value?.openForEdit({
-    ...record.raw,
-    snkey: record.snkey,
-    date: record.date,
-    quantity: record.quantity,
-    note: record.note,
-    fee,
-  })
+  addDialogRef.value?.openForEdit(record)
 }
 
 const askDelete = (record) => {
-  proxy?.$swal?.({
+  proxy.$swal({
     title: '確認要刪除這筆計價項目嗎？',
+    text: '刪除後將無法復原，請再次確認。',
     icon: 'warning',
+    toast: false,
+    timer: null,
+    showConfirmButton: true,
     showCancelButton: true,
-    confirmButtonText: '刪除',
-    cancelButtonText: '取消',
-    confirmButtonColor: '#d32f2f',
+    position: 'center',
   }).then(async (result) => {
     if (!result?.isConfirmed) return
 
@@ -439,8 +344,8 @@ const askDelete = (record) => {
     const payload = {
       snkey: record.snkey,
       tablename: 'accounting',
-      info: JSON.stringify({
-        ...(record.raw ?? {}),
+      datalist: JSON.stringify({
+        ...record,
         delman: `${store.state?.pData?.username ?? ''} (${timestamp})`,
       }),
     }

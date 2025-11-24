@@ -412,13 +412,15 @@ const openEdit = (record) => {
 }
 
 const askDelete = (record) => {
-  proxy?.$swal?.({
+  proxy.$swal({
     title: '確認要刪除這筆管路使用紀錄嗎？',
+    text: '刪除後將無法復原，請再次確認。',
     icon: 'warning',
+    toast: false,
+    timer: null,
+    showConfirmButton: true,
     showCancelButton: true,
-    confirmButtonText: '刪除',
-    cancelButtonText: '取消',
-    confirmButtonColor: '#d32f2f',
+    position: 'center',
   }).then(async (result) => {
     if (!result?.isConfirmed) return
 
@@ -427,7 +429,7 @@ const askDelete = (record) => {
     const payload = {
       snkey,
       tablename: 'pipeline_used',
-      info: JSON.stringify({
+      datalist: JSON.stringify({
         ...(record.raw || record),
         delman: `${store.state?.pData?.username ?? ''} (${timestamp})`,
       }),

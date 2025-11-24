@@ -1,10 +1,10 @@
 <template>
-  <v-dialog v-model="dialog" max-width="960">
+  <v-dialog v-model="dialog" max-width="960" :retain-focus="false">
     <v-card rounded="xl" class="pricelist-add">
-      <v-sheet class="pricelist-add__header px-6 py-4" :color="headerColor" variant="tonal" rounded="t-xl">
+      <v-sheet class="pricelist-add__header px-6 py-4" :color="headerColor" rounded="t-xl">
         <div class="d-flex align-center justify-space-between">
           <div class="d-flex align-center">
-            <v-avatar size="48" color="white" variant="tonal" class="mr-4">
+            <v-avatar size="48" :color="headerColor" class="mr-4">
               <v-icon color="white" size="26">mdi-cash-register</v-icon>
             </v-avatar>
             <div>
@@ -20,30 +20,30 @@
 
       <v-card-text class="px-6 py-5">
         <v-form ref="formRef">
-          <v-row class="align-center">
+            <v-row class="align-center">
             <v-col cols="12" md="4">
               <v-text-field v-model="form.date" type="date" label="建檔日期" variant="outlined" :rules="[rules.required]" />
-            </v-col>
+              </v-col>
             <v-col cols="12" md="3">
               <v-text-field v-model.number="form.quantity" type="number" min="1" label="數量" variant="outlined"
                 :rules="[rules.required, rules.positive]" />
-            </v-col>
+              </v-col>
             <v-col cols="12" md="5" v-if="isAddMode">
               <v-autocomplete v-model="form.fee" :items="feeItems" item-title="text" return-object label="計價項目"
                 variant="outlined" :rules="[rules.required]" density="comfortable" prepend-inner-icon="mdi-store" />
-            </v-col>
+              </v-col>
             <v-col cols="12" md="5" v-else>
               <v-text-field :model-value="`${form.fee?.text ?? ''}`" label="計價項目" readonly variant="outlined" />
-            </v-col>
+              </v-col>
           </v-row>
 
           <v-row>
             <v-col cols="12">
               <v-textarea v-model="form.note" label="備註" variant="outlined" auto-grow rows="3"
                 prepend-inner-icon="mdi-note-edit" hint="如需調整日期或備註付款資訊，可於此欄補充。" persistent-hint />
-            </v-col>
-          </v-row>
-        </v-form>
+              </v-col>
+            </v-row>
+          </v-form>
 
         <v-alert v-if="isAddMode" class="mt-5" color="primary" variant="tonal" border="start">
           <div class="d-flex align-center mb-3">
@@ -56,7 +56,7 @@
               :disabled="!tempData.length || loading" :loading="loading" @click="finishAdd">
               完成新增
             </v-btn>
-          </div>
+            </div>
 
           <v-table class="pricelist-add__table" density="comfortable">
             <thead>
@@ -67,10 +67,10 @@
                 <th style="width: 100px;" class="text-right">單價</th>
                 <th style="width: 80px;" class="text-right">數量</th>
                 <th style="width: 120px;" class="text-right">小計</th>
-                <th>備註</th>
+                    <th>備註</th>
                 <th style="width: 80px;" class="text-center">移除</th>
-              </tr>
-            </thead>
+                  </tr>
+                </thead>
             <tbody>
               <tr v-for="(item, index) in tempData" :key="`${item.fee?.snkey}-${index}`">
                 <td>{{ index + 1 }}</td>
@@ -87,12 +87,12 @@
               <tr v-if="!tempData.length">
                 <td colspan="8" class="text-center text-medium-emphasis py-6">
                   尚未加入任何項目。
-                </td>
-              </tr>
-            </tbody>
+                    </td>
+                  </tr>
+                </tbody>
           </v-table>
-        </v-alert>
-      </v-card-text>
+          </v-alert>
+        </v-card-text>
 
       <v-divider />
 
@@ -105,9 +105,9 @@
           :disabled="loading" @click="handleEdit">
           確認修改
         </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
@@ -143,7 +143,6 @@ const headerSubtitle = computed(() =>
   isAddMode.value ? '依需求一次加入多筆項目，減少重複輸入。' : '更新項目內容，保留完整紀錄。'
 )
 const headerColor = computed(() => (isAddMode.value ? 'primary' : 'success'))
-const headerIconColor = computed(() => (isAddMode.value ? 'primary' : 'success'))
 
 const defaultNoteForAdjustment = (originalDate, adjustedDate) => {
   return `${originalDate} 調整為 ${adjustedDate}`
@@ -152,10 +151,13 @@ const defaultNoteForAdjustment = (originalDate, adjustedDate) => {
 function defaultForm() {
   return {
     snkey: '',
+    u_snkey: '',
     date: dayjs().format('YYYY-MM-DD'),
     quantity: 1,
     fee: null,
     note: '',
+    createInfo: null,
+    editInfo: [],
   }
 }
 
@@ -185,6 +187,9 @@ const resetForm = () => {
 const closeDialog = () => {
   if (loading.value) return
   dialog.value = false
+  // 重置表单
+  resetForm()
+  formRef.value?.resetValidation()
 }
 
 const validateForm = async () => {
@@ -277,45 +282,88 @@ const finishAdd = async () => {
 
 const handleEdit = async () => {
   const isValid = await validateForm()
-  if (!isValid) return
+  if (!isValid) {
+    store.showToastMulti({
+      type: 'warning',
+      message: '資料輸入不完整，請檢查後再試',
+      closeTime: 2,
+    })
+    return
+  }
 
   if (!form.fee?.snkey) {
-    proxy?.$swal?.({ icon: 'warning', title: '此筆資料缺少計價項目資訊，請重新選擇。' })
+    store.showToastMulti({
+      type: 'warning',
+      message: '此筆資料缺少計價項目資訊，請重新選擇',
+      closeTime: 2,
+    })
     return
   }
 
   loading.value = true
-  const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')
-  const payload = {
-    snkey: form.snkey,
-    user_snkey: store.state?.uData?.snkey,
-    fee_snkey: form.fee.snkey,
-    date: form.date,
-    start_day: form.date,
-    end_day: form.date,
-    quantity: form.quantity,
-    price: form.fee.price,
-    note: form.note,
-    edit_man: `${store.state?.pData?.username ?? ''} (${timestamp})`,
-  }
-
-  const response = await api.post('accounting', payload)
-  loading.value = false
-
-  if (response?.state == 1) {
-    store.showToastMulti({
-      type: 'success',
-      message: '計價項目已更新',
-      closeTime: 2,
+  try {
+    const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')
+    
+    // 确保 editInfo 是数组
+    if (!Array.isArray(form.editInfo)) {
+      form.editInfo = []
+    }
+    
+    // 添加新的编辑记录
+    form.editInfo.unshift({
+      snkey: store.state?.pData?.snkey,
+      name: store.state?.pData?.username,
+      time: timestamp,
     })
-    closeDialog()
-    emit('refresh')
-  } else {
+
+    // 构建 payload，确保包含所有必要字段
+    const payloadData = {
+      u_snkey: form.u_snkey || store.state?.uData?.snkey,
+      fee_snkey: form.fee.snkey,
+      date: form.date,
+      start_day: form.date,
+      end_day: form.date,
+      quantity: form.quantity,
+      price: form.fee.price,
+      note: form.note || '',
+      createInfo: form.createInfo || null,
+      editInfo: form.editInfo,
+    }
+
+    const payload = {
+      snkey: form.snkey,
+      datalist: JSON.stringify(payloadData),
+    }
+
+    const response = await api.post('accounting', payload)
+    
+    if (response?.state == 1) {
+      store.showToastMulti({
+        type: 'success',
+        message: '計價項目已更新',
+        closeTime: 2,
+      })
+      emit('refresh')
+      // 关闭对话框并重置表单
+      dialog.value = false
+      resetForm()
+      formRef.value?.resetValidation()
+    } else {
+      store.showToastMulti({
+        type: 'error',
+        message: '修改失敗，請稍後再試',
+        closeTime: 3,
+      })
+    }
+  } catch (error) {
+    console.error('修改失敗:', error)
     store.showToastMulti({
       type: 'error',
       message: '修改失敗，請稍後再試',
       closeTime: 3,
     })
+  } finally {
+    loading.value = false
   }
 }
 
@@ -340,31 +388,38 @@ const openForAdd = () => {
 
 const openForEdit = (record) => {
   processType.value = 'edit'
-  tempData.value = []
-
-  const feePayload = (() => {
-    if (record?.fee) return record.fee
-    if (record?.feeInfo) {
-      return {
-        snkey: record.feeInfo.snkey ?? '',
-        text: `${record.feeInfo.name ?? ''}｜${record.feeInfo.kind ?? ''}`,
-        price: Number(record.price ?? record.feeInfo.price ?? 0),
-      }
+  
+  // 重置表单
+  Object.assign(form, defaultForm())
+  
+  // 设置基本字段
+  form.snkey = record.snkey || ''
+  form.u_snkey = record.u_snkey || store.state?.uData?.snkey || ''
+  form.date = record.date || dayjs().format('YYYY-MM-DD')
+  form.quantity = record.quantity || 1
+  form.note = record.note || ''
+  
+  // 设置计费项目信息
+  const feeSnkey = record.fee_snkey || record.fee?.snkey
+  const feeName = record.feeInfo?.name || record.fee_name || ''
+  const feeKind = record.feeInfo?.kind || record.fee_kind || ''
+  const feePrice = record.price || 0
+  
+  if (feeSnkey) {
+    form.fee = {
+      snkey: feeSnkey,
+      text: feeName && feeKind ? `${feeName}｜${feeKind}` : feeName || '—',
+      price: Number(feePrice) || 0,
     }
-    return {
-      snkey: record?.fee_snkey ?? '',
-      text: record?.project ? `${record.project}｜${record.kind ?? ''}` : '',
-      price: Number(record?.price ?? record?.unitPrice ?? 0),
-    }
-  })()
+      } else {
+    form.fee = null
+  }
+  
+  // 确保 editInfo 是数组
+  form.editInfo = Array.isArray(record.editInfo) ? [...record.editInfo] : []
+  form.createInfo = record.createInfo || null
 
-  Object.assign(form, {
-    snkey: record.snkey,
-    date: record.date,
-    quantity: record.quantity,
-    note: record.note,
-    fee: feePayload,
-  })
+  formRef.value?.resetValidation()
   dialog.value = true
 }
 

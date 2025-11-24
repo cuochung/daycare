@@ -328,61 +328,45 @@ const openEdit = (record) => {
   addDialogRef.value?.openForEdit(record)
 }
 
-const askDelete = async (record) => {
-  try {
-    const result = await proxy.$swal({
-      title: '確認刪除？',
-      text: '此操作無法復原，請確認是否要刪除此筆資料。',
-      icon: 'warning',
-      toast: false,
-      timer: null,
-      showConfirmButton: true,
-      showCancelButton: true,
-      position: 'center',
-    })
+const askDelete = (record) => {
+  proxy.$swal({
+    title: '確認要刪除這筆個案服務處遇計畫嗎？',
+    text: '刪除後將無法復原，請再次確認。',
+    icon: 'warning',
+    toast: false,
+    timer: null,
+    showConfirmButton: true,
+    showCancelButton: true,
+    position: 'center',
+  }).then(async (result) => {
+    if (!result?.isConfirmed) return
 
-    if (result.isConfirmed) {
-      await handleDelete(record)
-    }
-  } catch (error) {
-    console.error('刪除確認失敗:', error)
-  }
-}
-
-const handleDelete = async (record) => {
-  try {
-    loading.value = true
     const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')
-    const delman = `${store.state.pData.username}(${timestamp})`
-
-    const postData = {
+    const payload = {
       snkey: record.snkey,
       tablename: 'treatment',
-      info: JSON.stringify({ ...record, delman }),
+      datalist: JSON.stringify({
+        ...record,
+        delman: `${store.state?.pData?.username ?? ''} (${timestamp})`,
+      }),
     }
 
-    await api.delete(
-      `${store.state.databaseName}/treatment`,
-      postData
-    )
-
-    store.showToastMulti({
-      msg: '已刪除',
-      type: true,
-      theme: 'success',
-    })
-
-    await fetchRecords()
-  } catch (error) {
-    console.error('刪除失敗:', error)
-    store.showToastMulti({
-      msg: '刪除失敗',
-      type: true,
-      theme: 'error',
-    })
-  } finally {
-    loading.value = false
-  }
+    const response = await api.delete('treatment', payload)
+    if (response?.state == 1) {
+      store.showToastMulti({
+        type: 'success',
+        message: '個案服務處遇計畫已刪除',
+        closeTime: 2,
+      })
+      fetchRecords()
+    } else {
+      store.showToastMulti({
+        type: 'error',
+        message: '刪除失敗，請稍後再試',
+        closeTime: 3,
+      })
+    }
+  })
 }
 
 const openPrint = (record) => {
