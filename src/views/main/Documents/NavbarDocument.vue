@@ -68,11 +68,22 @@
           </header>
           <v-row dense>
             <v-col v-for="item in documentButtons" :key="item.route" cols="12" sm="6" md="4">
-              <v-btn block rounded="lg" :color="item.color" variant="flat" class="document-sheet-btn"
-                @click="handleNavigate(item.route)">
-                <v-icon class="mr-2">{{ item.icon }}</v-icon>
-                <span>{{ item.title }}</span>
-              </v-btn>
+              <div class="document-btn-wrapper">
+                <v-btn block rounded="lg" :color="item.color" variant="flat" 
+                  :class="['document-sheet-btn', { 'document-sheet-btn--active': isCurrentRoute(item.route) }]"
+                  @click="handleNavigate(item.route)">
+                  <v-icon class="mr-2">{{ item.icon }}</v-icon>
+                  <span>{{ item.title }}</span>
+                </v-btn>
+                <v-chip v-if="isCurrentRoute(item.route)" 
+                  color="amber" 
+                  size="small" 
+                  variant="flat" 
+                  class="document-btn-badge">
+                  <v-icon start size="small">mdi-map-marker</v-icon>
+                  當前頁面
+                </v-chip>
+              </div>
             </v-col>
           </v-row>
         </section>
@@ -84,11 +95,22 @@
           </header>
           <v-row dense>
             <v-col v-for="item in mohwButtons" :key="item.route" cols="12" sm="6" md="4">
-              <v-btn block rounded="lg" :color="item.color" variant="flat" class="document-sheet-btn"
-                @click="handleNavigate(item.route)">
-                <v-icon class="mr-2">{{ item.icon }}</v-icon>
-                <span>{{ item.title }}</span>
-              </v-btn>
+              <div class="document-btn-wrapper">
+                <v-btn block rounded="lg" :color="item.color" variant="flat" 
+                  :class="['document-sheet-btn', { 'document-sheet-btn--active': isCurrentRoute(item.route) }]"
+                  @click="handleNavigate(item.route)">
+                  <v-icon class="mr-2">{{ item.icon }}</v-icon>
+                  <span>{{ item.title }}</span>
+                </v-btn>
+                <v-chip v-if="isCurrentRoute(item.route)" 
+                  color="amber" 
+                  size="small" 
+                  variant="flat" 
+                  class="document-btn-badge">
+                  <v-icon start size="small">mdi-map-marker</v-icon>
+                  當前頁面
+                </v-chip>
+              </div>
             </v-col>
           </v-row>
         </section>
@@ -100,11 +122,22 @@
           </header>
           <v-row dense>
             <v-col v-for="item in evaluationButtons" :key="item.route" cols="12" sm="6" md="4">
-              <v-btn block rounded="lg" :color="item.color" variant="flat" class="document-sheet-btn"
-                @click="handleNavigate(item.route)">
-                <v-icon class="mr-2">{{ item.icon }}</v-icon>
-                <span>{{ item.title }}</span>
-              </v-btn>
+              <div class="document-btn-wrapper">
+                <v-btn block rounded="lg" :color="item.color" variant="flat" 
+                  :class="['document-sheet-btn', { 'document-sheet-btn--active': isCurrentRoute(item.route) }]"
+                  @click="handleNavigate(item.route)">
+                  <v-icon class="mr-2">{{ item.icon }}</v-icon>
+                  <span>{{ item.title }}</span>
+                </v-btn>
+                <v-chip v-if="isCurrentRoute(item.route)" 
+                  color="amber" 
+                  size="small" 
+                  variant="flat" 
+                  class="document-btn-badge">
+                  <v-icon start size="small">mdi-map-marker</v-icon>
+                  當前頁面
+                </v-chip>
+              </div>
             </v-col>
           </v-row>
         </section>
@@ -161,7 +194,7 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '@/stores/useStore'
 import api from '@/assets/js/api.js'
 import UserAddDialog from '@/views/main/User/Add.vue'
@@ -169,6 +202,7 @@ import UserAddDialog from '@/views/main/User/Add.vue'
 const emit = defineEmits(['reloadPage'])
 
 const router = useRouter()
+const route = useRoute()
 const store = useStore()
 
 const toolbarVisible = ref(false)
@@ -273,6 +307,22 @@ const documentButtons = computed(() => {
 
 const mohwButtons = computed(() => (isPharmacist.value ? [] : mohwItems))
 const evaluationButtons = computed(() => (isPharmacist.value ? [] : evaluationMetricItems))
+
+// 檢查是否為當前頁面
+const isCurrentRoute = (itemRoute) => {
+  const currentPath = route.path
+  // 處理路由匹配：支援完整路徑或路徑片段匹配
+  if (currentPath === itemRoute) return true
+  // 處理子路由情況，例如 /main/Documents/Servicerecord 匹配 /main/Documents/Servicerecord
+  if (currentPath.startsWith(itemRoute + '/') || currentPath.startsWith(itemRoute + '?')) return true
+  // 處理路徑片段匹配，例如 /main/Documents/Servicerecord/index 匹配 /main/Documents/Servicerecord
+  const routeSegments = itemRoute.split('/').filter(Boolean)
+  const currentSegments = currentPath.split('/').filter(Boolean)
+  if (routeSegments.length > 0 && currentSegments.length >= routeSegments.length) {
+    return routeSegments.every((segment, index) => segment === currentSegments[index])
+  }
+  return false
+}
 
 const fetchAllUsers = async () => {
   const response = await api.get(`user`)
@@ -458,17 +508,127 @@ onMounted(async () => {
   margin-bottom: 12px;
 }
 
+.document-btn-wrapper {
+  position: relative;
+}
+
 .document-sheet-btn {
-  justify-content: flex-start;
+  justify-content: flex-start !important;
   padding: 18px 20px;
   color: white !important;
   box-shadow: 0 10px 26px rgba(74, 107, 95, 0.18);
   text-transform: none;
   font-weight: 600;
+  position: relative;
+  transition: all 0.3s ease;
+  overflow: visible;
+}
+
+.document-sheet-btn :deep(.v-btn__content) {
+  justify-content: flex-start !important;
+  width: 100%;
 }
 
 .document-sheet-btn .v-icon {
   font-size: 18px;
+  margin-right: 8px !important;
+}
+
+.document-sheet-btn span {
+  flex: 1;
+  text-align: left;
+}
+
+.document-sheet-btn--active {
+  box-shadow: 0 10px 26px rgba(74, 107, 95, 0.35), 
+              0 0 0 4px rgba(255, 193, 7, 0.6),
+              0 0 20px rgba(255, 193, 7, 0.4) !important;
+  transform: scale(1.03);
+  border: 3px solid #FFC107 !important;
+  animation: pulse-glow 2s ease-in-out infinite;
+  position: relative;
+}
+
+.document-sheet-btn--active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, transparent 85%, rgba(255, 193, 7, 0.2) 100%);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.document-sheet-btn--active :deep(.v-btn__content) {
+  position: relative;
+  z-index: 1;
+  justify-content: flex-start !important;
+}
+
+.document-sheet-btn--active::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #FFC107, #FFD54F);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(255, 193, 7, 0.8), 0 0 24px rgba(255, 193, 7, 0.4);
+  animation: pulse-dot 1.5s ease-in-out infinite;
+  z-index: 1;
+}
+
+.document-btn-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  z-index: 10;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.5);
+  animation: badge-bounce 0.6s ease-out;
+  white-space: nowrap;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 10px 26px rgba(74, 107, 95, 0.35), 
+                0 0 0 4px rgba(255, 193, 7, 0.6),
+                0 0 20px rgba(255, 193, 7, 0.4);
+  }
+  50% {
+    box-shadow: 0 10px 26px rgba(74, 107, 95, 0.35), 
+                0 0 0 6px rgba(255, 193, 7, 0.8),
+                0 0 30px rgba(255, 193, 7, 0.6);
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.7;
+  }
+}
+
+@keyframes badge-bounce {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(10deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
 }
 
 .document-drawer {

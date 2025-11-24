@@ -353,7 +353,6 @@ const resetForm = () => {
 }
 
 const closeDialog = () => {
-  if (loading.value) return
   dialog.value = false
 }
 
@@ -458,6 +457,7 @@ const handleEdit = async () => {
         message: '個案服務處遇計畫已修改',
         closeTime: 2,
       })
+      resetForm()
       closeDialog()
       emit('refresh')
     } else {

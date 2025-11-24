@@ -188,7 +188,7 @@
                     <v-sheet color="success dark-1" class="pa-2 white--text" elevation="4">
                       <h2>綜合評估及建議：</h2>
                     </v-sheet>
-                    <v-textarea class="ml-3" label="其他內容" v-model="list.comprehensiveAssessmentRecommendations"
+                    <v-textarea class="ml-3 mt-3" label="其他內容" v-model="list.comprehensiveAssessmentRecommendations"
                       variant="outlined" density="comfortable"></v-textarea>
                   </v-alert>
                 </v-col>

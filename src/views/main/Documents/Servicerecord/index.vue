@@ -143,9 +143,15 @@
                             </template>
                             <v-list density="compact">
                               <v-list-item @click="openEdit(record.raw)">
+                                <template #prepend>
+                                  <v-icon color="primary">mdi-square-edit-outline</v-icon>
+                                </template>
                                 <v-list-item-title>修改</v-list-item-title>
                               </v-list-item>
                               <v-list-item @click="askDelete(record.raw)">
+                                <template #prepend>
+                                  <v-icon color="error">mdi-delete-outline</v-icon>
+                                </template>
                                 <v-list-item-title>刪除</v-list-item-title>
                               </v-list-item>
                             </v-list>
@@ -167,15 +173,16 @@
                         </td>
                         <td v-if="canShowCreatorInfo">
                           <div class="text-body-2">
-                            {{ record.raw?.createInfo ? `${record.raw.createInfo.name} (${record.raw.createInfo.time})` : '' }}
+                            {{ record.raw?.createInfo ? `${record.raw.createInfo.name} (${record.raw.createInfo.time})`
+                            : '' }}
                           </div>
                         </td>
                         <td v-if="canShowEditorInfo">
                           <div class="text-body-2 text-truncate servicerecord__edit-info">
                             {{
-                              Array.isArray(record.raw?.editInfo)
-                                ? record.raw.editInfo.map((i) => `${i.name} (${i.time})`).join('，')
-                                : ''
+                            Array.isArray(record.raw?.editInfo)
+                            ? record.raw.editInfo.map((i) => `${i.name} (${i.time})`).join('，')
+                            : ''
                             }}
                           </div>
                         </td>

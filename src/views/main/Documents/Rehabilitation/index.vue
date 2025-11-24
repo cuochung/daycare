@@ -4,7 +4,7 @@
     <RehabilitationPrintOption ref="printDialogRef" />
 
     <v-container fluid class="pa-0">
-        <v-row>
+      <v-row>
         <v-col cols="12">
           <v-sheet class="rehabilitation__hero" rounded="xl" elevation="0">
             <div class="d-flex flex-column flex-md-row justify-space-between align-start">
@@ -60,8 +60,8 @@
             <div class="summary-value">{{ totalCount }}</div>
             <div class="summary-caption">目前載入的評估資料</div>
           </v-card>
-          </v-col>
-          <v-col cols="12" md="4">
+        </v-col>
+        <v-col cols="12" md="4">
           <v-card variant="tonal" color="info" rounded="xl" class="rehabilitation__summary-card">
             <v-icon size="28" class="mb-2">mdi-magnify</v-icon>
             <div class="summary-title">搜尋結果</div>
@@ -87,8 +87,8 @@
               </v-col>
             </v-row>
           </v-sheet>
-          </v-col>
-        </v-row>
+        </v-col>
+      </v-row>
 
       <v-row class="mt-2">
         <v-col cols="12">
@@ -114,7 +114,7 @@
                   <v-chip size="small" variant="tonal" color="primary" prepend-icon="mdi-calendar-range">
                     依日期由新到舊排序
                   </v-chip>
-      </v-card-title>
+                </v-card-title>
                 <v-divider />
                 <v-card-text class="pa-0">
                   <div class="rehabilitation__table-wrapper">
@@ -123,11 +123,11 @@
                         <tr>
                           <th rowspan="2" style="width: 80px;" class="text-center">操作</th>
                           <th rowspan="2" style="width: 120px;">評估日期</th>
-                        <th colspan="4">關節活動度（ROM）</th>
-                        <th colspan="4">肌肉力量（MMT）</th>
+                          <th colspan="4">關節活動度（ROM）</th>
+                          <th colspan="4">肌肉力量（MMT）</th>
                           <th rowspan="2" style="width: 150px;">動作、姿態與步態</th>
-                        <th colspan="5">肌肉張力(Muscle tone)</th>
-                        <th colspan="5">平衡（Balance）</th>
+                          <th colspan="5">肌肉張力(Muscle tone)</th>
+                          <th colspan="5">平衡（Balance）</th>
                           <th colspan="6">布郎斯壯分期（Brunnstrom's stage）</th>
                           <th rowspan="2" style="width: 200px;">短期目標</th>
                           <th rowspan="2" style="width: 200px;">長期目標</th>
@@ -135,8 +135,8 @@
                           <th v-if="canShowCreatorName" rowspan="2" style="width: 160px;">紀錄人姓名</th>
                           <th v-if="canShowCreatorInfo" rowspan="2" style="width: 220px;">紀錄人紀錄</th>
                           <th v-if="canShowEditorInfo" rowspan="2" style="width: 220px;">修改紀錄</th>
-                      </tr>
-                      <tr>
+                        </tr>
+                        <tr>
                           <th style="width: 80px;">右上肢</th>
                           <th style="width: 80px;">右下肢</th>
                           <th style="width: 80px;">左上肢</th>
@@ -161,9 +161,9 @@
                           <th style="width: 60px;">左上肢-遠</th>
                           <th style="width: 60px;">右下肢</th>
                           <th style="width: 60px;">左下肢</th>
-                      </tr>
-                    </thead>
-                    <tbody>
+                        </tr>
+                      </thead>
+                      <tbody>
                         <tr v-for="(record, index) in items"
                           :key="record.snkey || record.raw?.snkey || `rehabilitation-${index}`">
                           <td class="text-center">
@@ -175,18 +175,18 @@
                                 <v-list-item @click="openEdit(record.raw)">
                                   <template #prepend>
                                     <v-icon color="primary">mdi-square-edit-outline</v-icon>
-                            </template>
-                                <v-list-item-title>修改</v-list-item-title>
-                              </v-list-item>
+                                  </template>
+                                  <v-list-item-title>修改</v-list-item-title>
+                                </v-list-item>
                                 <v-list-item @click="askDelete(record.raw)">
                                   <template #prepend>
                                     <v-icon color="error">mdi-delete-outline</v-icon>
                                   </template>
-                                <v-list-item-title>刪除</v-list-item-title>
-                              </v-list-item>
-                            </v-list>
-                          </v-menu>
-                        </td>
+                                  <v-list-item-title>刪除</v-list-item-title>
+                                </v-list-item>
+                              </v-list>
+                            </v-menu>
+                          </td>
                           <td>
                             <div class="text-body-2 font-weight-medium">
                               {{ formatDate(record.raw?.date) }}
@@ -217,15 +217,19 @@
                           <td>{{ record.raw?.brunnstrom4 || '—' }}</td>
                           <td>{{ record.raw?.brunnstrom5 || '—' }}</td>
                           <td>{{ record.raw?.brunnstrom6 || '—' }}</td>
-                          <td class="text-truncate" style="max-width: 200px;">{{ record.raw?.shorttermgoals || '—' }}</td>
-                          <td class="text-truncate" style="max-width: 200px;">{{ record.raw?.longtermgoals || '—' }}</td>
-                          <td class="text-truncate" style="max-width: 200px;">{{ record.raw?.treatmentprograms || '—' }}</td>
+                          <td class="text-truncate" style="max-width: 200px;">{{ record.raw?.shorttermgoals || '—' }}
+                          </td>
+                          <td class="text-truncate" style="max-width: 200px;">{{ record.raw?.longtermgoals || '—' }}
+                          </td>
+                          <td class="text-truncate" style="max-width: 200px;">{{ record.raw?.treatmentprograms || '—' }}
+                          </td>
                           <td v-if="canShowCreatorName">
                             {{ record.raw?.createInfo?.name ?? '' }}
                           </td>
                           <td v-if="canShowCreatorInfo">
                             <div class="text-body-2">
-                              {{ record.raw?.createInfo ? `${record.raw.createInfo.name} (${record.raw.createInfo.time})` : '' }}
+                              {{ record.raw?.createInfo ? `${record.raw.createInfo.name}
+                              (${record.raw.createInfo.time})` : '' }}
                             </div>
                           </td>
                           <td v-if="canShowEditorInfo">
@@ -237,12 +241,12 @@
                               }}
                             </div>
                           </td>
-                      </tr>
-                    </tbody>
+                        </tr>
+                      </tbody>
                     </v-table>
                   </div>
-          </v-card-text>
-        </v-card>
+                </v-card-text>
+              </v-card>
             </template>
           </PaginatedIterator>
         </v-col>
@@ -504,21 +508,20 @@ watch(() => store.state?.uData?.snkey, () => {
   }
 
   &__table {
-  thead {
+    thead {
       background-color: #e3f2fd;
 
-    th {
-      font-size: 1.2rem;
+      th {
+        font-size: 1rem;
         font-family: '微軟正黑體';
-        color: #d32f2f;
         font-weight: 600;
+      }
     }
-  }
 
-  tbody {
-    td {
-      font-size: 1rem;
-    }
+    tbody {
+      td {
+        font-size: 1rem;
+      }
     }
   }
 
