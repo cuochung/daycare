@@ -224,11 +224,11 @@
                           <td class="text-truncate" style="max-width: 200px;">{{ record.raw?.treatmentprograms || '—' }}
                           </td>
                           <td v-if="canShowCreatorName">
-                            {{ record.raw?.createInfo?.name ?? '' }}
+                            {{ record.raw.createInfo?.name ?? '' }}
                           </td>
                           <td v-if="canShowCreatorInfo">
                             <div class="text-body-2">
-                              {{ record.raw?.createInfo ? `${record.raw.createInfo.name}
+                              {{ record.raw.createInfo ? `${record.raw.createInfo.name}
                               (${record.raw.createInfo.time})` : '' }}
                             </div>
                           </td>
@@ -310,22 +310,6 @@ const formatDate = (date) => {
   return parsed.isValid() ? parsed.format('YYYY/MM/DD') : date ?? ''
 }
 
-const normalizeRecord = (row) => {
-  // 如果有 datalist，解析它；否則直接使用 row 的資料
-  if (row.datalist) {
-    const parsed = JSON.parse(row.datalist || '{}')
-    return {
-      ...parsed,
-      snkey: row.snkey,
-    }
-  }
-  // 如果沒有 datalist，直接使用 row 的資料（舊格式兼容）
-  return {
-    ...row,
-    snkey: row.snkey,
-  }
-}
-
 const sortRecords = (list) => {
   return [...list].sort((a, b) => {
     const dateA = a.date || a.raw?.date || ''
@@ -357,14 +341,9 @@ const fetchRecords = async () => {
     )
 
     const normalized = response.map((row) => {
-      const parsed = normalizeRecord(row)
-      const createInfo = parseAction(row.create_man)
-      const editInfo = row.edit_man ? parseAction(row.edit_man) : null
-
       return {
-        ...parsed,
-        createInfo: createInfo ? { name: createInfo.name, time: createInfo.time } : null,
-        editInfo: editInfo ? [{ name: editInfo.name, time: editInfo.time }] : null,
+        ...JSON.parse(row.datalist),
+        snkey: row.snkey,
       }
     })
 
@@ -378,15 +357,6 @@ const fetchRecords = async () => {
     })
   } finally {
     loading.value = false
-  }
-}
-
-const parseAction = (value) => {
-  if (!value) return null
-  const parts = value.split('(')
-  return {
-    name: parts[0] ?? '',
-    time: parts[1] ? parts[1].replace(')', '') : '',
   }
 }
 

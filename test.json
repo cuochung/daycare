@@ -1,16 +1,41 @@
 {
+    "snkey": "1",
+    "date": "2025-11-24",
+    "rom1": "輕度限制",
+    "rom2": "無障礙",
+    "rom3": "無障礙",
+    "rom4": "輕度限制",
+    "mmt1": "4",
+    "mmt2": "3",
+    "mmt3": "2",
+    "mmt4": "1",
+    "action": "轉位困難",
+    "muscletone1": "正常",
+    "muscletone2": "高張",
+    "muscletone3": "低張",
+    "muscletone4": "正常",
+    "muscletone5": "高張",
+    "balance1": "良好",
+    "balance2": "較差",
+    "balance3": "不佳",
+    "balance4": "無法評估",
+    "balance5": "良好",
+    "brunnstrom1": "I",
+    "brunnstrom2": "II",
+    "brunnstrom3": "III",
+    "brunnstrom4": "IV",
+    "brunnstrom5": "V",
+    "brunnstrom6": "VI",
+    "shorttermgoals": "123",
+    "longtermgoals": "456",
+    "treatmentprograms": "789",
     "u_snkey": "12",
-    "fee_snkey": "115",
-    "date": "2025-11-13",
-    "start_day": "2025-11-13",
-    "end_day": "2025-11-13",
-    "quantity": 1,
-    "price": 1000,
-    "note": "",
-    "createInfo": {
-        "snkey": "31",
-        "name": "系統管理員",
-        "time": "2025-11-13 20:52:21"
-    },
-    "editInfo": []
+    "createInfo": null,
+    "editInfo": [
+        {
+            "snkey": "31",
+            "name": "系統管理員",
+            "time": "2025-11-25 15:05:01"
+        }
+    ]
 }
