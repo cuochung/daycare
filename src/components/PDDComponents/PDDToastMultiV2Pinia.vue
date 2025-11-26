@@ -77,8 +77,8 @@ const clearAll = () => {
 
 <style scoped>
 .clearAll{
-  color:rgba(var(--setColor-1), 1);
-  background-color: rgba(var(--setColor-4), 1);
+  color:black;
+  background-color: white;
   padding:5px 10px;
   border-radius: 5px;
   border:1px white solid;

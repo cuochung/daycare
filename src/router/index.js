@@ -37,6 +37,8 @@ const routes = [
           { path: 'Adaptability', name: 'Adaptability', component: () => import('@/views/main/Documents/Adaptability/index.vue') },
           { path: 'Treatment', name: 'Treatment', component: () => import('@/views/main/Documents/Treatment/index.vue') },
           { path: 'Rehabilitation', name: 'Rehabilitation', component: () => import('@/views/main/Documents/Rehabilitation/index.vue') },
+          { path: 'Hour72Nutrition', name: 'Hour72Nutrition', component: () => import('@/views/main/Documents/Hour72Nutrition/index.vue') },
+          { path: 'Nutrition', name: 'Nutrition', component: () => import('@/views/main/Documents/Nutrition/index.vue') },
 
           // { path: 'recordlist', name: 'recordlist', component: resolve => require(['../views/document/RecordList.vue'], resolve) },
           // { path: 'adaptlist', name: 'adaptlist', component: resolve => require(['../views/document/AdaptList.vue'], resolve) },
@@ -55,8 +57,8 @@ const routes = [
           
           
           
-          // { path: 'hour72nutrition', name: 'hour72nutrition', component: resolve => require(['../views/document/Hour72Nutrition.vue'], resolve) },
-          // { path: 'nutritionlist', name: 'nutritionlist', component: resolve => require(['../views/document/NutritionList.vue'], resolve) },
+          
+          
           // { path: 'consultationlist', name: 'consultationlist', component: resolve => require(['../views/document/ConsultationList.vue'], resolve) },
           // { path: 'pharmacistevaluationlist', name: 'pharmacistevaluationlist', component: resolve => require(['../views/document/PharmacistEvaluationList.vue'], resolve) },
           // { path: 'medicationevaluationlist', name: 'medicationevaluationlist', component: resolve => require(['../views/document/MedicationEvaluationList.vue'], resolve) },
@@ -104,6 +106,8 @@ const routes = [
   { path: '/AdaptabilityPrint', name: 'AdaptabilityPrint', component: () => import('@/views/main/Documents/Adaptability/PrintPage.vue') },
   { path: '/TreatmentPrint', name: 'TreatmentPrint', component: () => import('@/views/main/Documents/Treatment/PrintPage.vue') },
   { path: '/print/rehabilitationprint', name: 'RehabilitationPrint', component: () => import('@/views/main/Documents/Rehabilitation/PrintPage.vue') },
+  { path: '/print/hour72nutritionprint', name: 'Hour72NutritionPrint', component: () => import('@/views/main/Documents/Hour72Nutrition/PrintPage.vue') },
+  { path: '/print/nutritionmultiprint', name: 'NutritionMultiPrint', component: () => import('@/views/main/Documents/Nutrition/NutritionMultiPrint.vue') },
   
   // {
   //   path: '/orderpage',
