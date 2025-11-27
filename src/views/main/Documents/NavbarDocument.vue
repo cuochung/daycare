@@ -268,7 +268,7 @@ const documentItems = [
   { title: '復健評估表', route: '/main/Documents/Rehabilitation', color: 'success', authKey: 'pass', visable: true, icon: 'mdi-wheelchair' },
   { title: '72 小時營養篩檢表', route: '/main/Documents/Hour72Nutrition', color: 'pink', authKey: 'pass', visable: true, icon: 'mdi-food-apple' },
   { title: '營養評估單', route: '/main/Documents/Nutrition', color: 'pink', authKey: 'pass', visable: true, icon: 'mdi-food-variant' },
-  { title: '轉介照會單', route: '/main/Documents/consultationlist', color: 'pink', authKey: 'pass', visable: true, icon: 'mdi-account-arrow-right' },
+  { title: '轉介照會單', route: '/main/Documents/Consultation', color: 'pink', authKey: 'pass', visable: true, icon: 'mdi-account-arrow-right' },
   { title: '72 小時藥師評估表', route: '/main/Documents/pharmacistevaluationlist', color: 'grey', authKey: 'pharmacist', visable: true, icon: 'mdi-clipboard-list' },
   { title: '用藥評估紀錄表', route: '/main/Documents/medicationevaluationlist', color: 'grey', authKey: 'pharmacist', visable: true, icon: 'mdi-prescription' },
 ]

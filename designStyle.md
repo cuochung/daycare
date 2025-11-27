@@ -29,3 +29,4 @@ const normalizeRecord = (row) => {
 }
 13. 遇到資料使用到 CRUD 的邏輯；都參照 /signlife 目錄下 index.vue 及 Add.vue 之沒資料建構的方式處理
 14. 遇到 viewData 顯示資料的寫法都棄用；依各畫面顯示時讀入的資料去處理就好
+15. 使用 fromParent 的相關寫法棄用

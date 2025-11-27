@@ -332,7 +332,7 @@ const askDelete = (record) => {
 }
 
 const goPrint = () => {
-  router.push('/print/nutritionprintmanage')
+  router.push('/NutritionPrintManage')
 }
 
 onMounted(() => {

@@ -135,7 +135,7 @@ const handlePrintRange = async () => {
 
     // 開啟列印頁面
     const routeData = router.resolve({
-      path: '/print/rehabilitationprint',
+      path: '/RehabilitationPrint',
     })
     window.open(routeData.href, '_blank')
     closeDialog()
@@ -175,7 +175,7 @@ const handlePrintAll = async () => {
 
     // 開啟列印頁面
     const routeData = router.resolve({
-      path: '/print/rehabilitationprint',
+      path: '/RehabilitationPrint',
     })
     window.open(routeData.href, '_blank')
     closeDialog()

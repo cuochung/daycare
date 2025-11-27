@@ -397,7 +397,7 @@ const printConfirm = async () => {
     
     sessionStorage.setItem('printData', JSON.stringify(printData))
     const routeData = router.resolve({
-      path: '/print/nutritionmultiprint',
+      path: '/NutritionMultiPrint',
     })
     window.open(routeData.href, '_blank')
   }

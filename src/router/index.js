@@ -24,21 +24,23 @@ const routes = [
       {
         path: 'Documents', name: 'Documents', component: () => import('@/views/main/Documents/index.vue'),
         children: [
-          { path: 'Signlife', name: 'Signlife', component: () => import('@/views/main/Documents/Signlife/index.vue') },
-          { path: 'Nursingplan', name: 'Nursingplan', component: () => import('@/views/main/Documents/Nursingplan/index.vue') },
-          { path: 'Nursingrecord', name: 'Nursingrecord', component: () => import('@/views/main/Documents/Nursingrecord/index.vue') },
-          { path: 'PriceList', name: 'PriceList', component: () => import('@/views/main/Documents/PriceList/index.vue') },
-          { path: 'Pipeline', name: 'Pipeline', component: () => import('@/views/main/Documents/Pipeline/index.vue') },
-          { path: 'Inspectionreport', name: 'Inspectionreport', component: () => import('@/views/main/Documents/Inspectionreport/index.vue') },
-          { path: 'Spmsq', name: 'Spmsq', component: () => import('@/views/main/Documents/Spmsq/index.vue') },
-          { path: 'Hour72', name: 'Hour72', component: () => import('@/views/main/Documents/Hour72/index.vue') },
-          { path: 'Sociopsychological', name: 'Sociopsychological', component: () => import('@/views/main/Documents/Sociopsychological/index.vue') },
-          { path: 'Servicerecord', name: 'Servicerecord', component: () => import('@/views/main/Documents/Servicerecord/index.vue') },
-          { path: 'Adaptability', name: 'Adaptability', component: () => import('@/views/main/Documents/Adaptability/index.vue') },
-          { path: 'Treatment', name: 'Treatment', component: () => import('@/views/main/Documents/Treatment/index.vue') },
-          { path: 'Rehabilitation', name: 'Rehabilitation', component: () => import('@/views/main/Documents/Rehabilitation/index.vue') },
-          { path: 'Hour72Nutrition', name: 'Hour72Nutrition', component: () => import('@/views/main/Documents/Hour72Nutrition/index.vue') },
-          { path: 'Nutrition', name: 'Nutrition', component: () => import('@/views/main/Documents/Nutrition/index.vue') },
+          //原生表單
+          { path: 'Signlife', name: 'Signlife', component: () => import('@/views/main/Documents/Original/Signlife/index.vue') },
+          { path: 'Nursingplan', name: 'Nursingplan', component: () => import('@/views/main/Documents/Original/Nursingplan/index.vue') },
+          { path: 'Nursingrecord', name: 'Nursingrecord', component: () => import('@/views/main/Documents/Original/Nursingrecord/index.vue') },
+          { path: 'PriceList', name: 'PriceList', component: () => import('@/views/main/Documents/Original/PriceList/index.vue') },
+          { path: 'Pipeline', name: 'Pipeline', component: () => import('@/views/main/Documents/Original/Pipeline/index.vue') },
+          { path: 'Inspectionreport', name: 'Inspectionreport', component: () => import('@/views/main/Documents/Original/Inspectionreport/index.vue') },
+          { path: 'Spmsq', name: 'Spmsq', component: () => import('@/views/main/Documents/Original/Spmsq/index.vue') },
+          { path: 'Hour72', name: 'Hour72', component: () => import('@/views/main/Documents/Original/Hour72/index.vue') },
+          { path: 'Sociopsychological', name: 'Sociopsychological', component: () => import('@/views/main/Documents/Original/Sociopsychological/index.vue') },
+          { path: 'Servicerecord', name: 'Servicerecord', component: () => import('@/views/main/Documents/Original/Servicerecord/index.vue') },
+          { path: 'Adaptability', name: 'Adaptability', component: () => import('@/views/main/Documents/Original/Adaptability/index.vue') },
+          { path: 'Treatment', name: 'Treatment', component: () => import('@/views/main/Documents/Original/Treatment/index.vue') },
+          { path: 'Rehabilitation', name: 'Rehabilitation', component: () => import('@/views/main/Documents/Original/Rehabilitation/index.vue') },
+          { path: 'Hour72Nutrition', name: 'Hour72Nutrition', component: () => import('@/views/main/Documents/Original/Hour72Nutrition/index.vue') },
+          { path: 'Nutrition', name: 'Nutrition', component: () => import('@/views/main/Documents/Original/Nutrition/index.vue') },
+          { path: 'Consultation', name: 'Consultation', component: () => import('@/views/main/Documents/Original/Consultation/index.vue') },
 
           // { path: 'recordlist', name: 'recordlist', component: resolve => require(['../views/document/RecordList.vue'], resolve) },
           // { path: 'adaptlist', name: 'adaptlist', component: resolve => require(['../views/document/AdaptList.vue'], resolve) },
@@ -46,41 +48,29 @@ const routes = [
           // { path: 'falllist', name: 'falllist', component: resolve => require(['../views/document/FallList.vue'], resolve) },
           // { path: 'bradenlist', name: 'bradenlist', component: resolve => require(['../views/document/BradenList.vue'], resolve) },
           // { path: 'medicinerecordlist', name: 'medicinerecordlist', component: resolve => require(['../views/document/MedicineRecordList.vue'], resolve) },
-          
-          
           // { path: 'nursingassessment', name: 'nursingassessment', component: resolve => require(['../views/document/Nursingassessment.vue'], resolve) },
-          
-          
-          
-          
           // { path: 'melancholylist', name: 'melancholylist', component: resolve => require(['../views/document/MelancholyList.vue'], resolve) },
-          
-          
-          
-          
-          
-          // { path: 'consultationlist', name: 'consultationlist', component: resolve => require(['../views/document/ConsultationList.vue'], resolve) },
           // { path: 'pharmacistevaluationlist', name: 'pharmacistevaluationlist', component: resolve => require(['../views/document/PharmacistEvaluationList.vue'], resolve) },
           // { path: 'medicationevaluationlist', name: 'medicationevaluationlist', component: resolve => require(['../views/document/MedicationEvaluationList.vue'], resolve) },
 
           //衛服部專用表單
-          // { path: 'HealthyHabits', name: 'HealthyHabits', component: resolve => require(['../views/document/mohw/HealthyHabits'], resolve) },
-          // { path: 'MedicalHistories', name: 'MedicalHistories', component: resolve => require(['../views/document/mohw/MedicalHistories'], resolve) },
-          // { path: 'DrugSafeties', name: 'DrugSafeties', component: resolve => require(['../views/document/mohw/DrugSafeties'], resolve) },
-          // { path: 'BodyEvaluations', name: 'BodyEvaluations', component: resolve => require(['../views/document/mohw/BodyEvaluations'], resolve) },
-          // { path: 'PressureInjuries', name: 'PressureInjuries', component: resolve => require(['../views/document/mohw/PressureInjuries'], resolve) },
-          // { path: 'FallRisks', name: 'FallRisks', component: resolve => require(['../views/document/mohw/FallRisks'], resolve) },
-          // { path: 'ADLs', name: 'ADLs', component: resolve => require(['../views/document/mohw/ADLs'], resolve) },
-          // { path: 'IADLs', name: 'IADLs', component: resolve => require(['../views/document/mohw/IADLs'], resolve) },
-          // { path: 'Dementias', name: 'Dementias', component: resolve => require(['../views/document/mohw/Dementias'], resolve) },
-          // { path: 'GeriatricDepressionScales', name: 'GeriatricDepressionScales', component: resolve => require(['../views/document/mohw/GeriatricDepressionScales'], resolve) },
-          // { path: 'BSRS5s', name: 'BSRS5s', component: resolve => require(['../views/document/mohw/BSRS5s'], resolve) },
-          // { path: 'MNASFs', name: 'MNASFs', component: resolve => require(['../views/document/mohw/MNASFs'], resolve) },
-          // { path: 'PainEvaluations', name: 'PainEvaluations', component: resolve => require(['../views/document/mohw/PainEvaluations'], resolve) },
-          // { path: 'SOFs', name: 'SOFs', component: resolve => require(['../views/document/mohw/SOFs'], resolve) },
+          { path: 'HealthyHabits', name: 'HealthyHabits', component: () => import('@/views/main/Documents/Mohw/HealthyHabits.vue') },
+          { path: 'MedicalHistories', name: 'MedicalHistories', component: () => import('@/views/main/Documents/Mohw/MedicalHistories.vue') },
+          { path: 'DrugSafeties', name: 'DrugSafeties', component: () => import('@/views/main/Documents/Mohw/DrugSafeties.vue') },
+          { path: 'BodyEvaluations', name: 'BodyEvaluations', component: () => import('@/views/main/Documents/Mohw/BodyEvaluations.vue') },
+          { path: 'PressureInjuries', name: 'PressureInjuries', component: () => import('@/views/main/Documents/Mohw/PressureInjuries.vue') },
+          { path: 'FallRisks', name: 'FallRisks', component: () => import('@/views/main/Documents/Mohw/FallRisks.vue') },
+          { path: 'ADLs', name: 'ADLs', component: () => import('@/views/main/Documents/Mohw/ADLs.vue') },
+          { path: 'IADLs', name: 'IADLs', component: () => import('@/views/main/Documents/Mohw/IADLs.vue') },
+          { path: 'Dementias', name: 'Dementias', component: () => import('@/views/main/Documents/Mohw/Dementias.vue') },
+          { path: 'GeriatricDepressionScales', name: 'GeriatricDepressionScales', component: () => import('@/views/main/Documents/Mohw/GeriatricDepressionScales.vue') },
+          { path: 'BSRS5s', name: 'BSRS5s', component: () => import('@/views/main/Documents/Mohw/BSRS5s.vue') },
+          { path: 'MNASFs', name: 'MNASFs', component: () => import('@/views/main/Documents/Mohw/MNASFs.vue') },
+          { path: 'PainEvaluations', name: 'PainEvaluations', component: () => import('@/views/main/Mohw/PainEvaluations.vue') },
+          { path: 'SOFs', name: 'SOFs', component: () => import('@/views/main/Documents/Mohw/SOFs.vue') },
 
-          // { path: 'CaseSummaryPlan', name: 'CaseSummaryPlan', component: resolve => require(['../views/document/mohw/CaseSummaryPlan'], resolve) },
-          // { path: 'CareRecord', name: 'CareRecord', component: resolve => require(['../views/document/mohw/CareRecord'], resolve) },
+          { path: 'CaseSummaryPlan', name: 'CaseSummaryPlan', component: () => import('@/views/main/Documents/Original/mohw/CaseSummaryPlan.vue') },
+          { path: 'CareRecord', name: 'CareRecord', component: () => import('@/views/main/Documents/Original/mohw/CareRecord.vue') },
 
           // //六大評估指標表單
           // { path: 'FallEvent', name: 'FallEvent', component: resolve => require(['../views/document/EvaluationMetrics/FallEvent'], resolve) },
@@ -96,20 +86,20 @@ const routes = [
   },
 
   //列印區
-  { path: '/NursingplanPrint', name: 'NursingplanPrint', component: () => import('@/views/main/Documents/Nursingplan/PrintPage.vue') },
-  { path: '/NursingrecordPrint', name: 'NursingrecordPrint', component: () => import('@/views/main/Documents/Nursingrecord/PrintPage.vue') },
-  { path: '/InspectionreportPrint', name: 'InspectionreportPrint', component: () => import('@/views/main/Documents/Inspectionreport/PrintPage.vue') },
+  { path: '/NursingplanPrint', name: 'NursingplanPrint', component: () => import('@/views/main/Documents/Original/Nursingplan/PrintPage.vue') },
+  { path: '/NursingrecordPrint', name: 'NursingrecordPrint', component: () => import('@/views/main/Documents/Original/Nursingrecord/PrintPage.vue') },
+  { path: '/InspectionreportPrint', name: 'InspectionreportPrint', component: () => import('@/views/main/Documents/Original/Inspectionreport/PrintPage.vue') },
   { path: '/MultiDocumentPrint', name: 'MultiDocumentPrint', component: () => import('@/views/print/MultiDocumentPrint.vue') },
-  { path: '/Hour72Print', name: 'Hour72Print', component: () => import('@/views/main/Documents/Hour72/PrintPage.vue') },
-  { path: '/SociopsychologicalPrint', name: 'SociopsychologicalPrint', component: () => import('@/views/main/Documents/Sociopsychological/PrintPage.vue') },
-  { path: '/ServicerecordPrint', name: 'ServicerecordPrint', component: () => import('@/views/main/Documents/Servicerecord/PrintPage.vue') },
-  { path: '/AdaptabilityPrint', name: 'AdaptabilityPrint', component: () => import('@/views/main/Documents/Adaptability/PrintPage.vue') },
-  { path: '/TreatmentPrint', name: 'TreatmentPrint', component: () => import('@/views/main/Documents/Treatment/PrintPage.vue') },
-  { path: '/print/rehabilitationprint', name: 'RehabilitationPrint', component: () => import('@/views/main/Documents/Rehabilitation/PrintPage.vue') },
-  { path: '/print/hour72nutritionprint', name: 'Hour72NutritionPrint', component: () => import('@/views/main/Documents/Hour72Nutrition/PrintPage.vue') },
-  
-  { path: '/print/nutritionprintmanage', name: 'NutritionPrintManage', component: () => import('@/views/main/Documents/Nutrition/NutritionPrintManage.vue') },
-  { path: '/print/nutritionmultiprint', name: 'NutritionMultiPrint', component: () => import('@/views/main/Documents/Nutrition/NutritionMultiPrint.vue') },
+  { path: '/Hour72Print', name: 'Hour72Print', component: () => import('@/views/main/Documents/Original/Hour72/PrintPage.vue') },
+  { path: '/SociopsychologicalPrint', name: 'SociopsychologicalPrint', component: () => import('@/views/main/Documents/Original/Sociopsychological/PrintPage.vue') },
+  { path: '/ServicerecordPrint', name: 'ServicerecordPrint', component: () => import('@/views/main/Documents/Original/Servicerecord/PrintPage.vue') },
+  { path: '/AdaptabilityPrint', name: 'AdaptabilityPrint', component: () => import('@/views/main/Documents/Original/Adaptability/PrintPage.vue') },
+  { path: '/TreatmentPrint', name: 'TreatmentPrint', component: () => import('@/views/main/Documents/Original/Treatment/PrintPage.vue') },
+  { path: '/RehabilitationPrint', name: 'RehabilitationPrint', component: () => import('@/views/main/Documents/Original/Rehabilitation/PrintPage.vue') },
+  { path: '/Hour72NutritionPrint', name: 'Hour72NutritionPrint', component: () => import('@/views/main/Documents/Original/Hour72Nutrition/PrintPage.vue') },
+  { path: '/NutritionPrintManage', name: 'NutritionPrintManage', component: () => import('@/views/main/Documents/Original/Nutrition/NutritionPrintManage.vue') },
+  { path: '/NutritionMultiPrint', name: 'NutritionMultiPrint', component: () => import('@/views/main/Documents/Original/Nutrition/NutritionMultiPrint.vue') },
+  { path: '/ConsultationPrint', name: 'ConsultationPrint', component: () => import('@/views/main/Documents/Original/Consultation/PrintPage.vue') },
   
   
   // {

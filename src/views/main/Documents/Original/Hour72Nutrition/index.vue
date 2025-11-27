@@ -580,7 +580,7 @@ const handlePrint = () => {
     kbData: kbData.value,
   }
   const routeData = router.resolve({
-    path: '/print/hour72nutritionprint',
+    path: '/Hour72NutritionPrint',
     query: { data: JSON.stringify(postData) },
   })
   window.open(routeData.href, '_blank')
