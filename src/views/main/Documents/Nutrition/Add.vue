@@ -1,428 +1,587 @@
 <template>
   <div class="nutritionadd">
-    <v-dialog v-model="dialog" width="auto">
-      <template v-slot:activator="{ on }">
-        <v-icon color="red lighten-2" dark v-on="on" @click="addProcess">mdi-plus-circle</v-icon>
+    <v-dialog v-model="dialog" fullscreen persistent>
+      <template #activator="{ props }">
+        <v-btn
+          v-bind="props"
+          class="nutrition-add-btn"
+          color="primary"
+          variant="elevated"
+          prepend-icon="mdi-plus-circle"
+          elevation="6"
+          @click="openForAdd"
+        >
+          新增營養評估
+        </v-btn>
       </template>
 
-      <v-card>
-        <v-card-title :class="titleStyle" primary-title>{{title}}</v-card-title>
+      <v-card rounded="xl">
+        <v-sheet :color="headerColor" class="d-flex align-center justify-space-between px-6 py-4" rounded="t-xl">
+          <div class="d-flex align-center">
+            <v-avatar size="48" color="white" variant="tonal" class="mr-4">
+              <v-icon color="white" size="28">mdi-food</v-icon>
+            </v-avatar>
+            <div>
+              <h2 class="text-h6 font-weight-bold mb-1">{{ headerTitle }}</h2>
+              <p class="text-body-2 mb-0">{{ headerSubtitle }}</p>
+            </div>
+          </div>
+          <v-btn icon="mdi-close" variant="text" @click="dialog = false" />
+        </v-sheet>
 
-        <v-card-text>
-          <v-form ref="form" class="mt-3">
+        <v-card-text class="pt-6">
+          <v-form ref="formRef" class="mt-3">
             <v-row>
               <v-col cols="12">
-                <v-alert color="primary" outlined>
-                  <h2>基本資料:</h2>
-                  <v-container>
-                    床號:{{this.$store.state.uData.bed_name}} / 入住日期:{{this.$store.state.uData.in_date}} / 姓名:{{this.$store.state.uData.name}} / 性別:{{this.$store.state.uData.sex}} / 生日:{{this.$store.state.uData.birthday}}
-                    / 年齡:{{age}} / 身高:{{this.$store.state.uData.height}} / 標準體重(IBW): {{ibw}}
+                <v-alert color="primary" border="start" variant="tonal">
+                  <h3 class="text-subtitle-1 font-weight-bold mb-2">基本資料</h3>
+                  <div class="text-body-2">
+                    床號: {{ uData.bed_name }} / 入住日期: {{ uData.in_date }} / 姓名: {{ uData.name }} / 性別: {{ uData.sex }} / 生日: {{ uData.birthday }}
+                    / 年齡: {{ age }} / 身高: {{ uData.height }} / 標準體重(IBW): {{ ibw }}
                     <br />
-                    曾患疾病:{{this.$store.state.uData.hadadisease}}
-                  </v-container>
+                    曾患疾病: {{ uData.hadadisease }}
+                  </div>
                 </v-alert>
               </v-col>
 
-              <v-card>
-                <v-card-text>
-                  <v-col cols="3">
-                    <v-text-field label="評估日期" v-model="list.date" type="date" :rules="emptyRules"></v-text-field>
-                  </v-col>
-                  <v-col cols="9"></v-col>
-                  <v-col cols="12">
-                    <v-alert color="primary" outlined>
-                      <h3>生理資料</h3>
+              <v-col cols="12">
+                <v-card variant="outlined" rounded="lg">
+                  <v-card-text>
+                    <v-row>
+                      <v-col cols="12" md="3">
+                        <v-text-field
+                          label="評估日期"
+                          v-model="list.date"
+                          type="date"
+                          :rules="emptyRules"
+                          variant="outlined"
+                          density="comfortable"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+
+                    <v-alert color="primary" border="start" variant="tonal" class="mt-4">
+                      <h3 class="text-subtitle-1 font-weight-bold mb-2">生理資料</h3>
                       <v-row>
                         <v-col cols="12" sm="3">
-                          <v-combobox :items="actionItems" label="活動狀況" v-model="list.action"></v-combobox>
+                          <v-select
+                            :items="actionItems"
+                            label="活動狀況"
+                            v-model="list.action"
+                            variant="outlined"
+                            density="comfortable"
+                          ></v-select>
                         </v-col>
                         <v-col cols="12" sm="3">
-                          <v-text-field label="體重" v-model="list.weight"></v-text-field>
+                          <v-text-field
+                            label="體重"
+                            v-model="list.weight"
+                            variant="outlined"
+                            density="comfortable"
+                          ></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3">
-                          <v-text-field label="BMI" :value="bmi" readonly outlined></v-text-field>
+                          <v-text-field label="BMI" v-model="bmi" readonly variant="outlined" density="comfortable"></v-text-field>
                         </v-col>
                       </v-row>
                     </v-alert>
-                  </v-col>
 
-                  <v-col cols="12">
-                    <v-alert color="primary" outlined>
-                      <h3>飲食資料</h3>
+                    <v-alert color="primary" border="start" variant="tonal" class="mt-4">
+                      <h3 class="text-subtitle-1 font-weight-bold mb-2">飲食資料</h3>
                       <v-row>
                         <v-col cols="12" sm="3">
-                          <v-combobox :items="appetiteItems" label="食慾" v-model="list.appetite"></v-combobox>
+                          <v-select
+                            :items="appetiteItems"
+                            label="食慾"
+                            v-model="list.appetite"
+                            variant="outlined"
+                            density="comfortable"
+                          ></v-select>
                         </v-col>
                         <v-col cols="12" sm="3">
-                          <v-combobox :items="textureItems" label="飲食質地" v-model="list.texture"></v-combobox>
+                          <v-select
+                            :items="textureItems"
+                            label="飲食質地"
+                            v-model="list.texture"
+                            variant="outlined"
+                            density="comfortable"
+                          ></v-select>
                         </v-col>
                         <v-col cols="12" sm="3">
-                          <v-combobox :items="eatItems" label="進食方式" v-model="list.eat"></v-combobox>
+                          <v-select
+                            :items="eatItems"
+                            label="進食方式"
+                            v-model="list.eat"
+                            variant="outlined"
+                            density="comfortable"
+                          ></v-select>
                         </v-col>
                       </v-row>
                     </v-alert>
-                  </v-col>
 
-                  <v-col cols="12">
-                    <v-alert color="primary" outlined>
-                      <h3>評估</h3>
+                    <v-alert color="primary" border="start" variant="tonal" class="mt-4">
+                      <h3 class="text-subtitle-1 font-weight-bold mb-2">評估</h3>
                       <v-row>
                         <v-col cols="12" sm="3">
-                          <v-combobox
+                          <v-select
                             :items="dietprescriptionItems"
                             label="飲食處方"
                             v-model="list.dietprescription"
-                          ></v-combobox>
+                            variant="outlined"
+                            density="comfortable"
+                          ></v-select>
                         </v-col>
                         <v-col cols="12" sm="3">
-                          <v-text-field label="醣類(%)" v-model="list.carbohydrate"></v-text-field>
+                          <v-text-field
+                            label="醣類(%)"
+                            v-model="list.carbohydrate"
+                            variant="outlined"
+                            density="comfortable"
+                          ></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3">
-                          <v-text-field label="蛋白質(%)" v-model="list.protein"></v-text-field>
+                          <v-text-field
+                            label="蛋白質(%)"
+                            v-model="list.protein"
+                            variant="outlined"
+                            density="comfortable"
+                          ></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3">
-                          <v-text-field label="脂肪(%)" v-model="list.fat"></v-text-field>
+                          <v-text-field
+                            label="脂肪(%)"
+                            v-model="list.fat"
+                            variant="outlined"
+                            density="comfortable"
+                          ></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="3">
-                          <v-combobox :items="kcalItems" label="熱量(Kcal)" v-model="list.kcal"></v-combobox>
+                          <v-select
+                            :items="kcalItems"
+                            label="熱量(Kcal)"
+                            v-model="list.kcal"
+                            variant="outlined"
+                            density="comfortable"
+                          ></v-select>
                         </v-col>
                         <v-col cols="12" sm="3">
-                          <v-text-field label="醣類(g)" :value="carbohydrate_g" readonly outlined></v-text-field>
+                          <v-text-field
+                            label="醣類(g)"
+                            v-model="carbohydrate_g"
+                            readonly
+                            variant="outlined"
+                            density="comfortable"
+                          ></v-text-field>
                         </v-col>
-                        
                         <v-col cols="12" sm="3">
-                          <v-text-field label="蛋白質(g)" :value="protein_g" readonly outlined></v-text-field>
+                          <v-text-field
+                            label="蛋白質(g)"
+                            v-model="protein_g"
+                            readonly
+                            variant="outlined"
+                            density="comfortable"
+                          ></v-text-field>
                         </v-col>
-                        
                         <v-col cols="12" sm="3">
-                          <v-text-field label="脂肪(g)" :value="fat_g" readonly outlined></v-text-field>
+                          <v-text-field
+                            label="脂肪(g)"
+                            v-model="fat_g"
+                            readonly
+                            variant="outlined"
+                            density="comfortable"
+                          ></v-text-field>
                         </v-col>
                       </v-row>
                     </v-alert>
-                  </v-col>
 
-                  <v-col cols="12">
-                    <v-alert color="primary" outlined>
-                      <h3>營養建議</h3>
+                    <v-alert color="primary" border="start" variant="tonal" class="mt-4">
+                      <h3 class="text-subtitle-1 font-weight-bold mb-2">營養建議</h3>
                       <v-row>
-                        <v-col cols="12" sm="8">
-                          <v-textarea rows="20" label="營養建議" v-model="list.suggest"></v-textarea>
-                          <!-- <v-combobox :items="suggestItems" label="營養建議" v-model="list.suggest"></v-combobox> -->
+                        <v-col cols="12" md="8">
+                          <v-textarea
+                            rows="20"
+                            label="營養建議"
+                            v-model="list.suggest"
+                            variant="outlined"
+                            density="comfortable"
+                          ></v-textarea>
                         </v-col>
-                        <v-col cols="12" sm="4">
-                          <v-sheet color="primary" class="white--text">
-                            <h3>常用營養建議內容</h3>
+                        <v-col cols="12" md="4">
+                          <v-sheet color="primary" class="white--text pa-3 mb-2" rounded="sm">
+                            <h3 class="text-subtitle-1 font-weight-bold">常用營養建議內容</h3>
                           </v-sheet>
                           <v-text-field
                             label="新增內容"
-                            outlined
+                            variant="outlined"
                             hide-details
                             class="mt-2"
-                            append-icon="mdi-plus-circle"
-                            @click:append="addSuggest"
+                            append-inner-icon="mdi-plus-circle"
+                            @click:append-inner="addSuggest"
                             v-model="newSuggest"
+                            density="comfortable"
                           ></v-text-field>
 
-                          <div style="overflow:auto">
+                          <div style="overflow: auto">
                             <v-list height="300px">
-                              <v-list-item-group>
-                                <v-list-item v-for="(item, i) in suggestItems" :key="i">
-                                  <v-list-item-content @click="insertMsg(item)">
-                                    <v-list-item-title class="d-flex">
-                                      {{item.name}}
-                                      <v-spacer></v-spacer>
-                                      <v-icon color="red" @click.stop="delSuggest(item)">mdi-close</v-icon>
-                                    </v-list-item-title>
-                                  </v-list-item-content>
-                                </v-list-item>
-                              </v-list-item-group>
+                              <v-list-item v-for="(item, i) in suggestItems" :key="i">
+                                <v-list-item-title class="d-flex align-center">
+                                  <span @click="insertMsg(item)" class="flex-grow-1" style="cursor: pointer">
+                                    {{ item.name }}
+                                  </span>
+                                  <v-icon color="error" @click.stop="delSuggest(item)" size="small">mdi-close</v-icon>
+                                </v-list-item-title>
+                              </v-list-item>
                             </v-list>
                           </div>
                         </v-col>
                       </v-row>
                     </v-alert>
-                  </v-col>
-                </v-card-text>
-              </v-card>
+                  </v-card-text>
+                </v-card>
+              </v-col>
             </v-row>
           </v-form>
         </v-card-text>
 
         <v-divider></v-divider>
 
-        <v-card-actions>
+        <v-card-actions class="px-6 py-4">
           <v-spacer></v-spacer>
-          <v-btn class="primary" @click="addOK" v-if="processType=='add'" :loading="loading" :disabled="loading">確認新增</v-btn>
-          <v-btn class="success" @click="editOK" v-if="processType=='edit'" :loading="loading" :disabled="loading">確認修改</v-btn>
+          <v-btn
+            color="primary"
+            variant="flat"
+            @click="addOK"
+            v-if="processType == 'add'"
+            :loading="loading"
+            :disabled="loading"
+          >
+            確認新增
+          </v-btn>
+          <v-btn
+            color="success"
+            variant="flat"
+            @click="editOK"
+            v-if="processType == 'edit'"
+            :loading="loading"
+            :disabled="loading"
+          >
+            確認修改
+          </v-btn>
         </v-card-actions>
-        <!-- <pre>{{list}}</pre>  -->
       </v-card>
     </v-dialog>
   </div>
 </template>
 
-<script>
-import qs from "qs";
-import dayjs from "dayjs";
+<script setup>
+import { ref, computed, onMounted, getCurrentInstance } from 'vue'
+import dayjs from 'dayjs'
+import api from '@/assets/js/api.js'
+import { useStore } from '@/stores/useStore'
 
-export default {
-  data() {
-    return {
-      dialog: false,
-      list: {
-        snkey: "",
-        date: "",
-        suggest: ""
-      }, //表單內資料
-      oldList: {}, //未修改前的表單內資料
-      processType: "", //存放頁面執行是add新增或edit修改
-      title: "",
-      titleStyle: "",
-      emptyRules: [v => !!v || "不可空白"],
-      actionItems: ["臥床", "輕度", "中度", "重度"],
-      appetiteItems: ["好", "尚可", "差"],
-      textureItems: ["乾飯", "稀飯", "細碎","糊狀","流質"],
-      eatItems: ["由口進食", "鼻胃管灌食", "胃造廔"],
-      dietprescriptionItems: ["普通餐", "糖尿病餐", "低鹽餐", "低油餐", "灌食"],
-      kcalItems: ["1300", "1400", "1500", "1600", "1700", "1800"],
-      suggestItems: [],
-      age: dayjs().format("YYYY") - dayjs(this.$store.state.uData.birthday).format("YYYY"),
-      newSuggest: "",
-      loading:false,
-    };
-  },
-  props: ["edititem", "viewData"],
-  mounted() {
-    //父組件要執行本組件時的function時的設定 (showFromParent) id是暫存傳過來的值
-    this.$on("fromParent", function() {
-      this.dialog = true;
-      this.editProcess();
-    });
+const store = useStore()
+const { proxy } = getCurrentInstance()
 
-    this.getSuggestItems();
-  },
-  model: {
-    prop: "edititem"
-    // event: "parentData"
-  },
+const emit = defineEmits(['getAllData'])
 
-  watch: {
-    edititem: [
-      {
-        handler: "editProcess"
-      }
-    ]
-  },
+const dialog = ref(false)
+const formRef = ref(null)
+const list = ref({
+  snkey: '',
+  date: '',
+  suggest: '',
+})
+const processType = ref('')
+const loading = ref(false)
+const suggestItems = ref([])
+const newSuggest = ref('')
 
-  computed: {
-    bmi() {
-      //BMI = 當月體重(公斤)/身高(公尺)^2
-      this.list.bmi =
-        this.list.weight /
-        ((this.$store.state.uData.height / 100) *
-          (this.$store.state.uData.height / 100));
-      return (this.list.bmi = this.list.bmi.toFixed(2));
-    },
-    ibw() {
-      //IBW = 身高(公尺)*身高(公尺)*22，例如1.7*1.7*22=63.58
-      var ibw =
-        (this.$store.state.uData.height / 100) *
-        (this.$store.state.uData.height / 100) *
-        22;
-      return ibw.toFixed(2);
-    },
-    carbohydrate_g() {
-      // 醣類(g)=熱量*醣類(%)/4
-      this.list.carbohydrate_g =
-        (this.list.kcal * (this.list.carbohydrate / 100)) / 4;
-      return (this.list.carbohydrate_g = this.list.carbohydrate_g.toFixed(0));
-    },
-    protein_g() {
-      this.list.protein_g = (this.list.kcal * (this.list.protein / 100)) / 4;
-      return (this.list.protein_g = this.list.protein_g.toFixed(0));
-    },
-    fat_g() {
-      this.list.fat_g = (this.list.kcal * (this.list.fat / 100)) / 9;
-      return (this.list.fat_g = this.list.fat_g.toFixed(0));
+const emptyRules = [(v) => !!v || '不可空白']
+const actionItems = ['臥床', '輕度', '中度', '重度']
+const appetiteItems = ['好', '尚可', '差']
+const textureItems = ['乾飯', '稀飯', '細碎', '糊狀', '流質']
+const eatItems = ['由口進食', '鼻胃管灌食', '胃造廔']
+const dietprescriptionItems = ['普通餐', '糖尿病餐', '低鹽餐', '低油餐', '灌食']
+const kcalItems = ['1300', '1400', '1500', '1600', '1700', '1800']
+
+const uData = computed(() => store.state?.uData ?? {})
+
+const age = computed(() => {
+  if (!uData.value.birthday) return ''
+  return dayjs().format('YYYY') - dayjs(uData.value.birthday).format('YYYY')
+})
+
+const ibw = computed(() => {
+  if (!uData.value.height) return ''
+  const ibwValue = (uData.value.height / 100) * (uData.value.height / 100) * 22
+  return ibwValue.toFixed(2)
+})
+
+const bmi = computed(() => {
+  if (!list.value.weight || !uData.value.height) return ''
+  const bmiValue = list.value.weight / ((uData.value.height / 100) * (uData.value.height / 100))
+  list.value.bmi = bmiValue.toFixed(2)
+  return list.value.bmi
+})
+
+const carbohydrate_g = computed(() => {
+  if (!list.value.kcal || !list.value.carbohydrate) return ''
+  const value = (list.value.kcal * (list.value.carbohydrate / 100)) / 4
+  list.value.carbohydrate_g = value.toFixed(0)
+  return list.value.carbohydrate_g
+})
+
+const protein_g = computed(() => {
+  if (!list.value.kcal || !list.value.protein) return ''
+  const value = (list.value.kcal * (list.value.protein / 100)) / 4
+  list.value.protein_g = value.toFixed(0)
+  return list.value.protein_g
+})
+
+const fat_g = computed(() => {
+  if (!list.value.kcal || !list.value.fat) return ''
+  const value = (list.value.kcal * (list.value.fat / 100)) / 9
+  list.value.fat_g = value.toFixed(0)
+  return list.value.fat_g
+})
+
+const headerTitle = computed(() => (processType.value === 'add' ? '新增營養評估' : '修改營養評估'))
+const headerSubtitle = computed(() =>
+  processType.value === 'add'
+    ? '填寫住民營養狀況評估，包含生理資料、飲食資料、營養建議等完整資訊。'
+    : '更新既有營養評估紀錄，維持數據正確性與一致性。'
+)
+const headerColor = computed(() => (processType.value === 'add' ? 'primary' : 'success'))
+
+const resetRecord = () => {
+  list.value = {
+    snkey: '',
+    date: '',
+    suggest: '',
+    action: '',
+    weight: '',
+    bmi: '',
+    appetite: '',
+    texture: '',
+    eat: '',
+    dietprescription: '',
+    carbohydrate: '',
+    protein: '',
+    fat: '',
+    kcal: '',
+    carbohydrate_g: '',
+    protein_g: '',
+    fat_g: '',
+  }
+  if (formRef.value) {
+    formRef.value.resetValidation()
+  }
+}
+
+const openForAdd = () => {
+  resetRecord()
+  processType.value = 'add'
+  dialog.value = true
+}
+
+const openForEdit = (item) => {
+  processType.value = 'edit'
+  list.value = JSON.parse(JSON.stringify(item))
+  dialog.value = true
+}
+
+const addOK = async () => {
+  const { valid } = await formRef.value?.validate()
+  if (!valid) {
+    store.showToastMulti({
+      type: 'warning',
+      message: '資料輸入不完全!!請重新確認!!',
+      closeTime: 3,
+    })
+    return
+  }
+
+  list.value.u_snkey = store.state.uData.snkey
+  list.value.createInfo = {
+    snkey: store.state.pData.snkey,
+    name: store.state.pData.username,
+    time: dayjs().format('YYYY-MM-DD HH:mm:ss')
+  }
+  list.value.editInfo = []
+
+  let postData = {
+    datalist: JSON.stringify(list.value)
+  }
+
+  loading.value = true
+  try {
+    const response = await api.add('nutrition', postData)
+    if (response?.state == 1) {
+      store.showToastMulti({
+        type: 'success',
+        message: '已新增',
+        closeTime: 2,
+      })
+      list.value = { snkey: '', date: '', suggest: '' }
+      dialog.value = false
+      emit('getAllData')
     }
-  },
+  } catch (error) {
+    console.error('Add error:', error)
+    store.showToastMulti({
+      type: 'error',
+      message: '新增失敗，請稍後再試',
+      closeTime: 3,
+    })
+  } finally {
+    loading.value = false
+  }
+}
 
-  methods: {
-    addProcess() {
-      //進入畫面時,執行的是新增作業
-      this.processType = "add";
-      this.title = "新增資料";
-      this.titleStyle = "font-weight-black error lighten-2";
-      // this.list = {};
+const editOK = async () => {
+  const { valid } = await formRef.value?.validate()
+  if (!valid) {
+    store.showToastMulti({
+      type: 'warning',
+      message: '資料輸入不完全!!請重新確認!!',
+      closeTime: 3,
+    })
+    return
+  }
 
-      //設定最後一筆資料為新增時的預設值及清除新增中不必要的值
-      if (this.viewData.length > 0) {
-        this.list = { ...this.viewData[0] };
-      } else {
-        this.list.suggest = "";
+  const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')
+  list.value.editInfo.unshift({
+    snkey: store.state.pData.snkey,
+    name: store.state.pData.username,
+    time: timestamp
+  })
+
+  let postData = {
+    snkey: list.value.snkey,
+    datalist: JSON.stringify(list.value),
+    updateTime: dayjs().format('YYYY-MM-DD HH:mm:ss')
+  }
+
+  loading.value = true
+  try {
+    const response = await api.post('nutrition', postData)
+    if (response?.state == 1) {
+      store.showToastMulti({
+        type: 'success',
+        message: '已修改',
+        closeTime: 2,
+      })
+      dialog.value = false
+      emit('getAllData')
+    }
+  } catch (error) {
+    console.error('Edit error:', error)
+    store.showToastMulti({
+      type: 'error',
+      message: '修改失敗，請稍後再試',
+      closeTime: 3,
+    })
+  } finally {
+    loading.value = false
+  }
+}
+
+const getSuggestItems = async () => {
+  try {
+    const response = await api.get('suggest')
+    suggestItems.value = response || []
+  } catch (error) {
+    console.error('Get suggest items error:', error)
+  }
+}
+
+const addSuggest = async () => {
+  if (!newSuggest.value) return
+
+  const repeat = suggestItems.value.filter((item) => {
+    return newSuggest.value == item.name
+  })
+  if (repeat.length > 0) {
+    store.showToastMulti({
+      type: 'warning',
+      message: '不可重覆!!',
+      closeTime: 2,
+    })
+    return
+  }
+
+  const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')
+  const payload = {
+    name: newSuggest.value,
+    create_man: store.state.pData.username + '(' + timestamp + ')',
+  }
+
+  try {
+    const response = await api.add('suggest', payload)
+    if (response?.state == 1) {
+      store.showToastMulti({
+        type: 'success',
+        message: '已新增',
+        closeTime: 2,
+      })
+      newSuggest.value = ''
+      await getSuggestItems()
+    }
+  } catch (error) {
+    console.error('Add suggest error:', error)
+  }
+}
+
+const delSuggest = async (delData) => {
+  const result = await proxy.$swal({
+    title: '確認刪除常用營養建議內容嗎？',
+    text: '此操作無法復原',
+    icon: 'question',
+    toast: false,
+    timer: null,
+    showConfirmButton: true,
+    showCancelButton: true,
+    position: 'center'
+  })
+
+  if (result.isConfirmed) {
+    delData.delman = store.state.pData.username + '(' + dayjs().format('YYYY-MM-DD HH:mm:ss') + ')'
+    const payload = {
+      snkey: delData.snkey,
+      tablename: 'suggest',
+      info: JSON.stringify(delData),
+    }
+
+    try {
+      const response = await api.delete('suggest', payload)
+      if (response?.state == 1) {
+        store.showToastMulti({
+          type: 'success',
+          message: '已刪除',
+          closeTime: 2,
+        })
+        await getSuggestItems()
       }
-      this.list.snkey = "";
-      this.list.date = "";
-      this.list.edit_man = "";
-    },
-    editProcess() {
-      //進入畫面時,執行的是修改作業
-      this.processType = "edit";
-      this.title = "修改資料";
-      this.titleStyle = "font-weight-black success lighten-2";
-      this.oldList = this.edititem; //將頁面資料與父項的資料連結
-      this.list = { ...this.edititem }; //複制一份實際修改資料內容
-    },
-    addOK() {
-      //確認新增
-      if (this.$refs.form.validate()) {
-        this.$store.commit("getTime"); //取得現在時間
-        this.list.u_snkey = this.$store.state.uData.snkey;
-        this.list["create_man"] =
-          this.$store.state.pData.username + "(" + this.$store.state.time + ")"; //執行動作的人,時間,內容
-
-        this.loading = true;
-        this.axios
-          .post(
-            "general/add/" + this.$store.state.databaseName + "/nutrition",
-            qs.stringify(this.list)
-          )
-          .then(rs => {
-            // console.log(rs.data)
-            if (rs.data.state == 1) {
-              var pop = { msg: "已新增", type: true, theme: "success" };
-              this.$store.commit("snackbar", pop);
-              this.list = {};
-              this.dialog = false;
-              this.$emit("getAllData");
-              this.loading = false;
-            }
-          });
-      } else {
-        var pop = {
-          msg: "資料輸入不完全!!請重新確認!!",
-          type: true,
-          theme: "warning"
-        };
-        this.$store.commit("snackbar", pop);
-      }
-    },
-    editOK() {
-      //確認修改
-      if (this.$refs.form.validate()) {
-        this.$store.commit("getTime"); //取得現在時間
-        this.list["edit_man"] =
-          this.$store.state.pData.username + "(" + this.$store.state.time + ")"; //執行動作的人,時間,內容
-
-        this.loading = true;
-        this.axios
-          .post(
-            "general/edit/" + this.$store.state.databaseName + "/nutrition",
-            qs.stringify(this.list)
-          )
-          .then(rs => {
-            if (rs.data.state == 1) {
-              var pop = { msg: "已修改", type: true, theme: "success" };
-              this.$store.commit("snackbar", pop);
-              this.dialog = false;
-
-              for (var i in this.list) {
-                //將各個欄位的資料透過一對一的去比對,就可以使vue對資料會有反應
-                this.oldList[i] = this.list[i];
-              }
-              this.loading = false;
-            }
-          });
-      } else {
-        var pop = {
-          msg: "資料輸入不完全!!請重新確認!!",
-          type: true,
-          theme: "warning"
-        };
-        this.$store.commit("snackbar", pop);
-      }
-    },
-    getSuggestItems() {
-      //this.$store.commit("setLoadingOn"); //讀取畫面on
-      this.axios
-        .post("general/getAll/" + this.$store.state.databaseName + "/suggest")
-        .then(rs => {
-          // console.log(rs.data)
-          this.suggestItems = rs.data;
-          // this.$store.commit("setLoadingOff"); //讀取畫面off
-        });
-    },
-    addSuggest() {
-      //新增常用營養建議內容
-      if (this.newSuggest != "") {
-        //判斷重覆
-        var repeat = this.suggestItems.filter(item => {
-          if (this.newSuggest == item.name) {
-            return item;
-          }
-        });
-        if (repeat.length > 0) {
-          var pop = { msg: "不可重覆!!", type: true, theme: "warning" };
-          this.$store.commit("snackbar", pop);
-          return;
-        }
-
-        this.$store.commit("getTime"); //取得現在時間
-        var postData = {
-          name: this.newSuggest,
-          create_man:
-            this.$store.state.pData.username +
-            "(" +
-            this.$store.state.time +
-            ")" //執行動作的人,時間,內容
-        };
-
-        this.axios
-          .post(
-            "general/add/" + this.$store.state.databaseName + "/suggest",
-            qs.stringify(postData)
-          )
-          .then(rs => {
-            // console.log(rs.data)
-            var pop = { msg: "已新增", type: true, theme: "success" };
-            this.$store.commit("snackbar", pop);
-            this.newSuggest = "";
-            this.getSuggestItems();
-            // this.$store.commit("setLoadingOff"); //讀取畫面off
-          });
-      }
-    },
-    delSuggest(delData) {
-      //刪除功能
-      this.$confirm("確認刪除?").then((res) => {
-        delData.delman = this.$store.state.pData.username + "(" + dayjs().format("YYYY-MM-DD HH:mm:ss") + ")";
-        var postData = {
-          snkey: delData.snkey,
-          tablename: "suggest",
-          info: JSON.stringify(delData),
-        };
-
-        if (res) {
-          this.axios
-            .post(
-              "general/delv3/" + this.$store.state.databaseName + "/suggest",
-              qs.stringify(postData)
-            )
-            .then((rs) => {
-              console.log(rs.data);
-              if (rs.data.state == 1) {
-                var pop = { msg: "已刪除", type: true, theme: "success" };
-                this.$store.commit("snackbar", pop);
-                this.getSuggestItems();
-              }
-            });
-        }
-      });
-    },
-    insertMsg(item) {
-      //新增訊息到suggest中
-      this.list.suggest += item.name;
+    } catch (error) {
+      console.error('Delete suggest error:', error)
     }
   }
-};
+}
+
+const insertMsg = (item) => {
+  list.value.suggest = (list.value.suggest || '') + item.name
+}
+
+defineExpose({
+  openForAdd,
+  openForEdit,
+})
+
+onMounted(() => {
+  getSuggestItems()
+})
 </script>
+
+<style scoped lang="scss">
+// 樣式可以根據需要添加
+</style>

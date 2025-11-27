@@ -1,39 +1,27 @@
 {
-    "snkey": "1",
-    "date": "2025-11-26",
-    "eatingpattern": "",
-    "breakfast": "",
-    "lunch": "",
-    "dinner": "",
-    "dessert": "",
-    "physiologicaltest1": "",
-    "physiologicaltest2": "",
-    "physiologicaltest3": "",
-    "physiologicaltest4": "",
-    "physiologicaltest5": "",
-    "physiologicaltest6": "",
-    "assessment": "A=營養足夠",
+    "snkey": "",
+    "date": "2025-11-27",
+    "suggest": "",
+    "edit_man": "",
+    "action": "臥床",
+    "weight": "80",
+    "bmi": "25.25",
+    "appetite": "",
+    "texture": "",
+    "eat": "",
+    "dietprescription": "",
+    "carbohydrate": "",
+    "protein": "",
+    "fat": "",
+    "kcal": "",
+    "carbohydrate_g": "",
+    "protein_g": "",
+    "fat_g": "",
+    "u_snkey": "12",
     "createInfo": {
         "snkey": "31",
         "name": "系統管理員",
-        "time": "2025-11-26 20:29:23"
+        "time": "2025-11-27 15:39:30"
     },
-    "editInfo": [
-        {
-            "snkey": "31",
-            "name": "系統管理員",
-            "time": "2025-11-26 20:38:59"
-        },
-        {
-            "snkey": "31",
-            "name": "系統管理員",
-            "time": "2025-11-26 20:36:15"
-        },
-        {
-            "snkey": "31",
-            "name": "系統管理員",
-            "time": "2025-11-26 20:35:58"
-        }
-    ],
-    "u_snkey": "12"
+    "editInfo": []
 }

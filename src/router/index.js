@@ -107,7 +107,10 @@ const routes = [
   { path: '/TreatmentPrint', name: 'TreatmentPrint', component: () => import('@/views/main/Documents/Treatment/PrintPage.vue') },
   { path: '/print/rehabilitationprint', name: 'RehabilitationPrint', component: () => import('@/views/main/Documents/Rehabilitation/PrintPage.vue') },
   { path: '/print/hour72nutritionprint', name: 'Hour72NutritionPrint', component: () => import('@/views/main/Documents/Hour72Nutrition/PrintPage.vue') },
+  
+  { path: '/print/nutritionprintmanage', name: 'NutritionPrintManage', component: () => import('@/views/main/Documents/Nutrition/NutritionPrintManage.vue') },
   { path: '/print/nutritionmultiprint', name: 'NutritionMultiPrint', component: () => import('@/views/main/Documents/Nutrition/NutritionMultiPrint.vue') },
+  
   
   // {
   //   path: '/orderpage',

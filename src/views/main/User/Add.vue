@@ -232,6 +232,43 @@
               </v-card-text>
             </v-card>
 
+            <!-- 近一次入出院紀錄 -->
+            <v-card id="section-lasthospital" variant="outlined" rounded="lg" elevation="1" class="mb-6">
+              <v-card-title class="d-flex align-center py-4">
+                <v-avatar size="40" color="info" variant="tonal" class="mr-4">
+                  <v-icon color="info" size="24">mdi-hospital-building</v-icon>
+                </v-avatar>
+                <div class="d-flex flex-column">
+                  <span class="text-subtitle-1 font-weight-bold text-info">近一次入出院紀錄</span>
+                  <span class="text-body-2 text-medium-emphasis">記錄最近一次住院與出院資訊</span>
+                </div>
+              </v-card-title>
+              <v-divider></v-divider>
+
+              <v-card-text class="pt-6">
+                <v-select :items="['無', '有']" label="是否有近一次入出院紀錄？" v-model="list.HasLastHospital" :rules="emptyRules"
+                  variant="outlined" density="comfortable" class="mb-4"></v-select>
+                <v-row v-if="list.HasLastHospital == '有'">
+                  <v-col cols="12" sm="3">
+                    <v-text-field label="入院日期" type="date" v-model="list.LastHospital.AdmittedDate" :rules="emptyRules"
+                      variant="outlined" density="comfortable"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="3">
+                    <v-text-field label="出院日期" type="date" v-model="list.LastHospital.DischargedDate"
+                      :rules="emptyRules" variant="outlined" density="comfortable"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="3">
+                    <v-text-field label="主要診斷(ICD10)" v-model="list.LastHospital.ICD10" :rules="emptyRules"
+                      variant="outlined" density="comfortable"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="3">
+                    <v-text-field label="醫療機構名稱" v-model="list.LastHospital.OrgName" :rules="emptyRules"
+                      variant="outlined" density="comfortable"></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+
             <!-- 障礙設定 -->
             <v-card id="section-obstacle" variant="outlined" rounded="lg" elevation="1" class="mb-6">
               <v-card-title class="d-flex align-center py-4">
@@ -436,6 +473,247 @@
                 </v-row>
               </v-card-text>
 
+            </v-card>
+
+
+            <!-- 個人病史 -->
+            <v-card id="section-medical-history" variant="outlined" rounded="lg" elevation="1" class="mb-6">
+              <v-card-title class="d-flex align-center py-4">
+                <v-avatar size="40" color="primary" variant="tonal" class="mr-4">
+                  <v-icon color="primary" size="24">mdi-clipboard-pulse-outline</v-icon>
+                </v-avatar>
+                <div class="d-flex flex-column">
+                  <span class="text-subtitle-1 font-weight-bold text-primary">個人病史</span>
+                  <span class="text-body-2 text-medium-emphasis">記錄疾病診斷、過去病史與過敏史</span>
+                </div>
+              </v-card-title>
+              <v-divider></v-divider>
+
+              <v-card-text class="pt-6">
+                <v-sheet color="primary-lighten-5" variant="tonal" rounded="lg" class="pa-5 mb-6" elevation="2">
+                  <div class="d-flex align-center justify-space-between mb-4">
+                    <h3 class="text-subtitle-1 font-weight-bold text-primary mb-0">入住診斷</h3>
+                    <v-btn color="primary" variant="flat" size="small" prepend-icon="mdi-plus" @click="newDiagnosis">
+                      新增病名
+                    </v-btn>
+                  </div>
+                  <v-divider class="mb-4"></v-divider>
+                  <v-row dense>
+                    <v-col cols="12" v-for="(item, index) in list.diagnosis" :key="index">
+                      <div class="d-flex align-center" style="gap: 8px;">
+                        <v-combobox :label="`疾病診斷 ${index + 1}`" :items="DiagnosisItems" v-model="list.diagnosis[index]"
+                          variant="outlined" density="comfortable" prepend-icon="mdi-close-circle"
+                          @click:prepend="delUserDiagnosis(index)" @focus="disabled = false" @blur="disabled = true"
+                          class="flex-grow-1"></v-combobox>
+                        <div class="d-flex align-center" style="gap: 4px;">
+                          <v-btn icon="mdi-plus-circle" color="primary" variant="tonal" size="default"
+                            @click.stop="addDiagnosis(index)" :disabled="!disabled" density="comfortable">
+                          </v-btn>
+                          <v-btn icon="mdi-minus-circle" color="error" variant="tonal" size="default"
+                            @click.stop="delDiagnosis(index)" :disabled="!disabled" density="comfortable">
+                          </v-btn>
+                        </div>
+                      </div>
+                    </v-col>
+                    <v-col cols="12" v-if="!list.diagnosis || list.diagnosis.length === 0">
+                      <v-alert type="info" variant="tonal" density="compact" class="mb-0">
+                        尚未新增任何診斷，請點擊「新增病名」按鈕開始新增
+                      </v-alert>
+                    </v-col>
+                  </v-row>
+                </v-sheet>
+
+                <v-sheet color="primary-lighten-5" variant="tonal" rounded="lg" class="pa-5 mb-6">
+                  <h3 class="text-subtitle-1 font-weight-bold text-primary mb-4">過去病史</h3>
+                  <v-row dense>
+                    <v-col cols="12">
+                      <h4 class="text-subtitle-2 font-weight-bold mb-2">1. 曾患疾病</h4>
+                      <v-text-field label="曾患疾病" v-model="list.hadadisease" variant="outlined"
+                        density="comfortable"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="1">
+                      <v-select :items="ynitems" label="2. 住院次數" v-model="list.behospitalized1" variant="outlined"
+                        density="comfortable"></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="1">
+                      <v-text-field label="次" v-model="list.behospitalized2" variant="outlined"
+                        density="comfortable"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="2">
+                      <v-text-field label="原因" v-model="list.behospitalized3" variant="outlined"
+                        density="comfortable"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="2">
+                      <v-text-field label="住院地點" v-model="list.behospitalized4" variant="outlined"
+                        density="comfortable"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="1">
+                      <v-select :items="ynitems" label="3. 手術情形" v-model="list.surgerysituation1" variant="outlined"
+                        density="comfortable"></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="1">
+                      <v-text-field label="次" v-model="list.surgerysituation2" variant="outlined"
+                        density="comfortable"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="2">
+                      <v-text-field label="原因" v-model="list.surgerysituation3" variant="outlined"
+                        density="comfortable"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="2">
+                      <v-text-field label="手術地點" v-model="list.surgerysituation4" variant="outlined"
+                        density="comfortable"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="2">
+                      <v-select :items="ynitems" label="4. 輸血經驗" v-model="list.bloodtransfusion" variant="outlined"
+                        density="comfortable"></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="2">
+                      <h4 class="text-subtitle-2 font-weight-bold mb-2">不良反應</h4>
+                      <v-row dense>
+                        <v-col cols="6">
+                          <v-checkbox label="無" v-model="list.adversereactions1" true-value="true" false-value=""
+                            hide-details density="compact"></v-checkbox>
+                        </v-col>
+                        <v-col cols="6">
+                          <v-checkbox label="有" v-model="list.adversereactions2" true-value="true" false-value=""
+                            hide-details density="compact"></v-checkbox>
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                    <v-col cols="12" sm="1">
+                      <v-select :items="ynitems" label="5. 服藥" v-model="list.takingmedicine1" variant="outlined"
+                        density="comfortable"></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="3">
+                      <v-text-field label="藥物名稱及使用情形" v-model="list.takingmedicine2" variant="outlined"
+                        density="comfortable"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="1">
+                      <v-select :items="ynitems" label="6. 先天疾病" v-model="list.congenitaldisease1" variant="outlined"
+                        density="comfortable"></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="3">
+                      <v-text-field label="疾病名稱" v-model="list.congenitaldisease2" variant="outlined"
+                        density="comfortable"></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-sheet>
+
+                <v-sheet color="primary-lighten-5" variant="tonal" rounded="lg" class="pa-5 mb-6">
+                  <h3 class="text-subtitle-1 font-weight-bold text-primary mb-4">過敏史</h3>
+                  <v-row dense>
+                    <v-col cols="12" sm="2">
+                      <v-select :items="allergyhistory1items" label="1. 藥物" v-model="list.allergyhistory1"
+                        variant="outlined" density="comfortable"></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="3">
+                      <v-text-field label="藥名" v-model="list.allergyhistory2" variant="outlined"
+                        density="comfortable"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="2">
+                      <v-select :items="allergyhistory3items" label="2. 食物" v-model="list.allergyhistory3"
+                        variant="outlined" density="comfortable"></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="3">
+                      <v-text-field label="食物名" v-model="list.allergyhistory4" variant="outlined"
+                        density="comfortable"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="2">
+                      <v-text-field label="3. 其他" v-model="list.allergyhistory5" variant="outlined"
+                        density="comfortable"></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-sheet>
+
+                <v-sheet color="primary-lighten-5" variant="tonal" rounded="lg" class="pa-5">
+                  <h3 class="text-subtitle-1 font-weight-bold text-primary mb-4">輔助器材</h3>
+                  <v-row dense>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="無" v-model="list.auxiliaryequipment1" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="助聽器" v-model="list.auxiliaryequipment2" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="活動假牙" v-model="list.auxiliaryequipment3" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="義眼" v-model="list.auxiliaryequipment4" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="眼鏡" v-model="list.auxiliaryequipment5" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="隱形眼鏡" v-model="list.auxiliaryequipment6" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="義肢:上肢左" v-model="list.auxiliaryequipment7" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="義肢:上肢右" v-model="list.auxiliaryequipment8" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="義肢:下肢左" v-model="list.auxiliaryequipment9" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="義肢:下肢右" v-model="list.auxiliaryequipment10" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="矯正鞋" v-model="list.auxiliaryequipment11" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="輪椅" v-model="list.auxiliaryequipment12" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="助行器" v-model="list.auxiliaryequipment13" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="拐杖" v-model="list.auxiliaryequipment14" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="手杖" v-model="list.auxiliaryequipment15" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                    <v-col cols="6" sm="3" md="2">
+                      <v-checkbox label="假髮" v-model="list.auxiliaryequipment16" true-value="true" false-value=""
+                        hide-details density="compact"></v-checkbox>
+                    </v-col>
+                  </v-row>
+                </v-sheet>
+              </v-card-text>
+            </v-card>
+
+            <!-- 主要護理問題 -->
+            <v-card id="section-nursing-issues" variant="outlined" rounded="lg" elevation="1" class="mb-6">
+              <v-card-title class="d-flex align-center py-4">
+                <v-avatar size="40" color="secondary" variant="tonal" class="mr-4">
+                  <v-icon color="secondary" size="24">mdi-clipboard-text-outline</v-icon>
+                </v-avatar>
+                <div class="d-flex flex-column">
+                  <span class="text-subtitle-1 font-weight-bold text-secondary">主要護理問題</span>
+                  <span class="text-body-2 text-medium-emphasis">記錄主要護理問題與注意事項</span>
+                </div>
+              </v-card-title>
+              <v-divider></v-divider>
+
+              <v-card-text class="pt-6">
+                <v-textarea label="主要護理問題" v-model="list.mainnursingissues" variant="outlined" rows="4"
+                  hint="請詳細描述主要護理問題"></v-textarea>
+              </v-card-text>
             </v-card>
 
             <!-- 入院護理評估 -->
@@ -923,7 +1201,8 @@
                     <v-sheet v-if="familyTreeImage.preview" color="white" rounded="lg"
                       class="d-flex align-center justify-center pa-2">
                       <v-img :src="familyTreeImage.preview" aspect-ratio="16/9" rounded="lg" cover>
-                        <v-overlay absolute :model-value="uploadingFamilyTree" class="d-flex align-center justify-center">
+                        <v-overlay absolute :model-value="uploadingFamilyTree"
+                          class="d-flex align-center justify-center">
                           <v-progress-circular color="primary" indeterminate size="32"></v-progress-circular>
                         </v-overlay>
                       </v-img>
@@ -932,14 +1211,15 @@
                     <v-sheet v-else-if="hasExistingFamilyTree" color="white" rounded="lg"
                       class="d-flex align-center justify-center pa-2">
                       <v-img :src="`${baseUrl}/upload/familytree/${list.familyTreeInfo.picName}`"
-                        :lazy-src="`${baseUrl}/upload/familytree/${defaultPicName}`" aspect-ratio="16/9"
-                        rounded="lg" cover>
+                        :lazy-src="`${baseUrl}/upload/familytree/${defaultPicName}`" aspect-ratio="16/9" rounded="lg"
+                        cover>
                         <template #placeholder>
                           <v-row class="fill-height ma-0" align="center" justify="center">
                             <v-progress-circular color="primary" indeterminate size="32"></v-progress-circular>
                           </v-row>
                         </template>
-                        <v-overlay absolute :model-value="uploadingFamilyTree" class="d-flex align-center justify-center">
+                        <v-overlay absolute :model-value="uploadingFamilyTree"
+                          class="d-flex align-center justify-center">
                           <v-progress-circular color="primary" indeterminate size="32"></v-progress-circular>
                         </v-overlay>
                       </v-img>
@@ -1047,6 +1327,7 @@ const loading = ref(false)
 const uploading = ref(false)
 const uploadingFamilyTree = ref(false)
 const idEdit = ref(true)
+const DiagnosisItems = ref([])
 
 const sexitems = ['男', '女']
 const sourceitems = ['自由登記', '醫院轉介', '家屬介紹', '社衛政轉介', '其他']
@@ -1124,6 +1405,9 @@ const skeletalOptions = ['正常', '脊椎側彎', '駝背']
 
 const languageOptions = ['國語', '台語', '客家語', '筆談', '圖片', '手勢', '其他']
 const marriageOptions = ['未婚', '已婚', '離婚', '喪偶', '分居', '其他']
+const ynitems = ['無', '有']
+const allergyhistory1items = ['是', '否']
+const allergyhistory3items = ['是', '否']
 
 const createContactEntry = (initial = {}) => ({
   man: initial.man ?? '',
@@ -1304,7 +1588,48 @@ const createDefaultList = () => ({
   familyTreeInfo: {
     picName: '',
     picOriginalName: ''
-  }
+  },
+  // 個人病史相關欄位
+  diagnosis: [],
+  hadadisease: '',
+  behospitalized1: '',
+  behospitalized2: '',
+  behospitalized3: '',
+  behospitalized4: '',
+  surgerysituation1: '',
+  surgerysituation2: '',
+  surgerysituation3: '',
+  surgerysituation4: '',
+  bloodtransfusion: '',
+  adversereactions1: '',
+  adversereactions2: '',
+  takingmedicine1: '',
+  takingmedicine2: '',
+  congenitaldisease1: '',
+  congenitaldisease2: '',
+  allergyhistory1: '',
+  allergyhistory2: '',
+  allergyhistory3: '',
+  allergyhistory4: '',
+  allergyhistory5: '',
+  auxiliaryequipment1: '',
+  auxiliaryequipment2: '',
+  auxiliaryequipment3: '',
+  auxiliaryequipment4: '',
+  auxiliaryequipment5: '',
+  auxiliaryequipment6: '',
+  auxiliaryequipment7: '',
+  auxiliaryequipment8: '',
+  auxiliaryequipment9: '',
+  auxiliaryequipment10: '',
+  auxiliaryequipment11: '',
+  auxiliaryequipment12: '',
+  auxiliaryequipment13: '',
+  auxiliaryequipment14: '',
+  auxiliaryequipment15: '',
+  auxiliaryequipment16: '',
+  // 主要護理問題
+  mainnursingissues: ''
 })
 
 const list = reactive(createDefaultList())
@@ -1371,6 +1696,18 @@ const addProcess = async () => {
   list.familyTreeInfo = { picName: '', picOriginalName: '' }
   list.familyTree_url = defaultPicName
   list.in_date = dayjs().format('YYYY-MM-DD')
+  
+  // 初始化個人病史相關欄位
+  if (!Array.isArray(list.diagnosis)) {
+    list.diagnosis = []
+  }
+  list.HasLastHospital = '無'
+  list.LastHospital = {
+    AdmittedDate: '',
+    DischargedDate: '',
+    ICD10: '',
+    OrgName: ''
+  }
 
   dialog.value = true
   await nextTick()
@@ -1393,6 +1730,22 @@ const editProcess = (item) => {
   list.familyTreeInfo = normalizeFamilyTreeInfo(item)
   list.familyTree_url = list.familyTreeInfo.picName || defaultPicName
   oldList.value = item
+
+  // 初始化個人病史相關欄位
+  if (!Array.isArray(list.diagnosis)) {
+    list.diagnosis = Array.isArray(item.diagnosis) ? [...item.diagnosis] : []
+  }
+  if (!list.HasLastHospital) {
+    list.HasLastHospital = '無'
+  }
+  if (!list.LastHospital) {
+    list.LastHospital = {
+      AdmittedDate: '',
+      DischargedDate: '',
+      ICD10: '',
+      OrgName: ''
+    }
+  }
 
   dialog.value = true
 }
@@ -1803,6 +2156,133 @@ const removeExistingFamilyTree = async () => {
   }
 }
 
+// 取得所有疾病名稱
+const getDiagnosis = async () => {
+  try {
+    const rs = await api.get('diagnosis')
+    DiagnosisItems.value = Array.isArray(rs) ? rs.map((item) => item.name) : []
+  } catch (error) {
+    console.error('取得疾病名稱失敗:', error)
+    DiagnosisItems.value = []
+  }
+}
+
+// 新增病名
+const newDiagnosis = () => {
+  if (!Array.isArray(list.diagnosis)) {
+    list.diagnosis = []
+  }
+  list.diagnosis.push('')
+}
+
+// 刪除使用者的病名
+const delUserDiagnosis = (index) => {
+  if (Array.isArray(list.diagnosis)) {
+    list.diagnosis.splice(index, 1)
+  }
+}
+
+// 新增病名到資料庫
+const addDiagnosis = async (index) => {
+  const name = list.diagnosis[index]
+  if (!name || name.trim() === '') {
+    store.showToastMulti({
+      type: 'warning',
+      message: `未輸入病名 ${index + 1}`,
+      closeTime: 2,
+    })
+    return false
+  }
+
+  const postData = {
+    name: name,
+    create_man: `${store.state.pData.username}(${dayjs().format('YYYY-MM-DD HH:mm:ss')})`
+  }
+
+  try {
+    const rs = await api.add('diagnosis', postData)
+    if (rs === 'repeat') {
+      store.showToastMulti({
+        type: 'warning',
+        message: '病名已存在!!',
+        closeTime: 2,
+      })
+    } else {
+      store.showToastMulti({
+        type: 'success',
+        message: '病名已新增!!',
+        closeTime: 2,
+      })
+      await getDiagnosis()
+    }
+  } catch (error) {
+    console.error('新增病名失敗:', error)
+    store.showToastMulti({
+      type: 'error',
+      message: '新增病名失敗',
+      closeTime: 2,
+    })
+  }
+}
+
+// 刪除病名
+const delDiagnosis = async (index) => {
+  const name = list.diagnosis[index]
+  if (!name || name.trim() === '') {
+    store.showToastMulti({
+      type: 'warning',
+      message: `未輸入病名 ${index + 1}`,
+      closeTime: 2,
+    })
+    return false
+  }
+
+  const DiagnosisItems = await api.get('diagnosis')
+  let findDiagnosis = DiagnosisItems.find(item => item.name == name)
+  if (!findDiagnosis) {
+    store.showToastMulti({
+      type: 'warning',
+      message: '病名不存在!!',
+      closeTime: 2,
+    })
+    return false
+  }
+
+  const postData = {
+    snkey: findDiagnosis.snkey,
+    tablename: 'diagnosis',
+    datalist: JSON.stringify({
+      ...findDiagnosis,
+      delman: `${store.state.pData.username}(${dayjs().format('YYYY-MM-DD HH:mm:ss')})`,
+    }),
+  }
+
+  try {
+    const rs = await api.delete(`diagnosis`, postData)
+    if (rs === 'noData') {
+      store.showToastMulti({
+        type: 'warning',
+        message: '病名不存在!!',
+        closeTime: 2,
+      })
+    } else {
+      store.showToastMulti({
+        type: 'success',
+        message: '病名已刪除!!',
+        closeTime: 2,
+      })
+      await getDiagnosis()
+    }
+  } catch (error) {
+    console.error('刪除病名失敗:', error)
+    store.showToastMulti({
+      type: 'error',
+      message: '刪除病名失敗',
+      closeTime: 2,
+    })
+  }
+}
+
 // 跳轉到指定區段
 const scrollToSection = (id) => {
   nextTick(() => {
@@ -1818,10 +2298,13 @@ const sectionAnchors = computed(() =>
   [
     { id: 'section-personal', label: '個人基本資料' },
     { id: 'section-welfare', label: '身分福利別', condition: !!list.Welfare },
+    { id: 'section-lasthospital', label: '近一次入出院紀錄' },
     { id: 'section-obstacle', label: '障礙設定' },
     { id: 'section-language', label: '語言與婚姻資訊' },
     { id: 'section-contacts', label: '連絡人資料' },
     { id: 'section-nursing', label: '入院護理評估' },
+    { id: 'section-medical-history', label: '個人病史' },
+    { id: 'section-nursing-issues', label: '主要護理問題' },
     { id: 'section-visit', label: '訪視設定' },
     { id: 'section-familytree', label: '家族圖譜' }
   ].filter((item) => item.condition ?? true)
@@ -1830,6 +2313,10 @@ const sectionAnchors = computed(() =>
 
 
 const baseUrl = computed(() => store.state.base_url)
+
+onMounted(async () => {
+  await getDiagnosis()
+})
 
 defineExpose({ addProcess, editProcess })
 
