@@ -1,219 +1,371 @@
 <template>
-  <div class="HealthyHabitsAdd">
-    <v-dialog v-model="dialog">
-      <template v-slot:activator="{ on }">
-        <v-icon color="red lighten-2" dark v-on="on" @click="addProcess"
-          >mdi-plus-circle</v-icon
-        >
-      </template>
+  <v-dialog v-model="dialog" fullscreen persistent>
+    <v-card rounded="xl">
+      <v-sheet :color="headerColor" class="d-flex align-center justify-space-between px-6 py-4" rounded="t-xl">
+        <div class="d-flex align-center">
+          <v-avatar size="48" color="white" variant="tonal" class="mr-4">
+            <v-icon color="whilte" size="28">mdi-account-cog</v-icon>
+          </v-avatar>
+          <div>
+            <h2 class="text-h6 font-weight-bold mb-1">{{ headerTitle }}</h2>
+            <p class="text-body-2 mb-0">{{ headerSubtitle }}</p>
+          </div>
+        </div>
+        <v-btn icon="mdi-close" variant="text" @click="closeDialog" />
+      </v-sheet>
 
-      <v-card>
-        <v-card-title :class="titleStyle" primary-title>{{
-          title
-        }}</v-card-title>
+      <v-card-text class="px-6 py-5">
+        <v-form ref="formRef">
+          <v-row class="mb-4">
+            <v-col cols="12" md="4">
+              <v-text-field
+                v-model="record.Date"
+                type="date"
+                label="評估日期"
+                variant="outlined"
+                density="comfortable"
+                prepend-inner-icon="mdi-calendar"
+                :rules="requiredDateRules"
+              />
+            </v-col>
+            <v-col cols="12" md="8">
+              <v-alert type="info" variant="tonal" border="start" color="primary">
+                請依照評估流程逐項填寫日常生活功能評估項目。
+              </v-alert>
+            </v-col>
+          </v-row>
 
-        <v-card-text>
-          <v-form ref="form" class="mt-3">
-            <v-text-field type="date" label="評估日期" v-model="list.Date" :rules="emptyRules"></v-text-field>
-            <v-autocomplete :items="qq1Items" label="進食" v-model="list.qq1" :rules="emptyRules" return-object></v-autocomplete>
-            <v-autocomplete :items="qq2Items" label="移位" v-model="list.qq2" :rules="emptyRules" return-object></v-autocomplete>
-            <v-autocomplete :items="qq3Items" label="衛生" v-model="list.qq3" :rules="emptyRules" return-object></v-autocomplete>
-            <v-autocomplete :items="qq4Items" label="如廁" v-model="list.qq4" :rules="emptyRules" return-object></v-autocomplete>
-            <v-autocomplete :items="qq5Items" label="洗澡" v-model="list.qq5" :rules="emptyRules" return-object></v-autocomplete>
-            <v-autocomplete :items="qq6Items" label="走動" v-model="list.qq6" :rules="emptyRules" return-object></v-autocomplete>
-            <v-autocomplete :items="qq7Items" label="樓梯" v-model="list.qq7" :rules="emptyRules" return-object></v-autocomplete>
-            <v-autocomplete :items="qq8Items" label="穿脫" v-model="list.qq8" :rules="emptyRules" return-object></v-autocomplete>
-            <v-autocomplete :items="qq9Items" label="大便" v-model="list.qq9" :rules="emptyRules" return-object></v-autocomplete>
-            <v-autocomplete :items="qq10Items" label="小便" v-model="list.qq10" :rules="emptyRules" return-object></v-autocomplete>
-            
-          </v-form>
-        </v-card-text>
+          <v-divider class="mb-6" />
 
-        <v-divider></v-divider>
+          <v-row v-for="(question, index) in questions" :key="question.key" class="mb-3">
+            <v-col cols="12">
+              <v-select
+                :items="questionItems[index]"
+                :label="question.label"
+                v-model="record[question.key]"
+                variant="outlined"
+                density="comfortable"
+                :rules="emptyRules"
+                return-object
+                item-title="text"
+                item-value="text"
+              >
+                <!-- <template #item="{ props, item }">
+                  <v-list-item v-bind="props">
+                    <v-list-item-title>
+                      {{ item.raw.text }}
+                      <span class="text-caption ml-2">({{ item.raw.Point }}分)</span>
+                    </v-list-item-title>
+                  </v-list-item>
+                </template> -->
+                <template #selection="{ item }">
+                  {{ item.raw.text }} ({{ item.raw.Point }}分)
+                </template>
+              </v-select>
+            </v-col>
+          </v-row>
+        </v-form>
+      </v-card-text>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            class="primary"
-            @click="addOK"
-            v-if="processType == 'add'"
-            :loading="loading"
-            :disabled="loading"
-            >確認新增</v-btn
-          >
-          <v-btn
-            class="success"
-            @click="editOK"
-            v-if="processType == 'edit'"
-            :loading="loading"
-            :disabled="loading"
-            >確認修改</v-btn
-          >
-        </v-card-actions>
-        <!-- <pre>{{this.$store.state.uData}}</pre>  -->
-      </v-card>
-    </v-dialog>
-  </div>
+      <v-divider />
+
+      <v-card-actions class="px-6 py-4">
+        <v-spacer />
+        <v-btn variant="tonal" color="secondary" @click="closeDialog">
+          取消
+        </v-btn>
+        <v-btn v-if="processType === 'add'" color="primary" variant="flat" :loading="loading" @click="handleAdd">
+          確認新增
+        </v-btn>
+        <v-btn v-else color="primary" variant="flat" :loading="loading" @click="handleEdit">
+          確認修改
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
-<script>
-import dayjs from "dayjs";
+<script setup>
+import { computed, reactive, ref, getCurrentInstance } from 'vue'
+import dayjs from 'dayjs'
+import api from '@/assets/js/api.js'
+import { useStore } from '@/stores/useStore'
 
-export default {
-  props:['useDataBase','items'],  //本表單使用的主要資料庫;用於讀取,新增,修改,刪除时指定的資料庫名
-  data() {
-    return {
-      dialog: false,
-      list: {}, //表單內資料
-      processType: "", //存放頁面執行是add新增或edit修改
-      title: "",
-      titleStyle: "",
-      emptyRules: [(v) => !!v || "不可空白"],
-      loading: false,
+const emit = defineEmits(['refresh'])
 
-      qq1Items:[
-        {text: '不需他人協助，在合理的時間(一小時)內，可自行用餐具取用眼前食物，或能自行取用穿脫進食輔具，將餐盤內食物吃完。',Point: 10},
-        {text: '需他人協助取用或切好食物或穿脫進食輔具，但可自行吃飯。',Point: 5},
-        {text: '無法自行取食。',Point: 0},
-      ],
-      qq2Items:[
-        {text: '可自行坐起，且由床移位至椅子或輪椅，使用輪椅的煞車及腳踏板，都不需要他人協助，且沒有安全上的顧慮。',Point: 15},
-        {text: '移位時需要少部分協助或提醒，且有安全上的顧慮。',Point: 10},
-        {text: '可自行坐起，但移位至椅子或輪椅，需他人大部份的協助。',Point: 5},
-        {text: '不能自行移位，完全需他人協助才能坐起或移位。',Point: 0},
-      ],
-      qq3Items:[
-        {text: '可自行刷牙、洗臉、洗手、梳頭及刮鬍子。',Point: 5},
-        {text: '他人協助才能完成上述盥洗項目。',Point: 0},
-      ],
-      qq4Items:[
-        {text: '可自行上下馬桶，穿脫衣褲且不弄髒衣物，自行取用衛生紙擦拭清潔，且不需他人協助。如使用便盆(尿壺)，可自行取放並清洗乾淨。',Point: 10},
-        {text: '需扶持使用馬桶或便盆(尿壺)，協助整理衣物或使用衛生紙或協助清理便盆(尿壺)。',Point: 5},
-        {text: '完全需要他人協助。',Point: 0},
-      ],
-      qq5Items:[
-        {text: '可自行完成盆浴、淋浴或擦澡。',Point: 5},
-        {text: '他人協助才能完成，或可自行完成，但執行困難或清潔度不佳。',Point: 0},
-      ],
-      qq6Items:[
-        {text: '使用或不使用輔具(包括拐杖、支架、義肢或助行器)皆可獨立行走50公尺以上，無安全顧慮。',Point: 15},
-        {text: '需他人稍微扶持(如一手攙扶)或口頭教導，才可行走50公尺以上(一口氣走完或中間休息一次)。',Point: 10},
-        {text: '雖無法行走，但可獨立操作輪椅或電動輪椅(包含轉彎、進門及接近桌子、床沿)並可推行輪椅50公尺以上。',Point: 5},
-        {text: '不能行走50公尺，且無法操縱輪椅，完全依賴他人。',Point: 5},
-      ],
-      qq7Items:[
-        {text: '可自行上下樓梯(可抓扶手或用柺扙)。',Point: 10},
-        {text: '需要他人稍微扶持(指一手輕扶)或口頭指導。',Point: 5},
-        {text: '完全無法上下樓梯。',Point: 0},
-      ],
-      qq8Items:[
-        {text: '可自行穿脫衣褲鞋襪，必要時使用輔具。',Point: 10},
-        {text: '在別人幫助下，可自行完成一半以上動作。',Point: 5},
-        {text: '需要他人完全幫忙。',Point: 0},
-      ],
-      qq9Items:[
-        {text: '無失禁(控)，或當便秘、需要時能自行使用塞劑、甘油球，不需他人協助。',Point: 10},
-        {text: '偶而失禁(控)(每週不超過一次)，或當便秘時需協助使用塞劑。',Point: 5},
-        {text: '失禁(控)(每週超過二次(含)以上)或當便秘時需要灌腸。',Point: 0},
-      ],
-      qq10Items:[
-        {text: '日夜皆無尿失禁(控)，可完全自我控制。',Point: 10},
-        {text: '偶而失禁(控)(每週不超過一次)，使用尿布尿套時需他人幫忙。',Point: 5},
-        {text: '失禁(控)(每週超過二次(含)以上)或使用導尿管。',Point: 0},
-      ],
-
-    };
+const props = defineProps({
+  useDataBase: {
+    type: String,
+    default: 'adls',
   },
-
-  methods: {
-    addProcess() {
-      this.processType = "add";
-      this.title = "新增資料";
-      this.titleStyle = "font-weight-black error lighten-2";
-      this.list = {};
-      if (this.items.length){
-        this.list = JSON.parse(JSON.stringify(this.items[0]))
-        delete this.list.snkey;
-        delete this.list.user_snkey;
-        delete this.list.create_man;
-        delete this.list.create_man_snkey;
-        delete this.list.edit_man;
-        delete this.list.uploadData;
-        delete this.list.uploadState;
-      }
-      this.$nextTick(() => {
-        this.$refs.form.resetValidation();
-      });
-
-    },
-    editProcess(item) {
-      this.dialog = true;
-      this.processType = "edit";
-      this.title = "修改資料";
-      this.titleStyle = "font-weight-black success lighten-2";
-      this.list = JSON.parse(JSON.stringify(item)); //複制一份實際修改資料內容
-    },
-    addOK() {
-      //確認新增
-      if (this.$refs.form.validate()) {
-        this.list.user_snkey = this.$store.state.uData.snkey;
-        this.list.create_man = this.$store.state.pData.username + "(" + dayjs().format("YYYY-MM-DD HH:mm:ss") + ")";
-        this.list.create_man_snkey  = this.$store.state.pData.snkey;
-        var postData = {
-          datalist: JSON.stringify(this.list)
-        };
-        this.loading = true;
-        this.$api.options("general/add/" + this.$store.state.databaseName + "/" + this.useDataBase,postData)
-          .then((rs) => {
-            if (rs.state == 1) {
-              var pop = { msg: "已新增", type: true, theme: "success" };
-              this.$store.commit("snackbar", pop);
-              this.$emit("getAllData");
-              this.dialog = false;
-              this.loading = false;
-              
-            }
-          });
-      } else {
-        var pop = {
-          msg: "資料輸入不完全!!請重新確認!!",
-          type: true,
-          theme: "warning",
-        };
-        this.$store.commit("snackbar", pop);
-      }
-    },
-    editOK() {
-      //確認修改
-      if (this.$refs.form.validate()) {
-        if (!this.list.edit_man){this.list.edit_man = ''}
-        this.list.edit_man = this.$store.state.pData.username + "(" + dayjs().format("YYYY-MM-DD HH:mm:ss") + ")" + this.list.edit_man;
-        let postData = {
-          snkey: this.list.snkey,
-          datalist: JSON.stringify(this.list),
-          edit_man: 'pass'
-        };
-
-        this.loading = true;
-        this.$api.options("general/edit/" + this.$store.state.databaseName + "/" + this.useDataBase,postData)
-          .then((rs) => {
-            if (rs.state == 1) {
-              let pop = { msg: "已修改", type: true, theme: "success" };
-              this.$store.commit("snackbar", pop);
-              this.$emit("getAllData");
-              this.loading = false;
-              this.dialog = false;
-            }
-          });
-      } else {
-        let pop = {
-          msg: "資料輸入不完全!!請重新確認!!",
-          type: true,
-          theme: "warning",
-        };
-        this.$store.commit("snackbar", pop);
-      }
-    },
+  items: {
+    type: Array,
+    default: () => [],
   },
-};
+})
+
+const store = useStore()
+const { proxy } = getCurrentInstance()
+
+const dialog = ref(false)
+const processType = ref('add')
+const loading = ref(false)
+const formRef = ref(null)
+const originalRecord = ref(null)
+
+const requiredDateRules = [(v) => !!v || '不可空白']
+const emptyRules = [(v) => !!v || '不可空白']
+
+const questions = [
+  { key: 'qq1', label: '進食' },
+  { key: 'qq2', label: '移位' },
+  { key: 'qq3', label: '衛生' },
+  { key: 'qq4', label: '如廁' },
+  { key: 'qq5', label: '洗澡' },
+  { key: 'qq6', label: '走動' },
+  { key: 'qq7', label: '樓梯' },
+  { key: 'qq8', label: '穿脫' },
+  { key: 'qq9', label: '大便' },
+  { key: 'qq10', label: '小便' },
+]
+
+const questionItems = [
+  [
+    { text: '不需他人協助，在合理的時間(一小時)內，可自行用餐具取用眼前食物，或能自行取用穿脫進食輔具，將餐盤內食物吃完。', Point: 10 },
+    { text: '需他人協助取用或切好食物或穿脫進食輔具，但可自行吃飯。', Point: 5 },
+    { text: '無法自行取食。', Point: 0 },
+  ],
+  [
+    { text: '可自行坐起，且由床移位至椅子或輪椅，使用輪椅的煞車及腳踏板，都不需要他人協助，且沒有安全上的顧慮。', Point: 15 },
+    { text: '移位時需要少部分協助或提醒，且有安全上的顧慮。', Point: 10 },
+    { text: '可自行坐起，但移位至椅子或輪椅，需他人大部份的協助。', Point: 5 },
+    { text: '不能自行移位，完全需他人協助才能坐起或移位。', Point: 0 },
+  ],
+  [
+    { text: '可自行刷牙、洗臉、洗手、梳頭及刮鬍子。', Point: 5 },
+    { text: '他人協助才能完成上述盥洗項目。', Point: 0 },
+  ],
+  [
+    { text: '可自行上下馬桶，穿脫衣褲且不弄髒衣物，自行取用衛生紙擦拭清潔，且不需他人協助。如使用便盆(尿壺)，可自行取放並清洗乾淨。', Point: 10 },
+    { text: '需扶持使用馬桶或便盆(尿壺)，協助整理衣物或使用衛生紙或協助清理便盆(尿壺)。', Point: 5 },
+    { text: '完全需要他人協助。', Point: 0 },
+  ],
+  [
+    { text: '可自行完成盆浴、淋浴或擦澡。', Point: 5 },
+    { text: '他人協助才能完成，或可自行完成，但執行困難或清潔度不佳。', Point: 0 },
+  ],
+  [
+    { text: '使用或不使用輔具(包括拐杖、支架、義肢或助行器)皆可獨立行走50公尺以上，無安全顧慮。', Point: 15 },
+    { text: '需他人稍微扶持(如一手攙扶)或口頭教導，才可行走50公尺以上(一口氣走完或中間休息一次)。', Point: 10 },
+    { text: '雖無法行走，但可獨立操作輪椅或電動輪椅(包含轉彎、進門及接近桌子、床沿)並可推行輪椅50公尺以上。', Point: 5 },
+    { text: '不能行走50公尺，且無法操縱輪椅，完全依賴他人。', Point: 5 },
+  ],
+  [
+    { text: '可自行上下樓梯(可抓扶手或用柺扙)。', Point: 10 },
+    { text: '需要他人稍微扶持(指一手輕扶)或口頭指導。', Point: 5 },
+    { text: '完全無法上下樓梯。', Point: 0 },
+  ],
+  [
+    { text: '可自行穿脫衣褲鞋襪，必要時使用輔具。', Point: 10 },
+    { text: '在別人幫助下，可自行完成一半以上動作。', Point: 5 },
+    { text: '需要他人完全幫忙。', Point: 0 },
+  ],
+  [
+    { text: '無失禁(控)，或當便秘、需要時能自行使用塞劑、甘油球，不需他人協助。', Point: 10 },
+    { text: '偶而失禁(控)(每週不超過一次)，或當便秘時需協助使用塞劑。', Point: 5 },
+    { text: '失禁(控)(每週超過二次(含)以上)或當便秘時需要灌腸。', Point: 0 },
+  ],
+  [
+    { text: '日夜皆無尿失禁(控)，可完全自我控制。', Point: 10 },
+    { text: '偶而失禁(控)(每週不超過一次)，使用尿布尿套時需他人幫忙。', Point: 5 },
+    { text: '失禁(控)(每週超過二次(含)以上)或使用導尿管。', Point: 0 },
+  ],
+]
+
+const createDefaultRecord = () => {
+  const defaultRecord = {
+    snkey: '',
+    user_snkey: '',
+    Date: '',
+  }
+  questions.forEach((q) => {
+    defaultRecord[q.key] = null
+  })
+  return defaultRecord
+}
+
+const record = reactive(createDefaultRecord())
+
+const headerTitle = computed(() => (processType.value === 'add' ? '新增日常生活功能評估' : '修改日常生活功能評估'))
+const headerSubtitle = computed(() =>
+  processType.value === 'add'
+    ? '填寫住民日常生活功能評估，包含進食、移位、衛生等十項功能評估項目。'
+    : '更新既有評估紀錄，維持數據正確性與一致性。'
+)
+const headerColor = computed(() => (processType.value === 'add' ? 'primary' : 'success'))
+
+
+const resetRecord = () => {
+  Object.assign(record, createDefaultRecord())
+  originalRecord.value = null
+  if (formRef.value) {
+    formRef.value.resetValidation()
+  }
+}
+
+const closeDialog = () => {
+  dialog.value = false
+  loading.value = false
+}
+
+const openForAdd = () => {
+  resetRecord()
+  processType.value = 'add'
+  
+  // 如果有既有資料，複製第一筆作為預設值
+  if (props.items && props.items.length > 0) {
+    const firstItem = JSON.parse(JSON.stringify(props.items[0]))
+    delete firstItem.snkey
+    delete firstItem.user_snkey
+    delete firstItem.createInfo
+    delete firstItem.editInfo
+    delete firstItem.uploadData
+    delete firstItem.uploadState
+    Object.assign(record, firstItem)
+  }
+  
+  dialog.value = true
+}
+
+const openForEdit = (item) => {
+  resetRecord()
+  processType.value = 'edit'
+  originalRecord.value = { ...item }
+  Object.assign(record, JSON.parse(JSON.stringify(item)))
+  dialog.value = true
+}
+
+const validateForm = async () => {
+  const result = await formRef.value?.validate()
+  return result?.valid ?? false
+}
+
+const handleAdd = async () => {
+  const isValid = await validateForm()
+  if (!isValid) {
+    store.showToastMulti({
+      type: 'warning',
+      message: '資料輸入不完全!!請重新確認!!',
+      closeTime: 3,
+    })
+    return
+  }
+
+  loading.value = true
+
+  record.user_snkey = store.state.uData?.snkey
+  record.createInfo = {
+    snkey: store.state.pData.snkey,
+    name: store.state.pData.username,
+    time: dayjs().format('YYYY-MM-DD HH:mm:ss')
+  }
+
+  try {
+    const postData = {
+      datalist: JSON.stringify(record),
+    }
+
+    const response = await api.add(props.useDataBase, postData)
+    if (response?.state == 1) {
+      store.showToastMulti({
+        type: 'success',
+        message: '已新增',
+        closeTime: 2,
+      })
+      dialog.value = false
+      emit('refresh')
+    } else {
+      store.showToastMulti({
+        type: 'error',
+        message: '新增失敗，請稍後再試',
+        closeTime: 3,
+      })
+    }
+  } catch (error) {
+    console.error('Add error:', error)
+    store.showToastMulti({
+      type: 'error',
+      message: '新增失敗，請稍後再試',
+      closeTime: 3,
+    })
+  } finally {
+    loading.value = false
+  }
+}
+
+const handleEdit = async () => {
+  const isValid = await validateForm()
+  if (!isValid) {
+    store.showToastMulti({
+      type: 'warning',
+      message: '資料輸入不完全!!請重新確認!!',
+      closeTime: 3,
+    })
+    return
+  }
+
+  loading.value = true
+
+  if (!record.editInfo) {
+    record.editInfo = []
+  }
+  
+  record.editInfo.unshift({
+    snkey: store.state.pData.snkey,
+    name: store.state.pData.username,
+    time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+  })
+  try {
+    const postData = {
+      snkey: record.snkey,
+      datalist: JSON.stringify(record),
+      updateTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    }
+
+    const response = await api.post(props.useDataBase, postData)
+    if (response?.state == 1) {
+      store.showToastMulti({
+        type: 'success',
+        message: '已修改',
+        closeTime: 2,
+      })
+      dialog.value = false
+      emit('refresh')
+    } else {
+      store.showToastMulti({
+        type: 'error',
+        message: '修改失敗，請稍後再試',
+        closeTime: 3,
+      })
+    }
+  } catch (error) {
+    console.error('Edit error:', error)
+    store.showToastMulti({
+      type: 'error',
+      message: '修改失敗，請稍後再試',
+      closeTime: 3,
+    })
+  } finally {
+    loading.value = false
+  }
+}
+
+defineExpose({
+  openForAdd,
+  openForEdit,
+})
 </script>
+
+<style scoped lang="scss">
+// 樣式可以根據需要添加
+</style>

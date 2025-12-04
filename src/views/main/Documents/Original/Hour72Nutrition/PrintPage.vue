@@ -187,13 +187,13 @@ const ibw = computed(() => {
 
 const createManName = computed(() => {
   if (!list.value.createInfo) {
-    if (list.value.create_man) {
-      const name = list.value.create_man.split('(')
-      return name[0] || '—'
+    if (list.value.createInfo.name) {
+      return list.value.createInfo.name.split('(')[0] || '—'
     }
     return '—'
+  } else {
+    return list.value.createInfo.name || '—'
   }
-  return list.value.createInfo.name || '—'
 })
 
 const formatArray = (value) => {

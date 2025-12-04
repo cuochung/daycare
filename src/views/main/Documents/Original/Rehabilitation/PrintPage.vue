@@ -146,8 +146,8 @@ const getCreatorName = (item) => {
   if (item.createInfo && item.createInfo.name) {
     return item.createInfo.name
   }
-  if (item.create_man) {
-    const parts = item.create_man.split('(')
+  if (item.createInfo) {
+    const parts = item.createInfo.name.split('(')
     return parts[0] || '—'
   }
   return '—'

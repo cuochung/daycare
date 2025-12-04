@@ -22,9 +22,9 @@
                 <v-chip class="hero-chip" prepend-icon="mdi-theme-light-dark" size="small" variant="outlined">
                   Daycare Style
                 </v-chip>
-                <v-btn color="primary" variant="tonal" prepend-icon="mdi-autorenew" class="ml-2" @click="reloadPage">
+                <!-- <v-btn color="primary" variant="tonal" prepend-icon="mdi-autorenew" class="ml-2" @click="reloadPage">
                   重新整理內容
-                </v-btn>
+                </v-btn> -->
               </div>
             </div>
           </v-sheet>
@@ -32,7 +32,7 @@
       </v-row>
 
       <v-row class="mt-4" dense>
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="8">
           <v-sheet class="document-summary" rounded="xl" elevation="2" color="primary-lighten-5">
             <v-icon color="primary" class="mb-2">mdi-account-heart</v-icon>
             <h3 class="summary-title">住民基本資訊</h3>
@@ -248,10 +248,11 @@ onBeforeUnmount(() => {
 
     &__row {
       display: flex;
-      justify-content: space-between;
+      // justify-content: space-between;
       align-items: center;
       font-size: 0.95rem;
       color: var(--daycare-primary);
+      gap: 12px;
 
       .label {
         font-weight: 600;

@@ -427,7 +427,11 @@ const enterNursingRecord = async (plan) => {
       u_snkey: store.state.uData.snkey,
       date: plan.date,
       nursingrecord_content: content,
-      create_man: operator,
+      createInfo: {
+        snkey: store.state.pData.snkey,
+        name: store.state.pData.username,
+        time: now,
+      },
     }
     const rs = await api.add('nursingrecord', addPayload)
     if (rs?.state == 1) {

@@ -77,8 +77,8 @@ const clearAll = () => {
 
 <style scoped>
 .clearAll{
-  color:black;
-  background-color: white;
+  color:white;
+  background-color: black;
   padding:5px 10px;
   border-radius: 5px;
   border:1px white solid;

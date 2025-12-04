@@ -346,22 +346,6 @@ const parseEditInfo = (value) => {
   return value.split(';').map((item) => parseAction(item)).filter(Boolean)
 }
 
-const normalizeRecord = (row) => {
-  const parsed = JSON.parse(row.datalist || '{}')
-  return {
-    ...parsed,
-    snkey: row.snkey,
-    createInfo: parseAction(row.create_man),
-    editInfo: parseEditInfo(row.edit_man),
-    raw: {
-      ...parsed,
-      snkey: row.snkey,
-      create_man: row.create_man,
-      edit_man: row.edit_man,
-    },
-  }
-}
-
 const sortRecords = (list) => {
   return [...list].sort((a, b) => {
     const dateA = a.start_date || a.raw?.start_date || ''

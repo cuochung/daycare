@@ -93,8 +93,8 @@
           <tr v-for="(item, idx) in group" :key="idx">
             <td class="text-center text-nowrap">{{ item.date }}</td>
             <td class="whitespace">{{ item.plan }}</td>
-            <td class="text-nowrap">{{ formatCreator(item.create_man) }}</td>
-            <td></td>
+            <td class="text-nowrap">{{ formatCreator(item.createInfo.name) }}</td>
+            <td></td> 
           </tr>
         </tbody>
       </table>

@@ -235,7 +235,11 @@ const handleAddQuestion = async () => {
     unit: form.question.trim(),
     p_snkey: 0,
     state: 'question',
-    create_man: `${store.state.pData?.username ?? ''} (${dayjs().format('YYYY-MM-DD HH:mm:ss')})`,
+    createInfo: {
+      snkey: store.state.pData.snkey,
+      name: store.state.pData.username,
+      time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    },
   }
 
   const rs = await api.add('nursing_record_list_data', payload)
@@ -259,7 +263,11 @@ const handleAddDetail = async (state) => {
     unit: form[state].trim(),
     p_snkey: selectedQuestionSnkey.value,
     state,
-    create_man: `${store.state.pData?.username ?? ''} (${dayjs().format('YYYY-MM-DD HH:mm:ss')})`,
+    createInfo: {
+      snkey: store.state.pData.snkey,
+      name: store.state.pData.username,
+      time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    },
   }
 
   const rs = await api.add('nursing_record_list_data', payload)

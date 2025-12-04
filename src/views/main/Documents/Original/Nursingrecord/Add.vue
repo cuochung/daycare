@@ -248,7 +248,7 @@ const validateForm = async () => {
 //       return {
 //         ...parsed,
 //         snkey: row.snkey,
-//         create_man: row.create_man,
+//         createInfo: row.createInfo,
 //         edit_man: row.edit_man,
 //       }
 //     } catch (error) {

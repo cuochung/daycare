@@ -1,46 +1,54 @@
 <template>
-  <div class="HealthyHabitsList">
-    <v-card class="mt-2">
-      <v-card-title>
-        <v-row>
-          <v-col cols="12" md="8">
-            <h2 class="subheading grey--text">
-              <v-icon class="mx-1">fas fa-file-alt</v-icon>
-              <span>
-                {{ this.$store.state.uData.p_code }} /
-                {{ this.$store.state.uData.name }}
-              </span>
-              <span>健康習慣評估表</span>
-            </h2>
-          </v-col>
-          <v-col cols="12" md="4">
-            <!-- 功能表 -->
-            <v-toolbar dense rounded>
-              <v-text-field
-                hide-details
-                prepend-icon="mdi-magnify"
-                single-line
-                label="搜尋"
-                v-model="searchKey"
-              ></v-text-field>
+  <div class="healthy-habits-list">
+    <v-container fluid class="pa-0">
+      <v-row>
+        <v-col cols="12">
+          <v-sheet class="healthy-habits-list__hero" rounded="xl" elevation="0">
+            <div class="d-flex flex-column flex-md-row justify-space-between align-start">
+              <div class="d-flex align-center mb-4 mb-md-0">
+                <v-avatar size="56" color="primary" variant="tonal" class="mr-4">
+                  <v-icon color="primary" size="32">mdi-heart-pulse</v-icon>
+                </v-avatar>
+                <div>
+                  <h2 class="healthy-habits-list__title mb-1">健康習慣評估表</h2>
+                  <p class="healthy-habits-list__subtitle mb-0">
+                    評估住民健康習慣狀況，包含吸菸、飲酒、嚼食檳榔、過敏等評估項目。
+                  </p>
+                </div>
+              </div>
+            </div>
 
-              <popupadd ref="childFn" @getAllData="getAllData" :items="items"></popupadd>
-            </v-toolbar>
-          </v-col>
-        </v-row>
-      </v-card-title>
-      <v-card-text>
-        <v-card class="mt-2">
-          <v-card-text>
-            <!-- 表單內容 -->
-            <v-data-iterator
-              :items="searchfilter"
-              :items-per-page.sync="itemsPerPage"
-              :footer-props="{ itemsPerPageOptions }"
-            >
-              <template v-slot:default="props">
-                <v-simple-table fixed-header class="mt-2 text-no-wrap">
-                  <template v-slot:default>
+            <v-divider class="my-4" />
+
+            <div class="healthy-habits-list__meta d-flex flex-wrap ga-3">
+              <v-chip variant="tonal" color="primary">
+                住民：{{ residentName }}
+              </v-chip>
+              <v-chip variant="tonal" color="secondary">
+                住編：{{ residentCode }}
+              </v-chip>
+            </div>
+          </v-sheet>
+        </v-col>
+      </v-row>
+
+      <v-row class="mt-4">
+        <v-col cols="12">
+          <v-card>
+            <v-card-title class="d-flex align-center">
+              <v-text-field v-model="searchKey" prepend-inner-icon="mdi-magnify" label="搜尋" variant="outlined"
+                density="comfortable" hide-details style="max-width: 300px;" @keyup.stop="handleSearch"></v-text-field>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" variant="flat" prepend-icon="mdi-plus-circle" @click="openAdd">
+                新增評估
+              </v-btn>
+              <HealthyHabitsAdd ref="addDialogRef" :items="items" @refresh="getAllData" />
+            </v-card-title>
+            <v-card-text>
+              <PaginatedIterator :items="filteredItems" :items-per-page-options="itemsPerPageOptions"
+                :items-per-page="itemsPerPage" @update:items-per-page="itemsPerPage = $event">
+                <template #default="{ items }">
+                  <v-table fixed-header class="text-no-wrap">
                     <thead style="background-color: #e3f2fd">
                       <tr>
                         <th></th>
@@ -51,282 +59,317 @@
                         <th>嚼食檳榔</th>
                         <th>食物過敏</th>
                         <th>藥物過敏</th>
-                        <th v-if="$store.state.cData.isShowCreaterName">紀錄人姓名</th>
-                        <th v-if="$store.state.cData.isShowCreaterInfo">紀錄人紀錄</th>
-                        <th v-if="$store.state.cData.isShowEditerInfo">修改紀錄</th>
+                        <th v-if="store.state?.cData?.isShowCreaterName">紀錄人姓名</th>
+                        <th v-if="store.state?.cData?.isShowCreaterInfo">紀錄人紀錄</th>
+                        <th v-if="store.state?.cData?.isShowEditerInfo">修改紀錄</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(item, index) in props.items" :key="index">
-                        <td>
-                          <v-menu transition="scale-transition" offset-y>
-                            <template v-slot:activator="{ on }">
-                              <v-btn color="primary" dark v-on="on">功能</v-btn>
+                      <tr v-for="(item, index) in items" :key="index">
+                        <td class="text-center">
+                          <v-menu location="bottom">
+                            <template #activator="{ props }">
+                              <v-btn v-bind="props" variant="text" icon="mdi-dots-vertical" color="primary" />
                             </template>
                             <v-list>
-                              <v-list-item @click="edit(item)">
+                              <v-list-item @click="edit(item.raw)">
+                                <template #prepend>
+                                  <v-icon color="primary">mdi-square-edit-outline</v-icon>
+                                </template>
                                 <v-list-item-title>修改</v-list-item-title>
                               </v-list-item>
-                              <v-list-item @click="del(item)">
+                              <v-list-item @click="del(item.raw)">
+                                <template #prepend>
+                                  <v-icon color="error">mdi-delete-outline</v-icon>
+                                </template>
                                 <v-list-item-title>刪除</v-list-item-title>
                               </v-list-item>
-                              <v-list-item @click="pushToMOHW(item)">
-                                <v-list-item-title
-                                  >上傳衛福部</v-list-item-title
-                                >
+                              <v-list-item @click="pushToMOHW(item.raw)">
+                                <template #prepend>
+                                  <v-icon color="info">mdi-cloud-upload-outline</v-icon>
+                                </template>
+                                <v-list-item-title>上傳衛福部</v-list-item-title>
                               </v-list-item>
-                              <v-list-item
-                                @click="checkMOHWData(item)"
-                                v-if="item.uploadData"
-                              >
-                                <v-list-item-title
-                                  >確認上傳資料狀況</v-list-item-title
-                                >
+                              <v-list-item @click="checkMOHWData(item.raw)" v-if="item.raw.uploadData">
+                                <template #prepend>
+                                  <v-icon color="success">mdi-check-circle-outline</v-icon>
+                                </template>
+                                <v-list-item-title>確認上傳資料狀況</v-list-item-title>
                               </v-list-item>
                             </v-list>
                           </v-menu>
                         </td>
                         <td>
-                          <div v-if="!item.uploadData">
-                            <span>未上傳</span> 
+                          <div v-if="!item.raw.uploadData">
+                            <span>未上傳</span>
                           </div>
                           <div v-else>
                             <span>已上傳</span>
-                            <span v-if="!item.uploadState">(未確認)</span>
-                            <span v-if="item.uploadState">(已確認-{{ returnState(item) }})</span>
+                            <span v-if="!item.raw.uploadState">(未確認)</span>
+                            <span v-if="item.raw.uploadState">(已確認-{{ returnState(item.raw) }})</span>
                           </div>
                         </td>
-                        <td>{{ item.Date }}</td>
-                        <td>{{ item.IsSmoking }}</td>
-                        <td>{{ item.IsAlcohol }}</td>
-                        <td>{{ item.IsBetelNut }}</td>
-                        <td>{{ item.IsAllergy }}</td>
-                        <td>{{ item.IsAllergyDrug }}</td>
-                        <td v-if="$store.state.cData.isShowCreaterName">{{(item.create_man).split('(')[0]}}</td>
-                        <td v-if="$store.state.cData.isShowCreaterInfo">{{item.create_man}}</td>
-                        <td v-if="$store.state.cData.isShowEditerInfo" class="text-truncate" style="max-width: 400px;">{{ item.edit_man }}</td>
+                        <td>{{ item.raw.Date }}</td>
+                        <td>{{ item.raw.IsSmoking }}</td>
+                        <td>{{ item.raw.IsAlcohol }}</td>
+                        <td>{{ item.raw.IsBetelNut }}</td>
+                        <td>{{ item.raw.IsAllergy }}</td>
+                        <td>{{ item.raw.IsAllergyDrug }}</td>
+                        <td v-if="canShowCreatorName">
+                          {{ (item.raw?.createInfo?.name || '').split('(')[0] }}
+                        </td>
+                        <td v-if="canShowCreatorInfo">
+                          {{ item.raw?.createInfo?.name || '' }}
+                        </td>
+                        <td v-if="canShowEditorInfo" class="text-truncate" style="max-width: 400px;">
+                          {{ item.raw?.editInfo?.name || '' }}
+                        </td>
                       </tr>
                     </tbody>
-                  </template>
-                </v-simple-table>
-              </template>
-            </v-data-iterator>
-          </v-card-text>
-        </v-card>
-      </v-card-text>
-    </v-card>
-
+                  </v-table>
+                </template>
+              </PaginatedIterator>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
-<script>
-import popupadd from "@/views/document/mohw/HealthyHabits/Add";
-import dayjs from "dayjs";
+<script setup>
+import { ref, computed, onMounted, getCurrentInstance } from 'vue'
+import dayjs from 'dayjs'
+import api from '@/assets/js/api.js'
+import { useStore } from '@/stores/useStore'
+import PaginatedIterator from '@/components/PaginatedIterator.vue'
+import HealthyHabitsAdd from './Add.vue'
 import mohwFn from '@/assets/js/mohwFn'
 
-export default {
-  components: { popupadd },
-  data() {
-    return {
-      useDataBase:'healthyhabits',
-      items: [], //目前讀取進來的資料庫
-      searchKey: "",
-      itemsPerPageOptions: [10, 20, 30],
-      itemsPerPage: 10,
-    };
-  },
+const store = useStore()
+const { proxy } = getCurrentInstance()
 
-  computed: {
-    searchfilter() {
-      var keys = this.searchKey.split(" ");
-      var str = "";
-      return keys.reduce(function (prev, element) {
-        return prev.filter((item) => {
-          str = JSON.stringify(item).toUpperCase();
-          if (str.includes(element.toUpperCase())) {
-            return item;
-          }
-        });
-      }, this.items);
-    },
-  },
+const useDataBase = 'healthyhabits'
+const items = ref([])
+const searchKey = ref('')
+const itemsPerPageOptions = [10, 20, 30]
+const itemsPerPage = ref(10)
+const addDialogRef = ref(null)
 
-  mounted() {
-    this.getAllData();
-  },
+const residentName = computed(() => store.state?.uData?.name ?? '未選擇住民')
+const residentCode = computed(() => store.state?.uData?.p_code ?? '---')
 
-  methods: {
-    getAllData() {
-      //取得指定病歷的資料
-      this.$api.options(
-        "general/getAll/" + this.$store.state.databaseName + "/healthyhabits"
-      ).then((rs) => {
-        this.items = rs
-          .map((i) => {
-            return {
-              ...JSON.parse(i.datalist),
-              snkey: i.snkey,
-            };
-          })
-          .filter((i) => i.user_snkey == this.$store.state.uData.snkey)
-          .sort((a,b)=>a.Date < b.Date ? 1 : -1);
-      });
-    },
-    edit(item) {
-      //修改功能
-      this.$refs.childFn.editProcess(item);
-    },
-    del(delData) {
-      //刪除功能
-      this.$confirm("確認刪除?").then((res) => {
-        delData.delman =
-          this.$store.state.pData.username +
-          "(" +
-          dayjs().format("YYYY-MM-DD HH:mm:ss") +
-          ")";
-        var postData = {
-          snkey: delData.snkey,
-          tablename: "healthyhabits",
-          info: JSON.stringify(delData),
-        };
+const canShowCreatorName = computed(() => store.state?.cData?.isShowCreaterName)
+const canShowCreatorInfo = computed(() => store.state?.cData?.isShowCreaterInfo)
+const canShowEditorInfo = computed(() => store.state?.cData?.isShowEditerInfo)
 
-        if (res) {
-          this.$api.options(
-            "general/delv3/" +
-              this.$store.state.databaseName +
-              "/" +
-              postData.tablename,
-            postData
-          ).then((rs) => {
-            if (rs.state == 1) {
-              var pop = { msg: "已刪除", type: true, theme: "success" };
-              this.$store.commit("snackbar", pop);
-              this.getAllData();
-            }
-          });
-        }
-      });
-    },
-    
-    //資料轉成適合的JSON檔
-    dataToJson(postItem) {
+const normalizeRecord = (row) => {
+  const parsed = JSON.parse(row.datalist || '{}')
+  return {
+    ...parsed,
+    snkey: row.snkey,
+  }
+}
 
-      //判斷護理人員身分證字號 ;不存在時先用預設值
-      // let findNurse = this.$store.state.personnelItems.find(
-      //   (i) => i.snkey == postItem.create_man_snkey
-      // );
-      // if (findNurse && findNurse.idNum) {
-      //   postItem.NurseID = findNurse.idNum;
-      // } else {
-      //   postItem.NurseID = "N223456789";
-      // }
+const filteredItems = computed(() => {
+  if (!searchKey.value) return items.value
 
-      // postItem.AssessmentNo = this.items.length; //目前資料筆數
-      
-      // let finalPostData = {
-			// 		"Date": postItem.Date,
-			// 		"NurseID": postItem.NurseID,
-			// 		"AssessmentNo": postItem.AssessmentNo,
-			// 		"IsSmoking": postItem.IsSmoking,
-			// 		"QuitSmoking": postItem.QuitSmoking ? postItem.QuitSmoking : 0,
-			// 		"BeforeSmoking": postItem.BeforeSmoking ? postItem.BeforeSmoking : 0,
-			// 		"SmokingYear": postItem.SmokingYear ? postItem.SmokingYear : 0,
-			// 		"IsAlcohol": postItem.IsAlcohol,
-			// 		"QuitAlcohol": postItem.QuitAlcohol ? postItem.QuitAlcohol : 0,
-			// 		"BeforequitAlcohol": postItem.BeforequitAlcohol ? postItem.BeforequitAlcohol : 0,
-			// 		"AlcoholYear": postItem.AlcoholYear ? postItem.AlcoholYear : 0,
-			// 		"IsBetelNut": postItem.IsBetelNut,
-			// 		"QuitBetelNut": postItem.QuitBetelNut ? postItem.QuitBetelNut : 0,
-			// 		"BeforequitBetelNut": postItem.BeforequitBetelNut ? postItem.BeforequitBetelNut : 0,
-			// 		"BetelNutYear": postItem.BetelNutYear ? postItem.BetelNutYear : 0,
-			// 		"IsAllergy": postItem.IsAllergy,
-			// 		"Allergy_Desc": postItem.Allergy_Desc ? postItem.Allergy_Desc : null,
-			// 		"IsAllergyDrug": postItem.IsAllergyDrug ? postItem.IsAllergyDrug : null,
-			// 		"AllergyDrug_Desc": postItem.AllergyDrug_Desc ? postItem.AllergyDrug_Desc : null
-			// 	}
-
-      //因應衛福部會新增表單的情況；改成在 store 建構一個 mohwAllManArrs 空陣列表單備用
-      
-      //2025.2.4 統一改為由 mohwFn 來處理
-      let postData = [postItem];
-      let finalPostData = mohwFn.returnHealthyHabitsJSON(postData)
-      //因應衛福部會新增表單的情況；改成在 store 建構一個 mohwAllManArrs 空陣列表單備用
-      let finalObj = {
-        CaseID: this.$store.state.uData.id_num,
-        EndDate: this.$store.state.uData.in_date,
-        ...this.$store.state.mohwAllManArrs
+  const keys = searchKey.value.split(' ')
+  let str = ''
+  return keys.reduce((prev, element) => {
+    return prev.filter((item) => {
+      str = JSON.stringify(item).toUpperCase()
+      if (str.includes(element.toUpperCase())) {
+        return item
       }
-      finalObj['HealthyHabits'] = finalPostData //設置指定的資料內容
+    })
+  }, items.value)
+})
 
-      //建構回傳的資料基本架構
-      let finalData = {
-        DataList:[]
-      }
-      finalData.DataList.push(finalObj)
-      return finalData;
+const getAllData = async () => {
+  if (!store.state?.uData?.snkey) {
+    items.value = []
+    return
+  }
 
-      // return {
-      //   DataList: [
-      //     {
-      //       CaseID: this.$store.state.uData.id_num,
-      //       EndDate: this.$store.state.uData.in_date,
-      //       HealthyHabits: [finalPostData],
-      //       MedicalHistories: [],
-      //       DrugSafeties: [],
-      //       BodyEvaluations: [],
-      //       PressureInjuries: [],
-      //       FallRisks: [],
-      //       ADLs: [],
-      //       IADLs: [],
-      //       Dementias: [],
-      //       BSRS5s: [],
-      //       GeriatricDepressionScales: [],
-      //       MNASFs: [],
-      //       PainEvaluations: [],
-      //       SOFs: [],
-      //     },
-      //   ],
-      // };
-    },
-    
-    //上傳資料到衛福部 -> 紀錄成功的ticket
-    async pushToMOHW(postItem){
-      const res = await this.$confirm('確認上傳資料到衛福部?');
-      if (res){
-        mohwFn.pushToMOHW(postItem,this.useDataBase,JSON.stringify(this.dataToJson(postItem)))
-        .then(rs=>{ if (rs){ this.getAllData() }
-        })
-      }
-    },
-    //判斷上傳到衛福部的狀態
-    checkMOHWData(postItem) {
-        mohwFn.checkMOHWData(postItem,this.useDataBase)
-        .then(rs=>{ 
-          // console.log('rs123',rs)
-          if (rs){ this.getAllData() }
-        })
-    },
-    //回覆回傳後的時間
-    returnState(item){
-      let data = JSON.parse(item.uploadState.data)
-      return dayjs(data[0].log_date).format("YYYY-MM-DD HH:mm:ss");
+  try {
+    const url = `byjson/searchByKeyValue/${store.state.databaseName}/${useDataBase}`
+    const payload = {
+      key: 'user_snkey',
+      value: store.state.uData.snkey,
     }
-  },
-};
-</script>
+    const response = await api.options(url, payload)
 
-<style lang="scss">
-.HealthyHabitsList {
-  h2 {
-    span {
-      vertical-align: middle;
+    if (response && response.length > 0) {
+      items.value = response
+        .map(normalizeRecord)
+        .sort((a, b) => (a.Date < b.Date ? 1 : -1))
+    } else {
+      items.value = []
+    }
+  } catch (error) {
+    console.error('Get all data error:', error)
+    store.showToastMulti({
+      type: 'error',
+      message: '讀取資料失敗',
+      closeTime: 3,
+    })
+  }
+}
+
+const openAdd = () => {
+  addDialogRef.value?.openForAdd()
+}
+
+const edit = (item) => {
+  addDialogRef.value?.openForEdit(item)
+}
+
+const del = async (delData) => {
+  const result = await proxy?.$swal?.({
+    title: '確認刪除?',
+    icon: 'question',
+    showConfirmButton: true,
+    showCancelButton: true,
+    toast: false,
+    timer: null,
+    position: 'center'
+  })
+
+  if (result.isConfirmed) {
+    delData.delman =
+      store.state.pData.username + '(' + dayjs().format('YYYY-MM-DD HH:mm:ss') + ')'
+    const payload = {
+      snkey: delData.snkey,
+      tablename: useDataBase,
+      info: JSON.stringify(delData),
+    }
+
+    try {
+      const response = await api.delete(useDataBase, payload)
+      if (response?.state == 1) {
+        store.showToastMulti({
+          type: 'success',
+          message: '已刪除',
+          closeTime: 2,
+        })
+        await getAllData()
+      }
+    } catch (error) {
+      console.error('Delete error:', error)
+      store.showToastMulti({
+        type: 'error',
+        message: '刪除失敗，請稍後再試',
+        closeTime: 3,
+      })
     }
   }
+}
+
+const pushToMOHW = async (postItem) => {
+  const result = await proxy?.$swal?.({
+    title: '確認上傳資料到衛福部?',
+    text: '此操作將把資料上傳到衛福部系統，請確認資料正確性。',
+    icon: 'question',
+    toast: false,
+    timer: null,
+    showConfirmButton: true,
+    showCancelButton: true,
+    position: 'center'
+  })
+
+  if (result.isConfirmed) {
+    try {
+      const result = await mohwFn.pushToMOHW(
+        postItem,
+        useDataBase,
+        JSON.stringify(dataToJson(postItem))
+      )
+      if (result) {
+        await getAllData()
+      }
+    } catch (error) {
+      console.error('Push to MOHW error:', error)
+    }
+  }
+}
+
+const checkMOHWData = async (postItem) => {
+  try {
+    const result = await mohwFn.checkMOHWData(postItem, useDataBase)
+    if (result) {
+      await getAllData()
+    }
+  } catch (error) {
+    console.error('Check MOHW data error:', error)
+  }
+}
+
+const dataToJson = (postItem) => {
+  const postData = [postItem]
+  const finalPostData = mohwFn.returnHealthyHabitsJSON(postData)
+  const finalObj = {
+    CaseID: store.state.uData.id_num,
+    EndDate: store.state.uData.in_date,
+    ...store.state.mohwAllManArrs,
+  }
+  finalObj['HealthyHabits'] = finalPostData
+
+  const finalData = {
+    DataList: [],
+  }
+  finalData.DataList.push(finalObj)
+  return finalData
+}
+
+const returnState = (item) => {
+  if (!item?.uploadState?.data) return ''
+  try {
+    const data = JSON.parse(item.uploadState.data)
+    return dayjs(data[0]?.log_date).format('YYYY-MM-DD HH:mm:ss')
+  } catch (e) {
+    return ''
+  }
+}
+
+const handleSearch = () => {
+  // 搜尋邏輯已在 computed 中處理
+}
+
+onMounted(() => {
+  getAllData()
+})
+</script>
+
+<style scoped lang="scss">
+.healthy-habits-list {
+  &__hero {
+    padding: 28px;
+    background: linear-gradient(135deg, rgba(33, 150, 243, 0.12), rgba(33, 150, 243, 0.04));
+  }
+
+  &__title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.87);
+  }
+
+  &__subtitle {
+    font-size: 0.95rem;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  &__meta {
+    margin-top: 12px;
+  }
+
   thead {
     th {
       font-size: 1.2rem;
+      font-family: '微軟正黑體';
     }
   }
+
   tbody {
     td {
       font-size: 1rem;

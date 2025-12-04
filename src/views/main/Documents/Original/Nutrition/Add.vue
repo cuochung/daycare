@@ -513,7 +513,11 @@ const addSuggest = async () => {
   const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')
   const payload = {
     name: newSuggest.value,
-    create_man: store.state.pData.username + '(' + timestamp + ')',
+    createInfo: {
+      snkey: store.state.pData.snkey,
+      name: store.state.pData.username,
+      time: timestamp
+    },
   }
 
   try {

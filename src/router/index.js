@@ -60,7 +60,7 @@ const routes = [
           { path: 'BodyEvaluations', name: 'BodyEvaluations', component: () => import('@/views/main/Documents/Mohw/BodyEvaluations/index.vue') },
           { path: 'PressureInjuries', name: 'PressureInjuries', component: () => import('@/views/main/Documents/Mohw/PressureInjuries/index.vue') },
           { path: 'FallRisks', name: 'FallRisks', component: () => import('@/views/main/Documents/Mohw/FallRisks/index.vue') },
-          { path: 'ADLs', name: 'ADLs', component: () => import('@/views/main/Documents/Mohw/ADLs.vue') },
+          { path: 'ADLs', name: 'ADLs', component: () => import('@/views/main/Documents/Mohw/ADLs/index.vue') },
           { path: 'IADLs', name: 'IADLs', component: () => import('@/views/main/Documents/Mohw/IADLs/index.vue') },
           { path: 'Dementias', name: 'Dementias', component: () => import('@/views/main/Documents/Mohw/Dementias/index.vue') },
           { path: 'GeriatricDepressionScales', name: 'GeriatricDepressionScales', component: () => import('@/views/main/Documents/Mohw/GeriatricDepressionScales/index.vue') },
@@ -72,13 +72,12 @@ const routes = [
           { path: 'CaseSummaryPlan', name: 'CaseSummaryPlan', component: () => import('@/views/main/Documents/Mohw/CaseSummaryPlan/index.vue') },
           { path: 'CareRecord', name: 'CareRecord', component: () => import('@/views/main/Documents/Mohw/CareRecord/index.vue') },
 
-          // //六大評估指標表單
-          // { path: 'FallEvent', name: 'FallEvent', component: resolve => require(['../views/document/EvaluationMetrics/FallEvent'], resolve) },
-          // { path: 'PressureEvent', name: 'PressureEvent', component: resolve => require(['../views/document/EvaluationMetrics/PressureEvent'], resolve) },
-          // { path: 'InfectionEvent', name: 'InfectionEvent', component: resolve => require(['../views/document/EvaluationMetrics/InfectionEvent'], resolve) },
-          // { path: 'ConstraintEvent', name: 'ConstraintEvent', component: resolve => require(['../views/document/EvaluationMetrics/ConstraintEvent'], resolve) },
-          // { path: 'UnplannedEvent', name: 'UnplannedEvent', component: resolve => require(['../views/document/EvaluationMetrics/UnplannedEvent'], resolve) },
-
+          //六大評估指標表單
+          { path: 'FallEvent', name: 'FallEvent', component: () => import('@/views/main/Documents/EvaluationMetrics/FallEvent/index.vue') },
+          { path: 'PressureEvent', name: 'PressureEvent', component: () => import('@/views/main/Documents/EvaluationMetrics/PressureEvent/index.vue') },
+          { path: 'InfectionEvent', name: 'InfectionEvent', component: () => import('@/views/main/Documents/EvaluationMetrics/InfectionEvent/index.vue') },
+          { path: 'ConstraintEvent', name: 'ConstraintEvent', component: () => import('@/views/main/Documents/EvaluationMetrics/ConstraintEvent/index.vue') },
+          { path: 'UnplannedEvent', name: 'UnplannedEvent', component: () => import('@/views/main/Documents/EvaluationMetrics/UnplannedEvent/index.vue') },
 
         ]
       },
@@ -100,6 +99,7 @@ const routes = [
   { path: '/NutritionPrintManage', name: 'NutritionPrintManage', component: () => import('@/views/main/Documents/Original/Nutrition/NutritionPrintManage.vue') },
   { path: '/NutritionMultiPrint', name: 'NutritionMultiPrint', component: () => import('@/views/main/Documents/Original/Nutrition/NutritionMultiPrint.vue') },
   { path: '/ConsultationPrint', name: 'ConsultationPrint', component: () => import('@/views/main/Documents/Original/Consultation/PrintPage.vue') },
+  { path: '/CareRecordPrint', name: 'CareRecordPrint', component: () => import('@/views/main/Documents/Mohw/CareRecord/PrintPage.vue') },
   
   
   // {

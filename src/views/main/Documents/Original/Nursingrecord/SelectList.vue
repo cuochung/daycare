@@ -115,7 +115,7 @@ const transformItems = (payload) => {
         database,
         data: item,
         content: `${item.date ?? ''}｜${item.time ?? ''}`,
-        subtitle: item.create_man ? `紀錄人員：${item.create_man}` : '',
+        subtitle: item.createInfo.name ? `紀錄人員：${item.createInfo.name}` : '',
       }))
     case 'nursingPlan':
       return matchItems.map((item, idx) => ({
@@ -131,7 +131,7 @@ const transformItems = (payload) => {
         database,
         data: item,
         content: `${item.date ?? ''}｜${item.location ?? ''}`,
-        subtitle: item.create_man ? `填寫人員：${item.create_man}` : '',
+        subtitle: item.createInfo.name ? `填寫人員：${item.createInfo.name}` : '',
       }))
     case 'pipeline_used':
       return matchItems.map((item, idx) => ({
@@ -139,7 +139,7 @@ const transformItems = (payload) => {
         database,
         data: item,
         content: `${item.name ?? ''}｜${item.unit ?? ''}`,
-        subtitle: `${item.start_date ?? ''} ~ ${item.end_date ?? ''}${item.create_man ? `｜${item.create_man}` : ''}`,
+        subtitle: `${item.start_date ?? ''} ~ ${item.end_date ?? ''}${item.createInfo.name ? `｜${item.createInfo.name}` : ''}`,
       }))
     case 'consultation':
       return matchItems.map((item, idx) => ({
@@ -147,7 +147,7 @@ const transformItems = (payload) => {
         database,
         data: item,
         content: `${item.date ?? ''}｜${item.nurse_name ?? ''}`,
-        subtitle: item.create_man ? `紀錄人員：${item.create_man}` : '',
+        subtitle: item.createInfo.name ? `紀錄人員：${item.createInfo.name}` : '',
       }))
     default:
       return matchItems.map((item, idx) => ({

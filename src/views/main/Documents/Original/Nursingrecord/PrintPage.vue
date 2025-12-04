@@ -50,7 +50,7 @@
               {{ item.nursingrecord_content }}
             </td>
             <td class="text-center text-nowrap">
-              {{ extractName(item.create_man) }}
+              {{ extractName(item.createInfo.name) }}
             </td>
             <td></td>
           </tr>

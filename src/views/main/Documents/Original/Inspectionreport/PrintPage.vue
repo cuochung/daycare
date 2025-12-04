@@ -31,7 +31,7 @@
                     <v-col cols="3">評估日期: {{ formatDate(item.date) }}</v-col>
                     <v-col cols="3">檢驗地點: {{ item.location || '—' }}</v-col>
                     <v-col cols="6">
-                      評估人: {{ extractName(item.create_man) }}
+                      評估人: {{ extractName(item.createInfo.name) }}
                       <strong class="ml-3">簽名:</strong>
                     </v-col>
                   </v-row>
