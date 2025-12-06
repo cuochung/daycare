@@ -9,8 +9,8 @@
           <div>
             <h2 class="text-h6 font-weight-bold mb-1">{{ headerTitle }}</h2>
             <p class="text-body-2 mb-0">{{ headerSubtitle }}</p>
-          </div>
-        </div>
+              </div>
+            </div>
         <v-btn icon="mdi-close" variant="text" @click="closeDialog" />
       </v-sheet>
 
@@ -249,13 +249,13 @@
               </v-card>
             </v-card-text>
           </v-card>
-        </v-form>
-      </v-card-text>
+          </v-form>
+        </v-card-text>
 
       <v-divider />
 
       <v-card-actions class="px-6 py-4">
-        <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
         <v-btn variant="tonal" color="secondary" @click="closeDialog">
           取消
         </v-btn>
@@ -279,9 +279,9 @@
         >
           確認修改
         </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
@@ -357,10 +357,10 @@ watch(
           record.qq4 = '≧9種'
         } else {
           record.qq4 = '≧5種'
+            }
+          }
         }
-      }
-    }
-  },
+      },
   { deep: true }
 )
 
@@ -394,7 +394,7 @@ const addMedicine = () => {
 const delMedicine = (index) => {
   if (record.DrugInUses && Array.isArray(record.DrugInUses)) {
     record.DrugInUses.splice(index, 1)
-  }
+          }
 }
 
 const openForAdd = () => {
@@ -413,7 +413,7 @@ const openForAdd = () => {
       firstItem.DrugInUses = []
     }
     Object.assign(record, firstItem)
-  } else {
+      } else {
     record.DrugInUses = []
   }
   
@@ -478,7 +478,7 @@ const handleAdd = async () => {
         message: '新增失敗，請稍後再試',
         closeTime: 3,
       })
-    }
+      }
   } catch (error) {
     console.error('Add error:', error)
     store.showToastMulti({

@@ -25,6 +25,7 @@ const routes = [
         path: 'Documents', name: 'Documents', component: () => import('@/views/main/Documents/index.vue'),
         children: [
           //原生表單
+          { path: 'MedicineRecord', name: 'MedicineRecord', component: () => import('@/views/main/Documents/Original/MedicineRecord/index.vue') },
           { path: 'Signlife', name: 'Signlife', component: () => import('@/views/main/Documents/Original/Signlife/index.vue') },
           { path: 'Nursingplan', name: 'Nursingplan', component: () => import('@/views/main/Documents/Original/Nursingplan/index.vue') },
           { path: 'Nursingrecord', name: 'Nursingrecord', component: () => import('@/views/main/Documents/Original/Nursingrecord/index.vue') },
@@ -85,6 +86,7 @@ const routes = [
   },
 
   //列印區
+  { path: '/MedicinePrint', name: 'MedicinePrint', component: () => import('@/views/main/Documents/Original/MedicineRecord/PrintPage.vue') },
   { path: '/NursingplanPrint', name: 'NursingplanPrint', component: () => import('@/views/main/Documents/Original/Nursingplan/PrintPage.vue') },
   { path: '/NursingrecordPrint', name: 'NursingrecordPrint', component: () => import('@/views/main/Documents/Original/Nursingrecord/PrintPage.vue') },
   { path: '/InspectionreportPrint', name: 'InspectionreportPrint', component: () => import('@/views/main/Documents/Original/Inspectionreport/PrintPage.vue') },
@@ -99,6 +101,7 @@ const routes = [
   { path: '/NutritionPrintManage', name: 'NutritionPrintManage', component: () => import('@/views/main/Documents/Original/Nutrition/NutritionPrintManage.vue') },
   { path: '/NutritionMultiPrint', name: 'NutritionMultiPrint', component: () => import('@/views/main/Documents/Original/Nutrition/NutritionMultiPrint.vue') },
   { path: '/ConsultationPrint', name: 'ConsultationPrint', component: () => import('@/views/main/Documents/Original/Consultation/PrintPage.vue') },
+
   { path: '/CareRecordPrint', name: 'CareRecordPrint', component: () => import('@/views/main/Documents/Mohw/CareRecord/PrintPage.vue') },
   
   

@@ -1,34 +1,71 @@
 {
-    "snkey": "3",
-    "u_snkey": "12",
-    "Date": "2025-12-03",
-    "Time": "20:17",
-    "ageRange": "75-84",
-    "adl": "61-90中度依賴",
-    "location": "房間內",
-    "situation": "如廁",
-    "reason": "因住民健康狀況",
-    "restraint": "雙側床欄",
-    "medicine": "抗組織胺",
-    "hurt": "無",
-    "part": "",
-    "hurtDetail": "",
-    "counts": "1次",
+    "medicinedata": {
+        "snkey": "271",
+        "text": "Ascotyl",
+        "effect": ""
+    },
+    "unitdata": {
+        "snkey": "108",
+        "text": "顆"
+    },
+    "methoddata": {
+        "snkey": "110",
+        "text": "滴劑(雙眼)"
+    },
+    "eat_medicine_timedata": {
+        "snkey": "76",
+        "text": "Q12H/AC [4,16] / 間隔 1天",
+        "time": "4,16",
+        "day": "1",
+        "repeatWeek": "",
+        "repeatDate": ""
+    },
+    "start_date": "2025-12-06",
+    "start_time": "16",
+    "medicine_counts": "22",
+    "dosage": "2",
+    "attention": "222",
+    "quantity": "3",
+    "medicineEndInfo": "日期:2025-12-17 時段:4",
+    "user_snkey": "12",
+    "medical_snkey": "1",
     "createInfo": {
         "snkey": "31",
         "name": "系統管理員",
-        "time": "2025-12-03 20:17:18"
+        "time": "2025-12-06 15:09:09"
     },
     "editInfo": [
         {
             "snkey": "31",
             "name": "系統管理員",
-            "time": "2025-12-03 20:18:11"
+            "time": "2025-12-06 15:15:13"
         },
         {
             "snkey": "31",
             "name": "系統管理員",
-            "time": "2025-12-03 20:18:03"
+            "time": "2025-12-06 15:15:04"
+        },
+        {
+            "snkey": "31",
+            "name": "系統管理員",
+            "time": "2025-12-06 15:13:01"
+        },
+        {
+            "snkey": "31",
+            "name": "系統管理員",
+            "time": "2025-12-06 15:12:36"
+        },
+        {
+            "snkey": "31",
+            "name": "系統管理員",
+            "time": "2025-12-06 15:09:30"
+        },
+        {
+            "snkey": "31",
+            "name": "系統管理員",
+            "time": "2025-12-06 15:09:15"
         }
-    ]
+    ],
+    "snkey": "4",
+    "stop": ""
 }

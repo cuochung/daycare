@@ -1,20 +1,20 @@
 <template>
-  <v-dialog v-model="dialog" fullscreen persistent>
-    <v-card rounded="xl">
+    <v-dialog v-model="dialog" fullscreen persistent>
+      <v-card rounded="xl">
       <v-sheet :color="headerColor" class="d-flex align-center justify-space-between px-6 py-4" rounded="t-xl">
-        <div class="d-flex align-center">
-          <v-avatar size="48" color="white" variant="tonal" class="mr-4">
-            <v-icon color="white" size="28">mdi-heart-pulse</v-icon>
-          </v-avatar>
-          <div>
+          <div class="d-flex align-center">
+            <v-avatar size="48" color="white" variant="tonal" class="mr-4">
+              <v-icon color="white" size="28">mdi-heart-pulse</v-icon>
+            </v-avatar>
+            <div>
             <h2 class="text-h6 font-weight-bold mb-1">{{ headerTitle }}</h2>
             <p class="text-body-2 mb-0">{{ headerSubtitle }}</p>
           </div>
         </div>
         <v-btn icon="mdi-close" variant="text" @click="closeDialog" />
-      </v-sheet>
+        </v-sheet>
 
-      <v-card-text class="px-6 py-5">
+        <v-card-text class="px-6 py-5">
         <v-form ref="formRef" class="mt-3">
           <v-text-field type="date" label="評估日期" v-model="record.Date" :rules="emptyRules" variant="outlined" density="comfortable"></v-text-field>
           <div class="d-flex flex-wrap">
@@ -22,60 +22,60 @@
             <v-text-field type="number" label="已戒菸(年)" v-model="record.QuitSmoking" variant="outlined" density="comfortable" class="mx-2 mb-2" :rules="emptyRules" v-if="record.IsSmoking=='已戒菸'"></v-text-field>
             <v-text-field type="number" label="之前吸菸(年)" v-model="record.BeforeSmoking" variant="outlined" density="comfortable" class="mx-2 mb-2" :rules="emptyRules" v-if="record.IsSmoking=='已戒菸'"></v-text-field>
             <v-text-field type="number" label="吸菸約(年)" v-model="record.SmokingYear" variant="outlined" density="comfortable" class="mx-2 mb-2" :rules="emptyRules" v-if="record.IsSmoking=='吸菸'"></v-text-field>
-          </div>
+            </div>
           <div class="d-flex flex-wrap">
             <v-autocomplete :items="IsAlcoholItems" label="飲酒" v-model="record.IsAlcohol" :rules="emptyRules" variant="outlined" density="comfortable" class="mr-2 mb-2"></v-autocomplete>
             <v-text-field type="number" label="已戒酒(年)" v-model="record.QuitAlcohol" variant="outlined" density="comfortable" class="mx-2 mb-2" :rules="emptyRules" v-if="record.IsAlcohol=='已戒酒'"></v-text-field>
             <v-text-field type="number" label="之前喝酒(年)" v-model="record.BeforequitAlcohol" variant="outlined" density="comfortable" class="mx-2 mb-2" :rules="emptyRules" v-if="record.IsAlcohol=='已戒酒'"></v-text-field>
             <v-text-field type="number" label="喝酒約(年)" v-model="record.AlcoholYear" variant="outlined" density="comfortable" class="mx-2 mb-2" :rules="emptyRules" v-if="record.IsAlcohol=='喝酒'"></v-text-field>
-          </div>
+            </div>
           <div class="d-flex flex-wrap">
             <v-autocomplete :items="IsBetelNutItems" label="嚼食檳榔" v-model="record.IsBetelNut" :rules="emptyRules" variant="outlined" density="comfortable" class="mr-2 mb-2"></v-autocomplete>
             <v-text-field type="number" label="已戒(年)" v-model="record.QuitBetelNut" variant="outlined" density="comfortable" class="mx-2 mb-2" :rules="emptyRules" v-if="record.IsBetelNut=='已戒'"></v-text-field>
             <v-text-field type="number" label="之前嚼食(年)" v-model="record.BeforequitBetelNut" variant="outlined" density="comfortable" class="mx-2 mb-2" :rules="emptyRules" v-if="record.IsBetelNut=='已戒'"></v-text-field>
             <v-text-field type="number" label="嚼食約(年)" v-model="record.BetelNutYear" variant="outlined" density="comfortable" class="mx-2 mb-2" :rules="emptyRules" v-if="record.IsBetelNut=='嚼食'"></v-text-field>
-          </div>
+            </div>
           <div class="d-flex flex-wrap">
             <v-autocomplete :items="YesNoItems" label="食物過敏" v-model="record.IsAllergy" :rules="emptyRules" variant="outlined" density="comfortable" class="mr-2 mb-2"></v-autocomplete>
             <v-text-field label="食物過敏說明" v-model="record.Allergy_Desc" variant="outlined" density="comfortable" class="mx-2 mb-2" :rules="emptyRules" v-if="record.IsAllergy=='有'"></v-text-field>
-          </div>
+            </div>
           <div class="d-flex flex-wrap">
             <v-autocomplete :items="YesNoItems" label="藥物過敏" v-model="record.IsAllergyDrug" :rules="emptyRules" variant="outlined" density="comfortable" class="mr-2 mb-2"></v-autocomplete>
             <v-text-field label="藥物過敏說明" v-model="record.AllergyDrug_Desc" variant="outlined" density="comfortable" class="mx-2 mb-2" :rules="emptyRules" v-if="record.IsAllergyDrug=='有'"></v-text-field>
-          </div>
-        </v-form>
-      </v-card-text>
+            </div>
+          </v-form>
+        </v-card-text>
 
-      <v-divider />
+        <v-divider />
 
-      <v-card-actions class="px-6 py-4">
-        <v-spacer></v-spacer>
+        <v-card-actions class="px-6 py-4">
+          <v-spacer></v-spacer>
         <v-btn variant="tonal" color="secondary" @click="closeDialog">
-          取消
-        </v-btn>
-        <v-btn
-          color="primary"
-          variant="flat"
+            取消
+          </v-btn>
+          <v-btn
+            color="primary"
+            variant="flat"
           @click="handleAdd"
-          v-if="processType == 'add'"
-          :loading="loading"
-          :disabled="loading"
-        >
+            v-if="processType == 'add'"
+            :loading="loading"
+            :disabled="loading"
+          >
           確認新增
         </v-btn>
-        <v-btn
-          color="primary"
-          variant="flat"
+          <v-btn
+            color="primary"
+            variant="flat"
           @click="handleEdit"
-          v-if="processType == 'edit'"
-          :loading="loading"
-          :disabled="loading"
-        >
+            v-if="processType == 'edit'"
+            :loading="loading"
+            :disabled="loading"
+          >
           確認修改
         </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
@@ -222,7 +222,7 @@ const handleAdd = async () => {
       })
       dialog.value = false
       emit('refresh')
-    } else {
+      } else {
       store.showToastMulti({
         type: 'error',
         message: '新增失敗，請稍後再試',
@@ -238,7 +238,7 @@ const handleAdd = async () => {
     })
   } finally {
     loading.value = false
-  }
+      }
 }
 
 const handleEdit = async () => {
@@ -280,7 +280,7 @@ const handleEdit = async () => {
       })
       dialog.value = false
       emit('refresh')
-    } else {
+      } else {
       store.showToastMulti({
         type: 'error',
         message: '修改失敗，請稍後再試',
@@ -296,7 +296,7 @@ const handleEdit = async () => {
     })
   } finally {
     loading.value = false
-  }
+      }
 }
 
 defineExpose({

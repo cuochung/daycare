@@ -342,7 +342,7 @@ const print = (item) => {
 
 const goDocument = (item) => {
   sessionStorage.setItem('uData', JSON.stringify(item))
-  router.push('/main/Documents/Signlife')
+  router.push('/main/Documents/MedicineRecord')
 }
 
 const resolveAvatar = (raw) => {

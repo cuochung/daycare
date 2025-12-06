@@ -199,39 +199,39 @@
               />
             </v-col>
           </v-row>
-        </v-form>
-      </v-card-text>
+          </v-form>
+        </v-card-text>
 
       <v-divider />
 
       <v-card-actions class="px-6 py-4">
-        <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
         <v-btn variant="tonal" color="secondary" @click="closeDialog">
           取消
         </v-btn>
-        <v-btn
+          <v-btn
           color="primary"
           variant="flat"
           @click="handleAdd"
-          v-if="processType == 'add'"
-          :loading="loading"
-          :disabled="loading"
-        >
+            v-if="processType == 'add'"
+            :loading="loading"
+            :disabled="loading"
+          >
           確認新增
         </v-btn>
-        <v-btn
+          <v-btn
           color="primary"
           variant="flat"
           @click="handleEdit"
-          v-if="processType == 'edit'"
-          :loading="loading"
-          :disabled="loading"
-        >
+            v-if="processType == 'edit'"
+            :loading="loading"
+            :disabled="loading"
+          >
           確認修改
         </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
@@ -375,7 +375,7 @@ const handleAdd = async () => {
       })
       dialog.value = false
       emit('refresh')
-    } else {
+      } else {
       store.showToastMulti({
         type: 'error',
         message: '新增失敗，請稍後再試',
@@ -391,7 +391,7 @@ const handleAdd = async () => {
     })
   } finally {
     loading.value = false
-  }
+      }
 }
 
 const handleEdit = async () => {
@@ -433,7 +433,7 @@ const handleEdit = async () => {
       })
       dialog.value = false
       emit('refresh')
-    } else {
+      } else {
       store.showToastMulti({
         type: 'error',
         message: '修改失敗，請稍後再試',
@@ -449,7 +449,7 @@ const handleEdit = async () => {
     })
   } finally {
     loading.value = false
-  }
+      }
 }
 
 defineExpose({

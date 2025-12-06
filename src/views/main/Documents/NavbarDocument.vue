@@ -246,7 +246,7 @@ const filteredUsers = computed(() => {
 })
 
 const documentItems = [
-  { title: '就醫及藥品紀錄維護', route: '/main/Documents/medicinerecordlist', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-pill' },
+  { title: '就醫及藥品紀錄維護', route: '/main/Documents/MedicineRecord', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-pill' },
   { title: '生命徵象紀錄單', route: '/main/Documents/Signlife', color: 'primary', authKey: 'pass', visable: true, icon: 'mdi-heart-pulse' },
   { title: '住民定期評估表', route: '/main/Documents/recordlist', color: 'primary', authKey: 'pass', visable: false, icon: 'mdi-calendar-clock' },
   { title: '柯氏/巴氏(ADL)量表', route: '/main/Documents/kblist', color: 'primary', authKey: 'pass', visable: false, icon: 'mdi-walk' },
