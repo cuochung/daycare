@@ -666,6 +666,7 @@ const closeDialog = () => {
 }
 
 const handleAdd = async () => {
+  console.log('handleAdd', list)
   const { valid } = await formRef.value?.validate()
   if (!valid) {
     store.showToastMulti({

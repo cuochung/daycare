@@ -9,9 +9,9 @@
               <div class="text-h5 text-sm-h4 font-weight-bold mb-2 loginTitleColor" style="letter-spacing: 0.5px;">
                 {{ store.cData.company_name }}
               </div>
-              <div class="text-subtitle-1 text-sm-h6 mb-4 loginSubtitleColor" style="font-weight: 500;">
+              <!-- <div class="text-subtitle-1 text-sm-h6 mb-4 loginSubtitleColor" style="font-weight: 500;">
                 後台管理系統
-              </div>
+              </div> -->
               <v-chip small outlined color="#7BA3B8" class="text-caption">
                 Version {{ store.state.verMsg }}
               </v-chip>

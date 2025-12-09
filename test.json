@@ -1,71 +1,38 @@
 {
     "medicinedata": {
-        "snkey": "271",
-        "text": "Ascotyl",
+        "snkey": "284",
+        "text": "Betaloc",
         "effect": ""
     },
     "unitdata": {
-        "snkey": "108",
-        "text": "顆"
+        "snkey": "114",
+        "text": "支"
     },
     "methoddata": {
-        "snkey": "110",
-        "text": "滴劑(雙眼)"
+        "snkey": "114",
+        "text": "噴劑(鼻)"
     },
     "eat_medicine_timedata": {
-        "snkey": "76",
-        "text": "Q12H/AC [4,16] / 間隔 1天",
-        "time": "4,16",
+        "snkey": "75",
+        "text": "Q12H [5,17] / 間隔 1天",
+        "time": "5,17",
         "day": "1",
         "repeatWeek": "",
         "repeatDate": ""
     },
-    "start_date": "2025-12-06",
-    "start_time": "16",
-    "medicine_counts": "22",
-    "dosage": "2",
-    "attention": "222",
-    "quantity": "3",
-    "medicineEndInfo": "日期:2025-12-17 時段:4",
+    "start_date": "2025-12-09",
+    "start_time": "5",
+    "medicine_counts": "2",
+    "dosage": "22",
+    "attention": "333",
+    "quantity": "22",
+    "medicineEndInfo": "日期:2025-12-09 時段:17",
     "user_snkey": "12",
-    "medical_snkey": "1",
+    "medical_snkey": "23",
     "createInfo": {
         "snkey": "31",
         "name": "系統管理員",
-        "time": "2025-12-06 15:09:09"
+        "time": "2025-12-09 19:06:13"
     },
-    "editInfo": [
-        {
-            "snkey": "31",
-            "name": "系統管理員",
-            "time": "2025-12-06 15:15:13"
-        },
-        {
-            "snkey": "31",
-            "name": "系統管理員",
-            "time": "2025-12-06 15:15:04"
-        },
-        {
-            "snkey": "31",
-            "name": "系統管理員",
-            "time": "2025-12-06 15:13:01"
-        },
-        {
-            "snkey": "31",
-            "name": "系統管理員",
-            "time": "2025-12-06 15:12:36"
-        },
-        {
-            "snkey": "31",
-            "name": "系統管理員",
-            "time": "2025-12-06 15:09:30"
-        },
-        {
-            "snkey": "31",
-            "name": "系統管理員",
-            "time": "2025-12-06 15:09:15"
-        }
-    ],
-    "snkey": "4",
-    "stop": ""
+    "editInfo": []
 }

@@ -766,27 +766,17 @@ const handleEdit = async () => {
 
   loading.value = true
 
-  const timeNow = dayjs().format('YYYY-MM-DD HH:mm:ss')
+  list.editInfo.unshift({
+    snkey: store.state.pData.snkey,
+    name: store.state.pData.username,
+    time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+  })
   const postData = {
     snkey: list.snkey,
-    date: list.date,
-    user_snkey: store.state.uData.snkey,
-    hospital_snkey: list.hospitaldata.snkey,
-    branch_snkey: list.branchdata.snkey,
-    doctor_snkey: list.doctordata.snkey,
-    main_cause_of_treatment_snkey: list.main_cause_of_treatmentdata.snkey,
-    time: list.time,
-    outpatient: list.outpatient,
-    description: list.description,
-    response: list.response,
-    back_date: list.back_date,
-    car: list.car,
-    accompany: list.accompany,
-    edit_man: `${store.state.pData.username}(${timeNow})`,
-  }
-
-  if (list.carryArray && list.carryArray.length > 0) {
-    postData.carryitems = list.carryArray.toString()
+    datalist: JSON.stringify({
+      ...list,
+    }),
+    updateTime: dayjs().format('YYYY-MM-DD HH:mm:ss')
   }
 
   try {
