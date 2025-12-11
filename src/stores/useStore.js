@@ -92,20 +92,20 @@ export const useStore = defineStore('company', () => {
       //   icon: 'mdi-book-open-page-variant',
       // },
 
-      // {
-      //   label: "生命徵象紀錄單(多單)", class: "ma-1", color: "primary", keyName: 'pass',
-      //   image: new URL('@/assets/img/kenkoushindan_ketsuatsu.png', import.meta.url).href,
-      //   route: "/main/signlifelistmulti",
-      //   authKey: "pass",
-      //   icon: 'mdi-table-large',
-      // },
-      // {
-      //   label: "交班表", class: "ma-1", color: "success", keyName: 'pass',
-      //   image: new URL('@/assets/img/hanashiai_nurse_woman.png', import.meta.url).href,
-      //   route: "/main/handoverlist",
-      //   authKey: "pass",
-      //   icon: 'mdi-text-box-outline',
-      // },
+      {
+        label: "生命徵象紀錄單(多單)", class: "ma-1", color: "primary", keyName: 'pass',
+        image: new URL('@/assets/img/kenkoushindan_ketsuatsu.png', import.meta.url).href,
+        route: "/main/signlifelistmulti",
+        authKey: "pass",
+        icon: 'mdi-table-large',
+      },
+      {
+        label: "交班表", class: "ma-1", color: "success", keyName: 'pass',
+        image: new URL('@/assets/img/hanashiai_nurse_woman.png', import.meta.url).href,
+        route: "/main/handoverlist",
+        authKey: "pass",
+        icon: 'mdi-text-box-outline',
+      },
       // {
       //   label: "活動參與紀錄表", class: "ma-1", color: "warning", keyName: 'pass',
       //   image: new URL('@/assets/img/party_christmas.png', import.meta.url).href,

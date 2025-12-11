@@ -20,6 +20,8 @@ const routes = [
       { path: 'functionlist', name: 'functionlist', component: () => import('@/views/main/FunctionList.vue') },
       { path: 'Personnel', name: 'Personnel', component: () => import('@/views/main/Personnel/index.vue') },
       { path: 'User', name: 'User', component: () => import('@/views/main/User/index.vue') },
+      { path: 'signlifelistmulti', name: 'signlifelistmulti', component: () => import('@/views/main/SignLifeMulti/index.vue') },
+      { path: 'handoverlist', name: 'handoverlist', component: () => import('@/views/main/Handover/index.vue') },
 
       {
         path: 'Documents', name: 'Documents', component: () => import('@/views/main/Documents/index.vue'),

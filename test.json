@@ -1,38 +1,12 @@
 {
-    "medicinedata": {
-        "snkey": "284",
-        "text": "Betaloc",
-        "effect": ""
-    },
-    "unitdata": {
-        "snkey": "114",
-        "text": "支"
-    },
-    "methoddata": {
-        "snkey": "114",
-        "text": "噴劑(鼻)"
-    },
-    "eat_medicine_timedata": {
-        "snkey": "75",
-        "text": "Q12H [5,17] / 間隔 1天",
-        "time": "5,17",
-        "day": "1",
-        "repeatWeek": "",
-        "repeatDate": ""
-    },
-    "start_date": "2025-12-09",
-    "start_time": "5",
-    "medicine_counts": "2",
-    "dosage": "22",
-    "attention": "333",
-    "quantity": "22",
-    "medicineEndInfo": "日期:2025-12-09 時段:17",
-    "user_snkey": "12",
-    "medical_snkey": "23",
+    "date": "2025-12-10",
+    "time": "20:14",
+    "content": "test123",
+    "administrativeContent": "test456",
+    "checkedList": [],
     "createInfo": {
         "snkey": "31",
         "name": "系統管理員",
-        "time": "2025-12-09 19:06:13"
-    },
-    "editInfo": []
+        "time": "2025-12-10 20:14:20"
+    }
 }
