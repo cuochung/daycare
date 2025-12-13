@@ -31,3 +31,4 @@ const normalizeRecord = (row) => {
 14. 遇到 viewData 顯示資料的寫法都棄用；依各畫面顯示時讀入的資料去處理就好
 15. 使用 fromParent 的相關寫法棄用
 16. 在 EvaluationMetrics 目錄下的；FallEvent 已完成；都參考這個目錄下的建構方式
+17. 有遇到上傳檔案的狀況；可以參考 user/add.vue 裡的做法

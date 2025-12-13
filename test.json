@@ -1,12 +1,38 @@
 {
-    "date": "2025-12-10",
-    "time": "20:14",
-    "content": "test123",
-    "administrativeContent": "test456",
-    "checkedList": [],
+    "snkey": "",
+    "name": "test123",
+    "date": "2025-12-13",
+    "time": "",
+    "target": "",
+    "location": "",
+    "memberArray": [],
+    "scheduleArray": [
+        {
+            "time": "",
+            "content": ""
+        }
+    ],
+    "device": "",
+    "leader": "",
+    "helper": "",
+    "picItems": [
+        {
+            "state": 1,
+            "picName": "1765626947_9afde17b7d2691c9a1cd.jpg",
+            "picOriginalName": "S__7880828.jpg"
+        },
+        {
+            "state": 1,
+            "picName": "1765626947_cd284ec87722765b004b.jpg",
+            "picOriginalName": "IMG_6118.jpg"
+        }
+    ],
+    "explanation": "",
+    "suggest": "",
     "createInfo": {
         "snkey": "31",
         "name": "系統管理員",
-        "time": "2025-12-10 20:14:20"
-    }
+        "time": "2025-12-13 19:55:48"
+    },
+    "editInfo": []
 }

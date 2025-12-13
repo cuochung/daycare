@@ -201,6 +201,18 @@ var api = {
 
   },
 
+  //刪除檔案,多檔
+  async delFileMulti(database, datas = null) {
+    console.log('run delFileMulti', `general/delFileMulti/${database}`, datas)
+    try {
+      const get = await instance.post(`general/delFileMulti/${database}`, qs.stringify(datas))
+      return get.data;
+    } catch (err) {
+      console.log('err', err)
+      throw err
+    }
+  },
+
   //新增多筆資料
   //addMulti data
   async addMulti(database, data) {

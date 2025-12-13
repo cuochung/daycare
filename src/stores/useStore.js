@@ -106,13 +106,13 @@ export const useStore = defineStore('company', () => {
         authKey: "pass",
         icon: 'mdi-text-box-outline',
       },
-      // {
-      //   label: "活動參與紀錄表", class: "ma-1", color: "warning", keyName: 'pass',
-      //   image: new URL('@/assets/img/party_christmas.png', import.meta.url).href,
-      //   route: "/main/activitylist",
-      //   authKey: "pass",
-      //   icon: 'mdi-ticket',
-      // },
+      {
+        label: "活動參與紀錄表", class: "ma-1", color: "warning", keyName: 'pass',
+        image: new URL('@/assets/img/party_christmas.png', import.meta.url).href,
+        route: "/main/activitylist",
+        authKey: "pass",
+        icon: 'mdi-ticket',
+      },
       // {
       //   label: "床位管理", class: "ma-1 white--text", color: "pink", keyName: 'bed',
       //   image: new URL('@/assets/img/kagu_sleep_futon_shiku.png', import.meta.url).href,

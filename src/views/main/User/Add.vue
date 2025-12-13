@@ -1958,10 +1958,14 @@ const onUpload = (tablename) => {
 }
 
 const delExistPic = async (picName) => {
-  const url = `general/delPic/${databaseName}/${picName}`
-  const rs = await api.options(url)
-  console.log('delExistPic rs', rs)
-  return rs
+  try {
+    const rs = await api.delFileMulti(databaseName, databaseName, [picName])
+    console.log('delExistPic rs', rs)
+    return rs
+  } catch (error) {
+    console.error('刪除照片失敗:', error)
+    return { state: 0, message: '刪除照片失敗' }
+  }
 }
 
 const onFileSelected = (event) => {

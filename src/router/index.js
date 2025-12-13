@@ -22,6 +22,7 @@ const routes = [
       { path: 'User', name: 'User', component: () => import('@/views/main/User/index.vue') },
       { path: 'signlifelistmulti', name: 'signlifelistmulti', component: () => import('@/views/main/SignLifeMulti/index.vue') },
       { path: 'handoverlist', name: 'handoverlist', component: () => import('@/views/main/Handover/index.vue') },
+      { path: 'activitylist', name: 'activitylist', component: () => import('@/views/main/ActivityList/index.vue') },
 
       {
         path: 'Documents', name: 'Documents', component: () => import('@/views/main/Documents/index.vue'),
@@ -105,6 +106,7 @@ const routes = [
   { path: '/ConsultationPrint', name: 'ConsultationPrint', component: () => import('@/views/main/Documents/Original/Consultation/PrintPage.vue') },
 
   { path: '/CareRecordPrint', name: 'CareRecordPrint', component: () => import('@/views/main/Documents/Mohw/CareRecord/PrintPage.vue') },
+  { path: '/ActivityPrint', name: 'ActivityPrint', component: () => import('@/views/main/ActivityList/PrintPage.vue') },
   
   
   // {
