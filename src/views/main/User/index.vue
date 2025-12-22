@@ -68,8 +68,9 @@
                   variant="outlined" prepend-inner-icon="mdi-magnify" hide-details single-line class="pr-md-4"
                   @keyup.shift.alt.72="changeHidden"></v-text-field>
               </v-col>
-              <v-col cols="12" md="4" class="d-flex justify-end mt-3 mt-md-0">
-                <popupadd v-if="auth.user_add_key" ref="childFn" @getAllData="getAllData"></popupadd>
+              <v-col cols="12" md="4" class="d-flex justify-end mt-3 mt-md-0 ga-2">
+                <HTMLPreviewDialog v-if="auth.user_add_key" ref="htmlPreviewDialog" @import-success="getAllData"></HTMLPreviewDialog>
+                
               </v-col>
             </v-row>
           </v-sheet>
@@ -144,22 +145,6 @@
 
                         <template #append>
                           <div class="d-flex align-center">
-                            <v-tooltip text="開啟照護紀錄" location="bottom">
-                              <template #activator="{ props }">
-                                <v-btn icon size="small" color="success" variant="tonal" class="mr-1" v-bind="props"
-                                  @click.stop="goDocument(raw)">
-                                  <v-icon>mdi-view-list</v-icon>
-                                </v-btn>
-                              </template>
-                            </v-tooltip>
-                            <v-tooltip text="列印病歷表" location="bottom">
-                              <template #activator="{ props }">
-                                <v-btn icon size="small" color="primary" variant="tonal" class="mr-1" v-bind="props"
-                                  @click.stop="print(raw)">
-                                  <v-icon>mdi-printer</v-icon>
-                                </v-btn>
-                              </template>
-                            </v-tooltip>
                             <v-tooltip text="刪除" v-if="auth.user_del_key" location="bottom">
                               <template #activator="{ props }">
                                 <v-btn icon size="small" color="error" variant="tonal" :loading="loading"
@@ -190,7 +175,7 @@ import { useRouter } from 'vue-router'
 import dayjs from 'dayjs'
 import api from '@/assets/js/api.js'
 import { useStore } from '@/stores/useStore'
-import popupadd from '@/views/main/User/Add.vue'
+import HTMLPreviewDialog from '@/components/HTMLPreviewDialog.vue'
 
 import PaginatedIterator from '@/components/PaginatedIterator.vue'
 
@@ -199,7 +184,7 @@ const router = useRouter()
 const { proxy } = getCurrentInstance()
 
 const databaseName = ref('user')
-const childFn = ref(null)
+const htmlPreviewDialog = ref(null)
 const allItems = ref([])
 const searchKey = ref('')
 const itemsPerPage = ref(12)
@@ -270,12 +255,21 @@ const changeHidden = () => {
 }
 
 const edit = (item) => {
-  if (auth.value.user_edit_key && childFn.value?.editProcess) {
-    childFn.value.editProcess(item)
+  // 改為顯示 HTML 預覽功能，從 userFullData 讀取資料
+  if (item && item.snkey) {
+    if (htmlPreviewDialog.value?.loadFromUserFullData) {
+      htmlPreviewDialog.value.loadFromUserFullData(item.snkey)
+    } else {
+      store.showToastMulti({
+        type: 'warning',
+        message: '預覽功能未就緒',
+        closeTime: 2,
+      })
+    }
   } else {
     store.showToastMulti({
       type: 'warning',
-      message: '修改功能未授權!!',
+      message: '無法取得用戶資料',
       closeTime: 2,
     })
   }
@@ -293,39 +287,85 @@ const del = async (item) => {
     position: 'center'
   }).then(async (result) => {
     if (result.isConfirmed) {
+      try {
+        // 步驟 1: 先查詢並刪除 userFullData 中相同 user_snkey 的資料
+        const allFullData = await api.get('userFullData')
+        const userFullDataRecords = allFullData.filter(fullDataItem => {
+          try {
+            const data = JSON.parse(fullDataItem.datalist)
+            return data.user_snkey === item.snkey || data.user_snkey === String(item.snkey)
+          } catch (e) {
+            return false
+          }
+        })
 
-      item.delInfo = {
-        name: store.state.pData.name,
-        time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
-      }
+        // 如果有找到 userFullData 資料，先刪除它們
+        if (userFullDataRecords.length > 0) {
+          for (const fullDataRecord of userFullDataRecords) {
+            try {
+              const fullData = JSON.parse(fullDataRecord.datalist)
+              fullData.delInfo = {
+                name: store.state.pData.name,
+                time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+              }
 
-      const postData = {
-        snkey: item.snkey,
-        tablename: databaseName.value,
-        datalist: JSON.stringify(item),
-      }
+              const fullDataPostData = {
+                snkey: fullDataRecord.snkey,
+                tablename: 'userFullData',
+                datalist: JSON.stringify(fullData),
+              }
 
-      const rs = await api.delete(databaseName.value, postData)
-      if (rs.state == 1) {
-        if (item.picInfo && item.picInfo.picName && item.picInfo.picName != "lazypic.jpg") {
-          console.log('del process run del pic')
-          await delExistPic(item.picInfo.picName)
+              const fullDataRs = await api.delete('userFullData', fullDataPostData)
+              if (fullDataRs.state != 1) {
+                console.warn('刪除 userFullData 失敗:', fullDataRecord.snkey)
+              }
+            } catch (error) {
+              console.error('刪除 userFullData 時發生錯誤:', error)
+            }
+          }
         }
 
+        // 步驟 2: 刪除 user 資料
+        item.delInfo = {
+          name: store.state.pData.name,
+          time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        }
+
+        const postData = {
+          snkey: item.snkey,
+          tablename: databaseName.value,
+          datalist: JSON.stringify(item),
+        }
+
+        const rs = await api.delete(databaseName.value, postData)
+        if (rs.state == 1) {
+          if (item.picInfo && item.picInfo.picName && item.picInfo.picName != "lazypic.jpg") {
+            console.log('del process run del pic')
+            await delExistPic(item.picInfo.picName)
+          }
+
+          proxy.$swal({
+            icon: "success",
+            title: "刪除成功",
+            confirmButtonText: '確定',
+            confirmButtonColor: '#3085d6',
+            allowEscapeKey: false
+          })
+
+          await getAllData();
+        } else {
+          throw new Error(rs.message || '刪除失敗')
+        }
+      } catch (error) {
+        console.error('刪除過程發生錯誤:', error)
         proxy.$swal({
-          icon: "success",
-          title: "刪除成功",
+          icon: "error",
+          title: "刪除失敗",
+          text: error.message || '刪除過程中發生錯誤，請稍後再試',
           confirmButtonText: '確定',
           confirmButtonColor: '#3085d6',
           allowEscapeKey: false
         })
-
-        if (item.picInfo && item.picInfo.picName && item.picInfo.picName != "lazypic.jpg") {
-          console.log('del process run del pic')
-          await delExistPic(item.picInfo.picName)
-        }
-
-        await getAllData();
       }
     }
   })
