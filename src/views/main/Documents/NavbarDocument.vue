@@ -188,7 +188,7 @@
       </v-card>
     </v-navigation-drawer>
 
-    <UserAddDialog ref="userDialogRef" @getAllData="fetchAllUsers" :isHidden="true" />
+    <!-- <UserAddDialog ref="userDialogRef" @getAllData="fetchAllUsers" :isHidden="true" /> -->
   </div>
 </template>
 
@@ -197,7 +197,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '@/stores/useStore'
 import api from '@/assets/js/api.js'
-import UserAddDialog from '@/views/main/User/Add.vue'
+// import UserAddDialog from '@/views/main/User/Add.vue'
 
 const emit = defineEmits(['reloadPage'])
 
