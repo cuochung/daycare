@@ -3,10 +3,10 @@ import { defineStore } from 'pinia'
 
 export const useStore = defineStore('company', () => {
   const state = {
-    verMsg: "2025.12.9.1",
+    verMsg: "2025.12.23.1",
     databaseName: "daycare", //資料庫名
-    base_url: "http://localhost/daycareapi", //localhost測試用
-    // base_url: "https://www.pddtvgame.com/daycareapi", //線上專用指定去讀圖片或其他東西的位置
+    // base_url: "http://localhost/daycareapi", //localhost測試用
+    base_url: "https://www.pddtvgame.com/daycareapi", //線上專用指定去讀圖片或其他東西的位置
 
     loading: false, //載入中
 
@@ -92,27 +92,28 @@ export const useStore = defineStore('company', () => {
       //   icon: 'mdi-book-open-page-variant',
       // },
 
-      {
-        label: "生命徵象紀錄單(多單)", class: "ma-1", color: "primary", keyName: 'pass',
-        image: new URL('@/assets/img/kenkoushindan_ketsuatsu.png', import.meta.url).href,
-        route: "/main/signlifelistmulti",
-        authKey: "pass",
-        icon: 'mdi-table-large',
-      },
-      {
-        label: "交班表", class: "ma-1", color: "success", keyName: 'pass',
-        image: new URL('@/assets/img/hanashiai_nurse_woman.png', import.meta.url).href,
-        route: "/main/handoverlist",
-        authKey: "pass",
-        icon: 'mdi-text-box-outline',
-      },
-      {
-        label: "活動參與紀錄表", class: "ma-1", color: "warning", keyName: 'pass',
-        image: new URL('@/assets/img/party_christmas.png', import.meta.url).href,
-        route: "/main/activitylist",
-        authKey: "pass",
-        icon: 'mdi-ticket',
-      },
+      // {
+      //   label: "生命徵象紀錄單(多單)", class: "ma-1", color: "primary", keyName: 'pass',
+      //   image: new URL('@/assets/img/kenkoushindan_ketsuatsu.png', import.meta.url).href,
+      //   route: "/main/signlifelistmulti",
+      //   authKey: "pass",
+      //   icon: 'mdi-table-large',
+      // },
+      // {
+      //   label: "交班表", class: "ma-1", color: "success", keyName: 'pass',
+      //   image: new URL('@/assets/img/hanashiai_nurse_woman.png', import.meta.url).href,
+      //   route: "/main/handoverlist",
+      //   authKey: "pass",
+      //   icon: 'mdi-text-box-outline',
+      // },
+      // {
+      //   label: "活動參與紀錄表", class: "ma-1", color: "warning", keyName: 'pass',
+      //   image: new URL('@/assets/img/party_christmas.png', import.meta.url).href,
+      //   route: "/main/activitylist",
+      //   authKey: "pass",
+      //   icon: 'mdi-ticket',
+      // },
+
       // {
       //   label: "床位管理", class: "ma-1 white--text", color: "pink", keyName: 'bed',
       //   image: new URL('@/assets/img/kagu_sleep_futon_shiku.png', import.meta.url).href,

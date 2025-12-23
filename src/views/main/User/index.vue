@@ -65,12 +65,13 @@
             <v-row align="center" no-gutters>
               <v-col cols="12" md="8">
                 <v-text-field v-if="auth.user_search_key" v-model="searchKey" label="搜尋住民關鍵字" density="comfortable"
-                  variant="outlined" prepend-inner-icon="mdi-magnify" hide-details single-line class="pr-md-4"
-                  @keyup.shift.alt.72="changeHidden"></v-text-field>
+                  variant="outlined" prepend-inner-icon="mdi-magnify" hide-details single-line
+                  class="pr-md-4"></v-text-field>
               </v-col>
               <v-col cols="12" md="4" class="d-flex justify-end mt-3 mt-md-0 ga-2">
-                <HTMLPreviewDialog v-if="auth.user_add_key" ref="htmlPreviewDialog" @import-success="getAllData"></HTMLPreviewDialog>
-                
+                <HTMLPreviewDialog v-if="auth.user_add_key" ref="htmlPreviewDialog" @import-success="getAllData">
+                </HTMLPreviewDialog>
+
               </v-col>
             </v-row>
           </v-sheet>
@@ -140,7 +141,7 @@
                             variant="tonal">
                             <v-icon size="16">mdi-heart-circle</v-icon>
                           </v-chip>
-                          
+
                         </div>
 
                         <template #append>
@@ -233,25 +234,13 @@ const sortBy = (data) => {
 const getAllData = async () => {
   const response = await api.get('user')
 
-  // console.log('response user', response)
-
-  let data = response.map((i) => ({
+  allItems.value = response.map((i) => ({
     ...JSON.parse(i.datalist),
     snkey: i.snkey,
     createTime: i.createTime,
     updateTime: i.updateTime,
   }))
 
-  if (userHidden.value === 'true') {
-    data = data.filter((item) => item.hidden === '')
-  }
-
-  allItems.value = sortBy(data)
-}
-
-const changeHidden = () => {
-  userHidden.value = userHidden.value === 'true' ? 'false' : 'true'
-  getAllData()
 }
 
 const edit = (item) => {
