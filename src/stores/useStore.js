@@ -5,8 +5,8 @@ export const useStore = defineStore('company', () => {
   const state = {
     verMsg: "2025.12.23.1",
     databaseName: "daycare", //資料庫名
-    // base_url: "http://localhost/daycareapi", //localhost測試用
-    base_url: "https://www.pddtvgame.com/daycareapi", //線上專用指定去讀圖片或其他東西的位置
+    base_url: "http://localhost/daycareapi", //localhost測試用
+    // base_url: "https://www.pddtvgame.com/daycareapi", //線上專用指定去讀圖片或其他東西的位置
 
     loading: false, //載入中
 
@@ -171,6 +171,13 @@ export const useStore = defineStore('company', () => {
       //   icon: 'mdi-chart-arc',
       // },
 
+      {
+        label: "出席一覽", class: "ma-1 white--text", color: "teal", keyName: 'attendance',
+        image: new URL('@/assets/img/template_calender_j.jpg', import.meta.url).href,
+        route: "/main/AttendanceCalendar",
+        authKey: "pass",
+        icon: 'mdi-calendar-month',
+      },
       {
         label: "登出", class: "ma-1 white--text", color: "dark", keyName: 'exit',
         image: new URL('@/assets/img/text_exit.png', import.meta.url).href,

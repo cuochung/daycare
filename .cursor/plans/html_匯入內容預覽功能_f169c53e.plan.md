@@ -26,6 +26,7 @@ todos:
     status: completed
     dependencies:
       - create_preview_dialog
+isProject: false
 ---
 
 # HTML 匯入內容預覽功能
@@ -43,8 +44,8 @@ todos:
 - 檔案選擇器（支援 .html/.htm）
 - 使用現有的 `htmlParser.js` 解析 HTML 檔案
 - 顯示解析結果，支援兩種顯示模式：
-    - **JSON 樹狀結構**：使用可展開/收合的 JSON 檢視器
-    - **格式化表格**：分類顯示（基本資料、聯絡人、照顧者、評估資料等）
+  - **JSON 樹狀結構**：使用可展開/收合的 JSON 檢視器
+  - **格式化表格**：分類顯示（基本資料、聯絡人、照顧者、評估資料等）
 - 可切換顯示模式
 - 顯示解析狀態（成功/失敗、錯誤訊息）
 
@@ -91,10 +92,11 @@ todos:
 
 - `src/components/HTMLPreviewDialog.vue` - 預覽對話框組件
 
-2. **修改檔案**:
+1. **修改檔案**:
 
 - `src/views/main/User/index.vue` - 新增預覽按鈕和組件引用
 
 ## 注意事項
 
 - 此功能僅用於預覽，不執行實際匯入
+

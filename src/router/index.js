@@ -23,6 +23,7 @@ const routes = [
       { path: 'signlifelistmulti', name: 'signlifelistmulti', component: () => import('@/views/main/SignLifeMulti/index.vue') },
       { path: 'handoverlist', name: 'handoverlist', component: () => import('@/views/main/Handover/index.vue') },
       { path: 'activitylist', name: 'activitylist', component: () => import('@/views/main/ActivityList/index.vue') },
+      { path: 'AttendanceCalendar', name: 'AttendanceCalendar', component: () => import('@/views/main/AttendanceCalendar/index.vue') },
 
       {
         path: 'Documents', name: 'Documents', component: () => import('@/views/main/Documents/index.vue'),

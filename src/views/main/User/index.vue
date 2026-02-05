@@ -71,6 +71,7 @@
               <v-col cols="12" md="4" class="d-flex justify-end mt-3 mt-md-0 ga-2">
                 <HTMLPreviewDialog v-if="auth.user_add_key" ref="htmlPreviewDialog" @import-success="getAllData">
                 </HTMLPreviewDialog>
+                <ResidentScheduleDialog ref="residentScheduleDialogRef" />
 
               </v-col>
             </v-row>
@@ -90,14 +91,6 @@
                 <v-card-title class="d-flex align-center user-panel__title">
                   <div class="text-subtitle-1 font-weight-bold">顯示筆數：{{ filteredCount }}</div>
                   <v-spacer></v-spacer>
-                  <div class="d-flex align-center ga-2">
-                    <v-chip size="small" prepend-icon="mdi-safety-goggles" variant="tonal">
-                      DNR {{ dnrCount }}
-                    </v-chip>
-                    <v-chip size="small" prepend-icon="mdi-cash-multiple" variant="tonal" color="secondary">
-                      公費 {{ publicExpensesCount }}
-                    </v-chip>
-                  </div>
                 </v-card-title>
 
                 <v-card-text class="pa-0">
@@ -145,7 +138,15 @@
                         </div>
 
                         <template #append>
-                          <div class="d-flex align-center">
+                          <div class="d-flex align-center ga-1">
+                            <v-tooltip text="服務項目設定" location="bottom">
+                              <template #activator="{ props }">
+                                <v-btn icon size="small" color="info" variant="tonal" v-bind="props"
+                                  @click.stop="openScheduleDialog(raw)">
+                                  <v-icon>mdi-calendar-edit</v-icon>
+                                </v-btn>
+                              </template>
+                            </v-tooltip>
                             <v-tooltip text="刪除" v-if="auth.user_del_key" location="bottom">
                               <template #activator="{ props }">
                                 <v-btn icon size="small" color="error" variant="tonal" :loading="loading"
@@ -177,7 +178,7 @@ import dayjs from 'dayjs'
 import api from '@/assets/js/api.js'
 import { useStore } from '@/stores/useStore'
 import HTMLPreviewDialog from '@/components/HTMLPreviewDialog.vue'
-
+import ResidentScheduleDialog from '@/components/ResidentScheduleDialog.vue'
 import PaginatedIterator from '@/components/PaginatedIterator.vue'
 
 const store = useStore()
@@ -186,6 +187,7 @@ const { proxy } = getCurrentInstance()
 
 const databaseName = ref('user')
 const htmlPreviewDialog = ref(null)
+const residentScheduleDialogRef = ref(null)
 const allItems = ref([])
 const searchKey = ref('')
 const itemsPerPage = ref(12)
@@ -215,8 +217,6 @@ const filteredItems = computed(() => {
 const filteredCount = computed(() => filteredItems.value.length)
 const maleCount = computed(() => filteredItems.value.filter((item) => item.sex === '男').length)
 const femaleCount = computed(() => filteredItems.value.filter((item) => item.sex === '女').length)
-const dnrCount = computed(() => filteredItems.value.filter((item) => item.dnr === 'true').length)
-const publicExpensesCount = computed(() => filteredItems.value.filter((item) => item.publicexpenses === 'true').length)
 const hasData = computed(() => filteredCount.value > 0)
 
 const sortBy = (data) => {
@@ -241,6 +241,12 @@ const getAllData = async () => {
     updateTime: i.updateTime,
   }))
 
+}
+
+const openScheduleDialog = (item) => {
+  if (item?.snkey && residentScheduleDialogRef.value?.open) {
+    residentScheduleDialogRef.value.open(item.snkey, item.name)
+  }
 }
 
 const edit = (item) => {
