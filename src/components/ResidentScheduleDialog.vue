@@ -420,14 +420,15 @@ async function save() {
       }
     })
 
-    for (const row of forUser) {
-      if (!existingSnkeys.has(row.snkey)) {
-        await api.delete('resident_schedule', {
-          snkey: row.snkey,
-          tablename: 'resident_schedule',
-          datalist: row.datalist,
-        })
-      }
+    const toDelete = forUser
+      .filter((row) => !existingSnkeys.has(row.snkey))
+      .map((row) => ({
+        snkey: row.snkey,
+        tablename: 'resident_schedule',
+        datalist: row.datalist,
+      }))
+    if (toDelete.length > 0) {
+      await api.deleteMulti('resident_schedule', toDelete)
     }
 
     const toUpdate = scheduleRows.value.filter((r) => r.snkey)

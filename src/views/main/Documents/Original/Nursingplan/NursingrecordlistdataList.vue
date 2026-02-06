@@ -314,7 +314,7 @@ const handleDeleteQuestion = async (item) => {
       });
     });
 
-    let rs = await api.options(`general/delMultiv3/${store.state.databaseName}/nursing_record_list_data`, postData)
+    let rs = await api.deleteMulti('nursing_record_list_data', postData)
     console.log('rs', rs)
     let isAllTrue = rs.every(i => i.del_state === true);
 

@@ -1,8 +1,21 @@
 {
+    "month": "2026-02",
+    "date": "2026-02-05",
+    "period": "am",
     "user_snkey": "1",
-    "start_date": "2026-02-05",
     "schedule_type": "BB08",
     "day_type": "half",
-    "quota_type": "month",
-    "weekdays": "1,2,3,4,5"
+    "resident_schedule_snkey": "4",
+    "checked_in": 0,
+    "checked_in_time": "",
+    "arrival_time": "",
+    "temperature": "",
+    "pulse": "",
+    "blood_pressure": "",
+    "blood_oxygen": "",
+    "respiration": "",
+    "medicine_taken": 0,
+    "medicine_taken_time": "",
+    "ate": 0,
+    "ate_time": ""
 }

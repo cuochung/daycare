@@ -613,10 +613,7 @@ const del = async (delData) => {
       executionStatus.step3_deleteMedicineRecords.status = 'processing'
       executionStatus.step3_deleteMedicineRecords.message = '執行中'
 
-      const medicineDeleteResult = await api.options(
-        `general/delMultiv3/${store.state.databaseName}/medicine_record`,
-        medicinePostData
-      )
+      const medicineDeleteResult = await api.deleteMulti('medicine_record', medicinePostData)
 
       // 檢查所有用藥紀錄是否都成功刪除
       const isAllMedicineDeleted = medicineDeleteResult.every(

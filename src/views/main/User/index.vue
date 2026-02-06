@@ -294,29 +294,30 @@ const del = async (item) => {
           }
         })
 
-        // 如果有找到 userFullData 資料，先刪除它們
+        // 如果有找到 userFullData 資料，先批次刪除
         if (userFullDataRecords.length > 0) {
-          for (const fullDataRecord of userFullDataRecords) {
-            try {
+          try {
+            const fullDataPostDataList = userFullDataRecords.map((fullDataRecord) => {
               const fullData = JSON.parse(fullDataRecord.datalist)
               fullData.delInfo = {
                 name: store.state.pData.name,
                 time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
               }
-
-              const fullDataPostData = {
+              return {
                 snkey: fullDataRecord.snkey,
                 tablename: 'userFullData',
                 datalist: JSON.stringify(fullData),
               }
-
-              const fullDataRs = await api.delete('userFullData', fullDataPostData)
-              if (fullDataRs.state != 1) {
-                console.warn('刪除 userFullData 失敗:', fullDataRecord.snkey)
-              }
-            } catch (error) {
-              console.error('刪除 userFullData 時發生錯誤:', error)
+            })
+            const fullDataRs = await api.deleteMulti('userFullData', fullDataPostDataList)
+            const isAllSuccess = Array.isArray(fullDataRs)
+              ? fullDataRs.every((r) => r?.state === 1 || r?.del_state === true)
+              : fullDataRs?.state === 1
+            if (!isAllSuccess) {
+              console.warn('刪除 userFullData 部分或全部失敗')
             }
+          } catch (error) {
+            console.error('刪除 userFullData 時發生錯誤:', error)
           }
         }
 
